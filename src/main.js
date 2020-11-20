@@ -4,6 +4,7 @@ import {createSortTemplate} from "./view/sorting.js";
 import {createAllMoviesTemplate} from "./view/movies-all.js";
 import {createMovieCardTemplate} from "./view/movie-card.js";
 import {createShowMoreTemplate} from "./view/show-more.js";
+import "./mock/card.js";
 
 const UPCOMING_CARD_COUNT = 5;
 const EXTRA_CARD_COUNT = 2;
