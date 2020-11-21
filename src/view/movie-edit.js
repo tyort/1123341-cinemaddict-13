@@ -1,13 +1,8 @@
 import dayjs from "dayjs";
+import {getRandomInteger} from "../utils";
+import {allEmojies} from "../const";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
 
 const generateRecorDay = () => {
   const daysAgo = getRandomInteger(0, 14);
@@ -52,8 +47,6 @@ const allComments = [
   }
 ];
 
-const allEmojies = [`angry`, `puke`, `sleeping`, `smile`];
-
 const createCommentsTemplate = (count) => {
   return new Array(count)
     .fill()
@@ -86,21 +79,31 @@ const createEmojiesTemplate = (emojies) => {
     .join(``);
 };
 
+const generateGenresTemplate = (genres) => {
+  return genres
+    .map((genre) => {
+      return `<span class="film-details__genre">${genre}</span>`;
+    })
+    .join(``);
+};
+
 export const createMovieEditTemplate = (card = {}) => {
   const {
-    poster,
+    poster: image,
     title,
     rating,
     releaseDate,
     duration,
     description,
     commentsSum,
-    ageLimit
+    ageLimit,
+    genres
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
   const comments = createCommentsTemplate(commentsSum);
   const emojies = createEmojiesTemplate(allEmojies);
+  const actualGenres = generateGenresTemplate(genres);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -110,7 +113,7 @@ export const createMovieEditTemplate = (card = {}) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
+            <img class="film-details__poster-img" src="./images/posters/${image}" alt="${title}">
 
             <p class="film-details__age">${ageLimit}</p>
           </div>
@@ -154,10 +157,7 @@ export const createMovieEditTemplate = (card = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
-                <td class="film-details__cell">
-                  <span class="film-details__genre">Drama</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span></td>
+                <td class="film-details__cell">${actualGenres}</td>
               </tr>
             </table>
 
