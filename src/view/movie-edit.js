@@ -1,4 +1,90 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
+const getRandomInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+const generateRecorDay = () => {
+  const daysAgo = getRandomInteger(0, 14);
+
+  if (daysAgo <= 7 && !!daysAgo) {
+    return dayjs().subtract(daysAgo, `day`).fromNow();
+  }
+
+  return daysAgo ? dayjs().subtract(daysAgo, `day`).format(`YYYY/MM/DD HH:mm`) : `today`;
+};
+
+const allComments = [
+  {
+    text: `Booooooooooring`,
+    author: `John Doe`,
+    emoji: `sleeping`,
+    day: generateRecorDay()
+  },
+  {
+    text: `Hello! Nice`,
+    author: `Gelo Bortelli`,
+    emoji: `smile`,
+    day: generateRecorDay()
+  },
+  {
+    text: `What's wrong with you? Guys!`,
+    author: `Arturo Gutti`,
+    emoji: `angry`,
+    day: generateRecorDay()
+  },
+  {
+    text: `Fuck it`,
+    author: `Tyo Sergey`,
+    emoji: `angry`,
+    day: generateRecorDay()
+  },
+  {
+    text: `Oh no! My eyes!!!!`,
+    author: `Conor Gregor`,
+    emoji: `puke`,
+    day: generateRecorDay()
+  }
+];
+
+const allEmojies = [`angry`, `puke`, `sleeping`, `smile`];
+
+const createCommentsTemplate = (count) => {
+  return new Array(count)
+    .fill()
+    .map((_comment, index) => {
+      return `<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${allComments[index].emoji}.png" width="55" height="55" alt="emoji-${allComments[index].emoji}">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${allComments[index].text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${allComments[index].author}</span>
+            <span class="film-details__comment-day">${allComments[index].day}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`;
+    })
+    .join(``);
+};
+
+const createEmojiesTemplate = (emojies) => {
+  return emojies
+    .map((emoji) => {
+      return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+        <label class="film-details__emoji-label" for="emoji-${emoji}">
+          <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+        </label>`;
+    })
+    .join(``);
+};
 
 export const createMovieEditTemplate = (card = {}) => {
   const {
@@ -13,6 +99,8 @@ export const createMovieEditTemplate = (card = {}) => {
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
+  const comments = createCommentsTemplate(commentsSum);
+  const emojies = createEmojiesTemplate(allEmojies);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -94,58 +182,7 @@ export const createMovieEditTemplate = (card = {}) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsSum}</span></h3>
 
           <ul class="film-details__comments-list">
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
-              </span>
-              <div>
-                <p class="film-details__comment-text">Interesting setting and a good cast</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">Tim Macoveev</span>
-                  <span class="film-details__comment-day">2019/12/31 23:59</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji-sleeping">
-              </span>
-              <div>
-                <p class="film-details__comment-text">Booooooooooring</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">2 days ago</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji-puke">
-              </span>
-              <div>
-                <p class="film-details__comment-text">Very very old. Meh</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">2 days ago</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji-angry">
-              </span>
-              <div>
-                <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">Today</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
+            ${comments}
           </ul>
 
           <div class="film-details__new-comment">
@@ -156,25 +193,7 @@ export const createMovieEditTemplate = (card = {}) => {
             </label>
 
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
-                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-              </label>
+              ${emojies}
             </div>
           </div>
         </section>
