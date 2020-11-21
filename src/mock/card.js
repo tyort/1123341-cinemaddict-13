@@ -1,5 +1,3 @@
-// import dayjs from "dayjs";
-
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -24,13 +22,13 @@ const generateRating = () => {
 
 const generateTitle = () => {
   const titles = [
-    `Made for each other`,
-    `Popeye meets sinbad`,
-    `Sagebrush trail`,
-    `Santa claus conquers the martians`,
-    `The dance of life`,
-    `The great flamarion`,
-    `The man with the golden arm`
+    `Made for each other.png`,
+    `Popeye meets sinbad.png`,
+    `Sagebrush trail.jpg`,
+    `Santa claus conquers the martians.jpg`,
+    `The dance of life.jpg`,
+    `The great flamarion.jpg`,
+    `The man with the golden arm.jpg`
   ];
   const randomIndex = getRandomInteger(0, titles.length - 1);
   return titles[randomIndex];
@@ -77,16 +75,13 @@ export const generateCard = () => {
 
   return {
     poster: title.toLowerCase().replace(/\s+/g, `-`),
-    title,
+    title: title.slice(0, title.length - 4),
     rating: generateRating(),
-    [`production year`]: getRandomInteger(1900, 2019),
+    year: getRandomInteger(1900, 2019),
     duration: generateDuration(),
     genre: generateGenre(),
     description: generateDescription(),
-    [`number of comments`]: getRandomInteger(0, 5),
-    [`watch plan`]: Boolean(getRandomInteger(0, 1)),
-    hasWatched: Boolean(getRandomInteger(0, 1)),
-    isFavorite: Boolean(getRandomInteger(0, 1))
+    commentsSum: getRandomInteger(0, 5)
   };
 };
 
