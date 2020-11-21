@@ -81,7 +81,10 @@ export const generateCard = () => {
     duration: generateDuration(),
     genre: generateGenre(),
     description: generateDescription(),
-    commentsSum: getRandomInteger(0, 5)
+    commentsSum: getRandomInteger(0, 5),
+    watchPlan: Boolean(getRandomInteger(0, 1)),
+    hasWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };
 
