@@ -7,6 +7,21 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
+const generateDuration = () => {
+  const duration = getRandomInteger(80, 150);
+  const hours = Math.trunc(duration / 60) !== 0 ? `${Math.trunc(duration / 60)}h` : ``;
+  const minutes = duration % 60 !== 0 ? `${duration % 60}m` : ``;
+
+  return hours + ` ` + minutes;
+};
+
+const generateRating = () => {
+  const integer = getRandomInteger(1, 10);
+  const fractional = getRandomInteger(0, 9);
+
+  return `${integer}.${fractional}`;
+};
+
 const generateTitle = () => {
   const titles = [
     `Made for each other`,
@@ -19,6 +34,20 @@ const generateTitle = () => {
   ];
   const randomIndex = getRandomInteger(0, titles.length - 1);
   return titles[randomIndex];
+};
+
+const generateGenre = () => {
+  const genres = [
+    `Musical`,
+    `Western`,
+    `Drama`,
+    `Cartoon`,
+    `Mystery`,
+    `Comedy`,
+    `Horror`
+  ];
+  const randomIndex = getRandomInteger(0, genres.length - 1);
+  return genres[randomIndex];
 };
 
 const generateDescription = () => {
@@ -44,19 +73,23 @@ const generateDescription = () => {
 };
 
 export const generateTask = () => {
+  const title = generateTitle();
+
   return {
-    poster: ``,
-    title: generateTitle(),
-    rating: null,
+    poster: title.toLowerCase().replace(/\s+/g, `-`),
+    title,
+    rating: generateRating(),
     [`production year`]: getRandomInteger(1900, 2019),
-    duration: undefined,
-    genre: ``,
+    duration: generateDuration(),
+    genre: generateGenre(),
     description: generateDescription(),
     [`number of comments`]: getRandomInteger(0, 5),
-    [`watch plan`]: false,
-    hasWatched: false,
-    isFavorite: false
+    [`watch plan`]: Boolean(getRandomInteger(0, 1)),
+    hasWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };
+
+console.log(generateTask());
 
 
