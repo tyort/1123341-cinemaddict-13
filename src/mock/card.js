@@ -20,6 +20,13 @@ const generateRating = () => {
   return `${integer}.${fractional}`;
 };
 
+const generateAgeLimits = () => {
+  const ages = [`0+`, `6+`, `12+`, `16+`, `18+`];
+  const randomIndex = getRandomInteger(0, ages.length - 1);
+  return ages[randomIndex];
+
+};
+
 const generateTitle = () => {
   const titles = [
     `Made for each other.png`,
@@ -44,8 +51,13 @@ const generateGenre = () => {
     `Comedy`,
     `Horror`
   ];
-  const randomIndex = getRandomInteger(0, genres.length - 1);
-  return genres[randomIndex];
+
+  const titles = new Set();
+  for (let i = 0; i < getRandomInteger(1, 5); i++) {
+    titles.add(genres[getRandomInteger(0, genres.length - 1)]);
+  }
+
+  return [...titles];
 };
 
 const generateDescription = () => {
@@ -62,12 +74,21 @@ const generateDescription = () => {
     `Cras aliquet varius magna, non porta ligula feugiat eget`,
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit`
   ];
+
   const sentences = new Set();
   for (let i = 0; i < getRandomInteger(1, 5); i++) {
     sentences.add(descriptions[getRandomInteger(0, descriptions.length - 1)]);
   }
+
   const description = sentences.size !== 0 ? `${[...sentences].join(`. `)}.` : ``;
+
   return description;
+};
+
+const generatedate = () => {
+  const milliseconds = getRandomInteger(315522000000, 1577739600000);
+
+  return new Date(milliseconds);
 };
 
 export const generateCard = () => {
@@ -77,14 +98,15 @@ export const generateCard = () => {
     poster: title.toLowerCase().replace(/\s+/g, `-`),
     title: title.slice(0, title.length - 4),
     rating: generateRating(),
-    year: getRandomInteger(1900, 2019),
+    releaseDate: generatedate(),
     duration: generateDuration(),
     genre: generateGenre(),
     description: generateDescription(),
     commentsSum: getRandomInteger(0, 5),
     watchPlan: Boolean(getRandomInteger(0, 1)),
     hasWatched: Boolean(getRandomInteger(0, 1)),
-    isFavorite: Boolean(getRandomInteger(0, 1))
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    ageLimit: generateAgeLimits()
   };
 };
 

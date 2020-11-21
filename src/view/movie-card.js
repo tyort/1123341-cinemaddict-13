@@ -1,9 +1,11 @@
+import dayjs from "dayjs";
+
 export const createMovieCardTemplate = (card) => {
   const {
     poster,
     title,
     rating,
-    year,
+    releaseDate,
     duration,
     genre,
     description,
@@ -12,6 +14,9 @@ export const createMovieCardTemplate = (card) => {
     hasWatched,
     isFavorite
   } = card;
+
+  const year = dayjs(releaseDate).format(`YYYY`);
+
 
   const planClassName = watchPlan ? `film-card__controls-item--active` : ``;
   const watchedClassName = hasWatched ? `film-card__controls-item--active` : ``;
@@ -23,7 +28,7 @@ export const createMovieCardTemplate = (card) => {
     <p class="film-card__info">
       <span class="film-card__year">${year}</span>
       <span class="film-card__duration">${duration}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__genre">${genre[0]}</span>
     </p>
     <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
     <p class="film-card__description">${description}</p>

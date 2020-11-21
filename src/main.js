@@ -11,6 +11,7 @@ const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 20;
 
 const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
+// console.log(cards);
 
 const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
