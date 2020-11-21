@@ -4,10 +4,13 @@ import {createSortTemplate} from "./view/sorting.js";
 import {createAllMoviesTemplate} from "./view/movies-all.js";
 import {createMovieCardTemplate} from "./view/movie-card.js";
 import {createShowMoreTemplate} from "./view/show-more.js";
-import "./mock/card.js";
+import {generateCard} from "./mock/card.js";
 
-const UPCOMING_CARD_COUNT = 5;
 const EXTRA_CARD_COUNT = 2;
+const COMMON_CARD_COUNT = 20;
+
+const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
+console.log(cards);
 
 const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
@@ -23,8 +26,11 @@ const filmsLists = films.querySelectorAll(`.films-list`);
 
 filmsLists.forEach((list, index) => {
   const container = list.querySelector(`.films-list__container`);
-  const count = index === 0 ? UPCOMING_CARD_COUNT : EXTRA_CARD_COUNT;
-  renderCard(container, createMovieCardTemplate(), count);
+  const count = index === 0 ? COMMON_CARD_COUNT : EXTRA_CARD_COUNT;
+
+  for (let i = 0; i < count; i++) {
+    render(container, createMovieCardTemplate(cards[i]));
+  }
 });
 
 render(filmsLists[0], createShowMoreTemplate());
@@ -33,8 +39,3 @@ function render(container, template, place = `beforeend`) {
   container.insertAdjacentHTML(place, template);
 }
 
-function renderCard(container, template, count) {
-  for (let i = 0; i < count; i++) {
-    render(container, template);
-  }
-}

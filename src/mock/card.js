@@ -72,7 +72,7 @@ const generateDescription = () => {
   return description;
 };
 
-export const generateTask = () => {
+export const generateCard = () => {
   const title = generateTitle();
 
   return {
@@ -89,7 +89,5 @@ export const generateTask = () => {
     isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };
-
-console.log(generateTask());
 
 
