@@ -1,7 +1,7 @@
 import {} from "../utils.js";
 
 const cardToFilterMap = {
-  allMovies: (cards) => cards.length,
+  all: (cards) => cards.length,
   watchlist: (cards) => cards
     .filter((card) => card.watchPlan).length,
   history: (cards) => cards
