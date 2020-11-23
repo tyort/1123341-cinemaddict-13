@@ -9,7 +9,8 @@ import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
 
 const EXTRA_CARD_COUNT = 2;
-const COMMON_CARD_COUNT = 20;
+const COMMON_CARD_COUNT = 22;
+const CARD_COUNT_STEP = 5;
 
 const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
 const filters = generateFilter(cards);
@@ -39,7 +40,15 @@ filmsLists.forEach((list, index) => {
   }
 });
 
-render(filmsLists[0], createShowMoreTemplate());
+if (cards.length > CARD_COUNT_STEP) {
+  render(filmsLists[0], createShowMoreTemplate());
+  const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
+
+  showMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    alert(`Works!`);
+  });
+}
 
 function render(container, template, place = `beforeend`) {
   container.insertAdjacentHTML(place, template);
