@@ -87,7 +87,7 @@ const generateGenresTemplate = (genres) => {
     .join(``);
 };
 
-export const createMovieEditTemplate = (card = {}) => {
+const createMovieEditTemplate = (card = {}) => {
   const {
     poster: image,
     title,

@@ -11,7 +11,7 @@ const createFilterItemTemplate = (filter) => {
     </a>`;
 };
 
-export const createMenuTemplate = (filters) => {
+const createMenuTemplate = (filters) => {
   const filterItems = filters
     .map((filter) => createFilterItemTemplate(filter))
     .join(``);

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import {createElement} from "../utils";
 
-export const createMovieCardTemplate = (card) => {
+const createMovieCardTemplate = (card) => {
   const {
     poster,
     title,
