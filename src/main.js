@@ -23,13 +23,16 @@ const siteMainElement = body.querySelector(`.main`);
 
 render(siteHeaderElement, new UserRank().getElement());
 render(siteMainElement, new Menu(filters).getElement());
+renderBoard(cards);
 
-if (cards.length === 0) {
-  render(siteMainElement, new NoMovies().getElement());
-} else {
+
+function renderBoard(boardCards) {
+  if (boardCards.length === 0) {
+    render(siteMainElement, new NoMovies().getElement());
+    return;
+  }
 
   render(siteMainElement, new Sort().getElement());
-
   const films = new AllMovies();
   render(siteMainElement, films.getElement());
 
@@ -39,12 +42,12 @@ if (cards.length === 0) {
     const container = list.querySelector(`.films-list__container`);
     const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
-    for (let i = 0; i < Math.min(cards.length, count); i++) {
-      renderCard(container, cards[i]);
+    for (let i = 0; i < Math.min(boardCards.length, count); i++) {
+      renderCard(container, boardCards[i]);
     }
   });
 
-  if (cards.length > CARD_COUNT_STEP) {
+  if (boardCards.length > CARD_COUNT_STEP) {
     let renderedCardsCount = CARD_COUNT_STEP;
 
     const showMoreButton = new ShowMore();
@@ -53,13 +56,13 @@ if (cards.length === 0) {
     showMoreButton.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
       const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
-      cards
+      boardCards
         .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
         .forEach((card) => renderCard(container, card));
 
       renderedCardsCount += CARD_COUNT_STEP;
 
-      if (renderedCardsCount >= cards.length) {
+      if (renderedCardsCount >= boardCards.length) {
         showMoreButton.getElement().remove(); // удаляем со свизуализируемого DOM-дерева
         showMoreButton.removeElement();
       }
