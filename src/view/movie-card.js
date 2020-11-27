@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import {createElement} from "../utils";
 
 export const createMovieCardTemplate = (card) => {
   const {
@@ -40,3 +41,26 @@ export const createMovieCardTemplate = (card) => {
     </div>
   </article>`;
 };
+
+export default class MovieCard {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+    return createMovieCardTemplate(this._card);
+  }
+
+  getElement() { // метод превращает в DOM-элемент полученную строку сверху
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

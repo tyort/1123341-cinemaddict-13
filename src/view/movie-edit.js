@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {getRandomInteger} from "../utils";
+import {getRandomInteger, createElement} from "../utils";
 import {allEmojies} from "../const";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -201,3 +201,26 @@ export const createMovieEditTemplate = (card = {}) => {
     </form>
   </section>`;
 };
+
+export default class MovieEdit {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+    return createMovieEditTemplate(this._card);
+  }
+
+  getElement() { // метод превращает в DOM-элемент полученную строку сверху
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -2,12 +2,12 @@ import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
 import Sort from "./view/sorting.js";
 import AllMovies from "./view/movies-all.js";
-import {createMovieCardTemplate} from "./view/movie-card.js";
-// import {createMovieEditTemplate} from "./view/movie-edit.js";
+import MovieCard from "./view/movie-card.js";
+// import MovieEdit from "./view/movie-edit.js";
 import ShowMore from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
-import {renderTemplate, renderElement} from "./utils.js";
+import {renderElement} from "./utils.js";
 
 const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 22;
@@ -33,11 +33,11 @@ filmsLists.forEach((list, index) => {
   const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
   // if (index === 0) {
-  //   renderTemplate(container, createMovieEditTemplate(cards[0]));
+  //   renderElement(container, new MovieEdit(cards[0]).getElement());
   // }
 
   for (let i = 0; i < Math.min(cards.length, count); i++) {
-    renderTemplate(container, createMovieCardTemplate(cards[i]));
+    renderElement(container, new MovieCard(cards[i]).getElement());
   }
 });
 
@@ -51,7 +51,7 @@ if (cards.length > CARD_COUNT_STEP) {
     const container = films.querySelector(`.films-list`).querySelector(`.films-list__container`);
     cards
       .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
-      .forEach((card) => renderTemplate(container, createMovieCardTemplate(card)));
+      .forEach((card) => renderElement(container, new MovieCard(card)).getElement());
 
     renderedCardsCount += CARD_COUNT_STEP;
 
