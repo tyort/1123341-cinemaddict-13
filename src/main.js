@@ -75,10 +75,19 @@ function renderCard(container, card) {
     body.removeChild(cardEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      deletePopup();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   Array.of(`.film-card__poster`, `.film-card__title`, `.film-card__comments`)
   .forEach((elementInCard) => {
     cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, () => {
       showPopup();
+      document.addEventListener(`keydown`, onEscKeyDown);
       body.classList.toggle(`hide-overflow`, true);
     });
   });
@@ -86,6 +95,7 @@ function renderCard(container, card) {
   cardEditComponent.getElement().querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, () => {
       deletePopup();
+      document.addEventListener(`keydown`, onEscKeyDown);
       body.classList.toggle(`hide-overflow`, false);
     });
 }
