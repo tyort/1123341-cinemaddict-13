@@ -1,3 +1,38 @@
+import {generateRecordDay} from "./utils.js";
+
+export const allComments = [
+  {
+    text: `Booooooooooring`,
+    author: `John Doe`,
+    emoji: `sleeping`,
+    day: generateRecordDay()
+  },
+  {
+    text: `Hello! Nice`,
+    author: `Gelo Bortelli`,
+    emoji: `smile`,
+    day: generateRecordDay()
+  },
+  {
+    text: `What's wrong with you? Guys!`,
+    author: `Arturo Gutti`,
+    emoji: `angry`,
+    day: generateRecordDay()
+  },
+  {
+    text: `Fuck it`,
+    author: `Tyo Sergey`,
+    emoji: `angry`,
+    day: generateRecordDay()
+  },
+  {
+    text: `Oh no! My eyes!!!!`,
+    author: `Conor Gregor`,
+    emoji: `puke`,
+    day: generateRecordDay()
+  }
+];
+
 export const ages = [`0+`, `6+`, `12+`, `16+`, `18+`];
 
 export const allEmojies = [`angry`, `puke`, `sleeping`, `smile`];

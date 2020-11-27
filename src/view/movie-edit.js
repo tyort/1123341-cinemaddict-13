@@ -1,51 +1,6 @@
 import dayjs from "dayjs";
-import {getRandomInteger, createElement} from "../utils";
-import {allEmojies} from "../const";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-
-const generateRecorDay = () => {
-  const daysAgo = getRandomInteger(0, 14);
-
-  if (daysAgo <= 7 && !!daysAgo) {
-    return dayjs().subtract(daysAgo, `day`).fromNow();
-  }
-
-  return daysAgo ? dayjs().subtract(daysAgo, `day`).format(`YYYY/MM/DD HH:mm`) : `today`;
-};
-
-const allComments = [
-  {
-    text: `Booooooooooring`,
-    author: `John Doe`,
-    emoji: `sleeping`,
-    day: generateRecorDay()
-  },
-  {
-    text: `Hello! Nice`,
-    author: `Gelo Bortelli`,
-    emoji: `smile`,
-    day: generateRecorDay()
-  },
-  {
-    text: `What's wrong with you? Guys!`,
-    author: `Arturo Gutti`,
-    emoji: `angry`,
-    day: generateRecorDay()
-  },
-  {
-    text: `Fuck it`,
-    author: `Tyo Sergey`,
-    emoji: `angry`,
-    day: generateRecorDay()
-  },
-  {
-    text: `Oh no! My eyes!!!!`,
-    author: `Conor Gregor`,
-    emoji: `puke`,
-    day: generateRecorDay()
-  }
-];
+import {createElement} from "../utils";
+import {allEmojies, allComments} from "../const";
 
 const createCommentsTemplate = (count) => {
   return new Array(count)
