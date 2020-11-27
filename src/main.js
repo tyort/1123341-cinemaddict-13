@@ -1,5 +1,5 @@
 import {createUserRankTemplate} from "./view/user-rank.js";
-import {createMenuTemplate} from "./view/menu.js";
+import Menu from "./view/menu.js";
 import {createSortTemplate} from "./view/sorting.js";
 import {createAllMoviesTemplate} from "./view/movies-all.js";
 import {createMovieCardTemplate} from "./view/movie-card.js";
@@ -7,7 +7,7 @@ import {createMovieCardTemplate} from "./view/movie-card.js";
 import {createShowMoreTemplate} from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
-import {renderTemplate} from "./utils.js";
+import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
 
 const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 22;
@@ -21,7 +21,7 @@ const siteHeaderElement = body.querySelector(`.header`);
 const siteMainElement = body.querySelector(`.main`);
 
 renderTemplate(siteHeaderElement, createUserRankTemplate());
-renderTemplate(siteMainElement, createMenuTemplate(filters));
+renderElement(siteMainElement, new Menu(filters).getElement());
 renderTemplate(siteMainElement, createSortTemplate());
 renderTemplate(siteMainElement, createAllMoviesTemplate());
 

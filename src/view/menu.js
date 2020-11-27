@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createFilterItemTemplate = (filter) => {
   const {name, count} = filter;
   const filterName = name !== `all`
@@ -21,3 +23,26 @@ export const createMenuTemplate = (filters) => {
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`;
 };
+
+export default class Menu {
+  constructor(filters) {
+    this._element = null;
+    this._filters = filters;
+  }
+
+  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+    return createMenuTemplate(this._filters);
+  }
+
+  getElement() { // метод превращает в DOM-элемент полученную строку сверху
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
