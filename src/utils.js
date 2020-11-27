@@ -26,7 +26,7 @@ export const RenderPosition = {
   AFTEREND: `afterEnd`
 };
 
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   // в элемент уже записан готовый DOM-элемент, а не строковый шаблон
   switch (place) {
     case RenderPosition.AFTERBEGIN:

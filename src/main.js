@@ -7,7 +7,7 @@ import MovieCard from "./view/movie-card.js";
 import ShowMore from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
-import {renderElement} from "./utils.js";
+import {render} from "./utils.js";
 
 const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 22;
@@ -20,43 +20,46 @@ const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
 const siteMainElement = body.querySelector(`.main`);
 
-renderElement(siteHeaderElement, new UserRank().getElement());
-renderElement(siteMainElement, new Menu(filters).getElement());
-renderElement(siteMainElement, new Sort().getElement());
-renderElement(siteMainElement, new AllMovies().getElement());
+render(siteHeaderElement, new UserRank().getElement());
+render(siteMainElement, new Menu(filters).getElement());
+render(siteMainElement, new Sort().getElement());
 
-const films = siteMainElement.querySelector(`.films`);
-const filmsLists = films.querySelectorAll(`.films-list`);
+const films = new AllMovies();
+render(siteMainElement, films.getElement());
+
+const filmsLists = films.getElement().querySelectorAll(`.films-list`);
 
 filmsLists.forEach((list, index) => {
   const container = list.querySelector(`.films-list__container`);
   const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
   // if (index === 0) {
-  //   renderElement(container, new MovieEdit(cards[0]).getElement());
+  //   render(container, new MovieEdit(cards[0]).getElement());
   // }
 
   for (let i = 0; i < Math.min(cards.length, count); i++) {
-    renderElement(container, new MovieCard(cards[i]).getElement());
+    render(container, new MovieCard(cards[i]).getElement());
   }
 });
 
 if (cards.length > CARD_COUNT_STEP) {
   let renderedCardsCount = CARD_COUNT_STEP;
-  renderElement(filmsLists[0], new ShowMore().getElement());
-  const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
 
-  showMoreButton.addEventListener(`click`, (evt) => {
+  const showMoreButton = new ShowMore();
+  render(filmsLists[0], showMoreButton.getElement());
+
+  showMoreButton.getElement().addEventListener(`click`, (evt) => {
     evt.preventDefault();
-    const container = films.querySelector(`.films-list`).querySelector(`.films-list__container`);
+    const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
     cards
       .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
-      .forEach((card) => renderElement(container, new MovieCard(card)).getElement());
+      .forEach((card) => render(container, new MovieCard(card).getElement()));
 
     renderedCardsCount += CARD_COUNT_STEP;
 
     if (renderedCardsCount >= cards.length) {
-      showMoreButton.remove();
+      showMoreButton.getElement().remove();
+      showMoreButton.removeElement();
     }
   });
 }
