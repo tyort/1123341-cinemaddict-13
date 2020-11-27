@@ -33,10 +33,6 @@ filmsLists.forEach((list, index) => {
   const container = list.querySelector(`.films-list__container`);
   const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
-  // if (index === 0) {
-  //   renderCard(container, cards[0]);
-  // }
-
   for (let i = 0; i < Math.min(cards.length, count); i++) {
     renderCard(container, cards[i]);
   }
@@ -70,6 +66,28 @@ function renderCard(container, card) {
   const cardEditComponent = new MovieEdit(card);
 
   render(container, cardComponent.getElement());
+
+  const showPopup = () => {
+    body.appendChild(cardEditComponent.getElement());
+  };
+
+  const deletePopup = () => {
+    body.removeChild(cardEditComponent.getElement());
+  };
+
+  Array.of(`.film-card__poster`, `.film-card__title`, `.film-card__comments`)
+  .forEach((elementInCard) => {
+    cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, () => {
+      showPopup();
+      body.classList.toggle(`hide-overflow`, true);
+    });
+  });
+
+  cardEditComponent.getElement().querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, () => {
+      deletePopup();
+      body.classList.toggle(`hide-overflow`, false);
+    });
 }
 
 
