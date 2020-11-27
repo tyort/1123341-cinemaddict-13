@@ -3,7 +3,7 @@ import Menu from "./view/menu.js";
 import Sort from "./view/sorting.js";
 import AllMovies from "./view/movies-all.js";
 import MovieCard from "./view/movie-card.js";
-// import MovieEdit from "./view/movie-edit.js";
+import MovieEdit from "./view/movie-edit.js";
 import ShowMore from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
@@ -34,11 +34,11 @@ filmsLists.forEach((list, index) => {
   const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
   // if (index === 0) {
-  //   render(container, new MovieEdit(cards[0]).getElement());
+  //   renderCard(container, cards[0]);
   // }
 
   for (let i = 0; i < Math.min(cards.length, count); i++) {
-    render(container, new MovieCard(cards[i]).getElement());
+    renderCard(container, cards[i]);
   }
 });
 
@@ -53,14 +53,23 @@ if (cards.length > CARD_COUNT_STEP) {
     const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
     cards
       .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
-      .forEach((card) => render(container, new MovieCard(card).getElement()));
+      .forEach((card) => renderCard(container, card));
 
     renderedCardsCount += CARD_COUNT_STEP;
 
     if (renderedCardsCount >= cards.length) {
-      showMoreButton.getElement().remove();
+      showMoreButton.getElement().remove(); // удаляем со свизуализируемого DOM-дерева
       showMoreButton.removeElement();
     }
   });
 }
+
+
+function renderCard(container, card) {
+  const cardComponent = new MovieCard(card);
+  const cardEditComponent = new MovieEdit(card);
+
+  render(container, cardComponent.getElement());
+}
+
 
