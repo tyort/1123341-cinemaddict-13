@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 export const createAllMoviesTemplate = () => {
   return `<section class="films">
     <section class="films-list">
@@ -17,3 +19,24 @@ export const createAllMoviesTemplate = () => {
   </section>`;
 };
 
+export default class AllMovies {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+    return createAllMoviesTemplate();
+  }
+
+  getElement() { // метод превращает в DOM-элемент полученную строку сверху
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

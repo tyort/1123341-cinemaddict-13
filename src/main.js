@@ -1,13 +1,13 @@
-import {createUserRankTemplate} from "./view/user-rank.js";
+import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
-import {createSortTemplate} from "./view/sorting.js";
-import {createAllMoviesTemplate} from "./view/movies-all.js";
+import Sort from "./view/sorting.js";
+import AllMovies from "./view/movies-all.js";
 import {createMovieCardTemplate} from "./view/movie-card.js";
 // import {createMovieEditTemplate} from "./view/movie-edit.js";
-import {createShowMoreTemplate} from "./view/show-more.js";
+import ShowMore from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
-import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
+import {renderTemplate, renderElement} from "./utils.js";
 
 const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 22;
@@ -20,10 +20,10 @@ const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
 const siteMainElement = body.querySelector(`.main`);
 
-renderTemplate(siteHeaderElement, createUserRankTemplate());
+renderElement(siteHeaderElement, new UserRank().getElement());
 renderElement(siteMainElement, new Menu(filters).getElement());
-renderTemplate(siteMainElement, createSortTemplate());
-renderTemplate(siteMainElement, createAllMoviesTemplate());
+renderElement(siteMainElement, new Sort().getElement());
+renderElement(siteMainElement, new AllMovies().getElement());
 
 const films = siteMainElement.querySelector(`.films`);
 const filmsLists = films.querySelectorAll(`.films-list`);
@@ -43,7 +43,7 @@ filmsLists.forEach((list, index) => {
 
 if (cards.length > CARD_COUNT_STEP) {
   let renderedCardsCount = CARD_COUNT_STEP;
-  renderTemplate(filmsLists[0], createShowMoreTemplate());
+  renderElement(filmsLists[0], new ShowMore().getElement());
   const showMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
 
   showMoreButton.addEventListener(`click`, (evt) => {
