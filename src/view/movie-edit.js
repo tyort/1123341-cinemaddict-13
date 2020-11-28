@@ -158,8 +158,16 @@ const createMovieEditTemplate = (card = {}) => {
 };
 
 export default class MovieEdit {
-  constructor(card) {
+  constructor() {
     this._element = null;
+    this._card = null;
+  }
+
+  get currentCard() {
+    return this._card;
+  }
+
+  set currentCard(card) {
     this._card = card;
   }
 

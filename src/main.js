@@ -23,6 +23,8 @@ const siteMainElement = body.querySelector(`.main`);
 
 render(siteHeaderElement, new UserRank().getElement());
 render(siteMainElement, new Menu(filters).getElement());
+const cardEditComponent = new MovieEdit();
+
 renderBoard(cards);
 
 
@@ -72,16 +74,25 @@ function renderBoard(boardCards) {
 
 function renderCard(container, card) {
   const cardComponent = new MovieCard(card);
-  const cardEditComponent = new MovieEdit(card);
 
   render(container, cardComponent.getElement());
 
   const showPopup = () => {
+    cardEditComponent.currentCard = card;
     body.appendChild(cardEditComponent.getElement());
+    body.classList.toggle(`hide-overflow`, true);
+
+    cardEditComponent.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, () => {
+        deletePopup();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
   };
 
   const deletePopup = () => {
     body.removeChild(cardEditComponent.getElement());
+    cardEditComponent.removeElement();
+    body.classList.toggle(`hide-overflow`, false);
   };
 
   const onEscKeyDown = (evt) => {
@@ -97,16 +108,8 @@ function renderCard(container, card) {
     cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, () => {
       showPopup();
       document.addEventListener(`keydown`, onEscKeyDown);
-      body.classList.toggle(`hide-overflow`, true);
     });
   });
-
-  cardEditComponent.getElement().querySelector(`.film-details__close-btn`)
-    .addEventListener(`click`, () => {
-      deletePopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-      body.classList.toggle(`hide-overflow`, false);
-    });
 }
 
 
