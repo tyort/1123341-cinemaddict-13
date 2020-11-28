@@ -42,9 +42,9 @@ function renderBoard(boardCards) {
     const container = list.querySelector(`.films-list__container`);
     const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
 
-    for (let i = 0; i < Math.min(boardCards.length, count); i++) {
-      renderCard(container, boardCards[i]);
-    }
+    boardCards
+      .slice(0, Math.min(boardCards.length, count))
+      .forEach((card) => renderCard(container, card));
   });
 
   if (boardCards.length > CARD_COUNT_STEP) {
