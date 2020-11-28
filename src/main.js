@@ -24,7 +24,6 @@ const siteMainElement = body.querySelector(`.main`);
 render(siteHeaderElement, new UserRank().getElement());
 render(siteMainElement, new Menu(filters).getElement());
 const cardEditComponent = new MovieEdit();
-
 renderBoard(cards);
 
 
@@ -37,13 +36,11 @@ function renderBoard(boardCards) {
   render(siteMainElement, new Sort().getElement());
   const films = new AllMovies();
   render(siteMainElement, films.getElement());
-
   const filmsLists = films.getElement().querySelectorAll(`.films-list`);
 
   filmsLists.forEach((list, index) => {
     const container = list.querySelector(`.films-list__container`);
     const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
-
     boardCards
       .slice(0, Math.min(boardCards.length, count))
       .forEach((card) => renderCard(container, card));
@@ -74,25 +71,24 @@ function renderBoard(boardCards) {
 
 function renderCard(container, card) {
   const cardComponent = new MovieCard(card);
-
   render(container, cardComponent.getElement());
 
-  const showPopup = () => {
+  const renderPopup = () => {
     cardEditComponent.currentCard = card;
     body.appendChild(cardEditComponent.getElement());
     body.classList.toggle(`hide-overflow`, true);
+    document.addEventListener(`keydown`, onEscKeyDown);
 
-    cardEditComponent.getElement().querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, () => {
-        deletePopup();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
+    cardEditComponent.getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, deletePopup);
   };
 
   const deletePopup = () => {
     body.removeChild(cardEditComponent.getElement());
     cardEditComponent.removeElement();
     body.classList.toggle(`hide-overflow`, false);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
   const onEscKeyDown = (evt) => {
@@ -104,12 +100,9 @@ function renderCard(container, card) {
   };
 
   Array.of(`.film-card__poster`, `.film-card__title`, `.film-card__comments`)
-  .forEach((elementInCard) => {
-    cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, () => {
-      showPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
+    .forEach((elementInCard) => {
+      cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, renderPopup);
     });
-  });
 }
 
 
