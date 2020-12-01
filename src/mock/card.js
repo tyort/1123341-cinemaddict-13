@@ -46,7 +46,7 @@ const generateDescription = () => {
   return description;
 };
 
-const generatedate = () => {
+const generateDate = () => {
   const milliseconds = getRandomInteger(315522000000, 1577739600000);
 
   return new Date(milliseconds);
@@ -59,7 +59,7 @@ export const generateCard = () => {
     poster: title.toLowerCase().replace(/\s+/g, `-`),
     title: title.slice(0, title.length - 4),
     rating: generateRating(),
-    releaseDate: generatedate(),
+    releaseDate: generateDate(),
     duration: generateDuration(),
     genres: generateGenres(),
     description: generateDescription(),
