@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createUserRankTemplate = () => {
   return `<section class="header__profile profile">
@@ -7,24 +7,8 @@ const createUserRankTemplate = () => {
   </section>`;
 };
 
-export default class UserRank {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+export default class UserRank extends Abstract {
+  getTemplate() {
     return createUserRankTemplate();
-  }
-
-  getElement() { // метод превращает в DOM-элемент полученную строку сверху
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

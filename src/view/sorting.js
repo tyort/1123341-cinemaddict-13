@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createSortTemplate = () => {
   return `<ul class="sort">
@@ -8,24 +8,8 @@ const createSortTemplate = () => {
   </ul>`;
 };
 
-export default class Sort {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент
+export default class Sort extends Abstract {
+  getTemplate() {
     return createSortTemplate();
-  }
-
-  getElement() { // метод превращает в DOM-элемент полученную строку сверху
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
