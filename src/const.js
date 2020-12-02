@@ -1,4 +1,4 @@
-import {generateRecordDay} from "./utils.js";
+import {generateRecordDay} from "./utils/project-tools.js";
 
 export const allComments = [
   {

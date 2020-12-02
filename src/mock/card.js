@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../utils";
+import {getRandomInteger} from "../utils/common-tools.js";
 import {ages, moviesTitles, genres, descriptions} from "../const";
 
 const generateRating = () => {

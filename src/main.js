@@ -8,7 +8,7 @@ import MovieEdit from "./view/movie-edit.js";
 import ShowMore from "./view/show-more.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
-import {render} from "./utils.js";
+import {render, removeExemplar} from "./utils/view-tools.js";
 
 const EXTRA_CARD_COUNT = 2;
 const COMMON_CARD_COUNT = 22;
@@ -21,21 +21,21 @@ const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
 const siteMainElement = body.querySelector(`.main`);
 
-render(siteHeaderElement, new UserRank().getElement());
-render(siteMainElement, new Menu(filters).getElement());
+render(siteHeaderElement, new UserRank());
+render(siteMainElement, new Menu(filters));
 const cardEditComponent = new MovieEdit();
 renderBoard(cards);
 
 
 function renderBoard(boardCards) {
   if (boardCards.length === 0) {
-    render(siteMainElement, new NoMovies().getElement());
+    render(siteMainElement, new NoMovies());
     return;
   }
 
-  render(siteMainElement, new Sort().getElement());
+  render(siteMainElement, new Sort());
   const films = new AllMovies();
-  render(siteMainElement, films.getElement());
+  render(siteMainElement, films);
   const filmsLists = films.getElement().querySelectorAll(`.films-list`);
 
   filmsLists.forEach((list, index) => {
@@ -50,7 +50,7 @@ function renderBoard(boardCards) {
     let renderedCardsCount = CARD_COUNT_STEP;
 
     const showMoreButton = new ShowMore();
-    render(filmsLists[0], showMoreButton.getElement());
+    render(filmsLists[0], showMoreButton);
 
     showMoreButton.setClickHandler(() => {
       const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
@@ -61,8 +61,7 @@ function renderBoard(boardCards) {
       renderedCardsCount += CARD_COUNT_STEP;
 
       if (renderedCardsCount >= boardCards.length) {
-        showMoreButton.getElement().remove(); // удаляем со свизуализируемого DOM-дерева
-        showMoreButton.removeElement();
+        removeExemplar(showMoreButton);
       }
     });
   }
@@ -70,19 +69,18 @@ function renderBoard(boardCards) {
 
 function renderCard(container, card) {
   const cardComponent = new MovieCard(card);
-  render(container, cardComponent.getElement());
+  render(container, cardComponent);
 
   const renderPopup = () => {
     cardEditComponent.currentCard = card;
-    body.appendChild(cardEditComponent.getElement());
+    render(body, cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, onEscKeyDown);
     cardEditComponent.setClickHandler(deletePopup);
   };
 
   const deletePopup = () => {
-    body.removeChild(cardEditComponent.getElement());
-    cardEditComponent.removeElement();
+    removeExemplar(cardEditComponent);
     body.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, onEscKeyDown);
   };

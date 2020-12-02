@@ -1,5 +1,3 @@
-import {} from "../utils.js";
-
 const cardToFilterMap = {
   all: (cards) => cards.length,
   watchlist: (cards) => cards
