@@ -7,6 +7,7 @@ export default class Abstract {
     }
 
     this._element = null;
+    this._insideHandler = {};
   }
 
   getTemplate() { // метод создает строковый шаблон, а ниже превращает в DOM-элемент

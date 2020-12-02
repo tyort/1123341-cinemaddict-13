@@ -52,8 +52,7 @@ function renderBoard(boardCards) {
     const showMoreButton = new ShowMore();
     render(filmsLists[0], showMoreButton.getElement());
 
-    showMoreButton.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    showMoreButton.setClickHandler(() => {
       const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
       boardCards
         .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
@@ -78,10 +77,7 @@ function renderCard(container, card) {
     body.appendChild(cardEditComponent.getElement());
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, onEscKeyDown);
-
-    cardEditComponent.getElement()
-      .querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, deletePopup);
+    cardEditComponent.setClickHandler(deletePopup);
   };
 
   const deletePopup = () => {
@@ -99,10 +95,7 @@ function renderCard(container, card) {
     }
   };
 
-  Array.of(`.film-card__poster`, `.film-card__title`, `.film-card__comments`)
-    .forEach((elementInCard) => {
-      cardComponent.getElement().querySelector(elementInCard).addEventListener(`click`, renderPopup);
-    });
+  cardComponent.setClickHandler(renderPopup);
 }
 
 

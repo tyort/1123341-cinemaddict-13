@@ -161,6 +161,7 @@ export default class MovieEdit extends Abstract {
   constructor() {
     super();
     this._card = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   get currentCard() {
@@ -173,5 +174,19 @@ export default class MovieEdit extends Abstract {
 
   getTemplate() {
     return createMovieEditTemplate(this._card);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._insideHandler.click();
+  }
+
+  setClickHandler(exactFormula) {
+    this._insideHandler = {
+      click: exactFormula
+    };
+
+    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
+    closeButton.addEventListener(`click`, this._clickHandler);
   }
 }
