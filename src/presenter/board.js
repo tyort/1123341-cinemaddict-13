@@ -15,7 +15,8 @@ const cardEditComponent = new MovieEdit();
 
 export default class Board {
   constructor() {
-    this._moviesListsComponent = new MoviesLists();
+    this._containerOfLists = new MoviesLists();
+    this.listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
   }
 
   init(cards) {
@@ -66,6 +67,23 @@ export default class Board {
     render(siteMainElement, new NoMovies());
   }
 
+  _renderShowMoreButton() {
+    let renderedCardsCount = CARD_COUNT_STEP;
+
+    const showMoreButton = new ShowMore();
+    render(this.listsComponents[0], showMoreButton);
+
+    showMoreButton.setClickHandler(() => {
+      const container = this.listsComponents[0].querySelector(`.films-list__container`);
+      this._renderCards(container, renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP);
+      renderedCardsCount += CARD_COUNT_STEP;
+
+      if (renderedCardsCount >= this._moviesCards.length) {
+        removeExemplar(showMoreButton);
+      }
+    });
+  }
+
   _renderMain() {
     if (this._moviesCards.length === 0) {
       this._renderNoMovies();
@@ -74,29 +92,15 @@ export default class Board {
 
     this._renderSort();
     render(siteMainElement, this._moviesListsComponent);
-    const filmsLists = this._moviesListsComponent.getElement().querySelectorAll(`.films-list`);
 
-    filmsLists.forEach((list, index) => {
+    this.listsComponents.forEach((list, index) => {
       const container = list.querySelector(`.films-list__container`);
       const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
       this._renderCards(container, 0, Math.min(this._moviesCards.length, count));
     });
 
     if (this._moviesCards.length > CARD_COUNT_STEP) {
-      let renderedCardsCount = CARD_COUNT_STEP;
-
-      const showMoreButton = new ShowMore();
-      render(filmsLists[0], showMoreButton);
-
-      showMoreButton.setClickHandler(() => {
-        const container = filmsLists[0].querySelector(`.films-list__container`);
-        this._renderCards(container, renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP);
-        renderedCardsCount += CARD_COUNT_STEP;
-
-        if (renderedCardsCount >= this._moviesCards.length) {
-          removeExemplar(showMoreButton);
-        }
-      });
+      this._renderShowMoreButton();
     }
   }
 }

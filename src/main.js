@@ -11,7 +11,7 @@ import {generateFilter} from "./mock/filter.js";
 import {render, removeExemplar} from "./utils/view-tools.js";
 
 const EXTRA_CARD_COUNT = 2;
-const COMMON_CARD_COUNT = 0;
+const COMMON_CARD_COUNT = 22;
 const CARD_COUNT_STEP = 5;
 
 const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
@@ -36,7 +36,7 @@ function renderBoard(boardCards) {
   render(siteMainElement, new Sort());
   const moviesLists = new MoviesLists();
   render(siteMainElement, moviesLists);
-  const filmsLists = moviesLists.getElement().querySelectorAll(`.films-list`);
+  const filmsLists = [...moviesLists.getElement().querySelectorAll(`.films-list`)];
 
   filmsLists.forEach((list, index) => {
     const container = list.querySelector(`.films-list__container`);
