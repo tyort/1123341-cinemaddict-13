@@ -19,13 +19,27 @@ export default class Board {
     this._renderMain();
   }
 
+  _renderSort() {
+    render(siteMainElement, new Sort());
+  }
+
+  _renderCards(container, from, to) {
+    this._moviesCards
+      .slice(from, to)
+      .forEach((card) => renderCard(container, card));
+  }
+
+  _renderNoMovies() {
+    render(siteMainElement, new NoMovies());
+  }
+
   _renderMain() {
     if (this._moviesCards.length === 0) {
-      render(siteMainElement, new NoMovies());
+      this._renderNoMovies();
       return;
     }
 
-    render(siteMainElement, new Sort());
+    this._renderSort();
     const moviesLists = new MoviesLists();
     render(siteMainElement, moviesLists);
     const filmsLists = moviesLists.getElement().querySelectorAll(`.films-list`);
@@ -33,9 +47,7 @@ export default class Board {
     filmsLists.forEach((list, index) => {
       const container = list.querySelector(`.films-list__container`);
       const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
-      this._moviesCards
-        .slice(0, Math.min(this._moviesCards.length, count))
-        .forEach((card) => renderCard(container, card));
+      this._renderCards(container, 0, Math.min(this._moviesCards.length, count));
     });
 
     if (this._moviesCards.length > CARD_COUNT_STEP) {
