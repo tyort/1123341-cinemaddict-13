@@ -1,6 +1,6 @@
 import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
-import InnerMain from "./presenter/board.js";
+import InnerMain from "./presenter/main-inside.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
 import {render} from "./utils/view-tools.js";
