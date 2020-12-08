@@ -1,12 +1,16 @@
 import {render, removeExemplar} from "../utils/view-tools";
 import MovieEdit from "../view/movie-edit.js";
+import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
 
-export default class MovieCard {
+export default class CardPresenter {
   constructor() {
     this._cardComponent = null;
     this._cardEditComponent = new MovieEdit();
+    this._renderPopupHandler = this._renderPopupHandler.bind(this);
+    this._deletePopupHandler = this._deletePopupHandler.bind(this);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
   init(container, card) {

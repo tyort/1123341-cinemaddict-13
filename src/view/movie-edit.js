@@ -181,7 +181,7 @@ export default class MovieEdit extends Abstract {
     this._insideHandler.click();
   }
 
-  setClickHandler(exactFormula) {
+  setCloseClickHandler(exactFormula) {
     this._insideHandler = {
       click: exactFormula
     };

@@ -3,8 +3,8 @@ import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
-import MovieCard from "../view/movie-card.js";
 import MovieEdit from "../view/movie-edit.js";
+import CardPresenter from "./movie-card";
 
 const body = document.querySelector(`body`);
 const siteMainElement = body.querySelector(`.main`);
@@ -37,32 +37,8 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardComponent = new MovieCard(card);
-
-    const renderPopup = () => {
-      this._cardEditComponent.currentCard = card;
-      render(body, this._cardEditComponent);
-      body.classList.toggle(`hide-overflow`, true);
-      document.addEventListener(`keydown`, onEscKeyDown);
-      this._cardEditComponent.setClickHandler(deletePopup);
-    };
-
-    const deletePopup = () => {
-      removeExemplar(this._cardEditComponent);
-      body.classList.toggle(`hide-overflow`, false);
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        deletePopup();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    cardComponent.setClickHandler(renderPopup);
-    render(container, cardComponent);
+    const cardPresenter = new CardPresenter();
+    cardPresenter.init(container, card);
   }
 
   _renderCards(container, from, to) {

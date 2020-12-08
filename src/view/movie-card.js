@@ -58,7 +58,7 @@ export default class MovieCard extends Abstract {
     this._insideHandler.click();
   }
 
-  setClickHandler(exactFormula) {
+  setEditClickHandler(exactFormula) {
     this._insideHandler = {
       click: exactFormula
     };
