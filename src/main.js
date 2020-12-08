@@ -11,7 +11,7 @@ import {generateFilter} from "./mock/filter.js";
 import {render, removeExemplar} from "./utils/view-tools.js";
 
 const EXTRA_CARD_COUNT = 2;
-const COMMON_CARD_COUNT = 22;
+const COMMON_CARD_COUNT = 0;
 const CARD_COUNT_STEP = 5;
 
 const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);

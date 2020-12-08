@@ -14,6 +14,10 @@ const cardEditComponent = new MovieEdit();
 
 
 export default class Board {
+  constructor() {
+    this._moviesListsComponent = new MoviesLists();
+  }
+
   init(cards) {
     this._moviesCards = cards.slice();
     this._renderMain();
@@ -23,10 +27,39 @@ export default class Board {
     render(siteMainElement, new Sort());
   }
 
+  _renderCard(container, card) {
+    const cardComponent = new MovieCard(card);
+
+    const renderPopup = () => {
+      cardEditComponent.currentCard = card;
+      render(body, cardEditComponent);
+      body.classList.toggle(`hide-overflow`, true);
+      document.addEventListener(`keydown`, onEscKeyDown);
+      cardEditComponent.setClickHandler(deletePopup);
+    };
+
+    const deletePopup = () => {
+      removeExemplar(cardEditComponent);
+      body.classList.toggle(`hide-overflow`, false);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        deletePopup();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    cardComponent.setClickHandler(renderPopup);
+    render(container, cardComponent);
+  }
+
   _renderCards(container, from, to) {
     this._moviesCards
       .slice(from, to)
-      .forEach((card) => renderCard(container, card));
+      .forEach((card) => this._renderCard(container, card));
   }
 
   _renderNoMovies() {
@@ -40,9 +73,8 @@ export default class Board {
     }
 
     this._renderSort();
-    const moviesLists = new MoviesLists();
-    render(siteMainElement, moviesLists);
-    const filmsLists = moviesLists.getElement().querySelectorAll(`.films-list`);
+    render(siteMainElement, this._moviesListsComponent);
+    const filmsLists = this._moviesListsComponent.getElement().querySelectorAll(`.films-list`);
 
     filmsLists.forEach((list, index) => {
       const container = list.querySelector(`.films-list__container`);
@@ -57,11 +89,8 @@ export default class Board {
       render(filmsLists[0], showMoreButton);
 
       showMoreButton.setClickHandler(() => {
-        const container = moviesLists.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
-        this._moviesCards
-          .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
-          .forEach((card) => renderCard(container, card));
-
+        const container = filmsLists[0].querySelector(`.films-list__container`);
+        this._renderCards(container, renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP);
         renderedCardsCount += CARD_COUNT_STEP;
 
         if (renderedCardsCount >= this._moviesCards.length) {
@@ -70,34 +99,4 @@ export default class Board {
       });
     }
   }
-}
-
-
-function renderCard(container, card) {
-  const cardComponent = new MovieCard(card);
-  render(container, cardComponent);
-
-  const renderPopup = () => {
-    cardEditComponent.currentCard = card;
-    render(body, cardEditComponent);
-    body.classList.toggle(`hide-overflow`, true);
-    document.addEventListener(`keydown`, onEscKeyDown);
-    cardEditComponent.setClickHandler(deletePopup);
-  };
-
-  const deletePopup = () => {
-    removeExemplar(cardEditComponent);
-    body.classList.toggle(`hide-overflow`, false);
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  };
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      deletePopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  cardComponent.setClickHandler(renderPopup);
 }
