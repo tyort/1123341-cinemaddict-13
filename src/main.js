@@ -1,7 +1,7 @@
 import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
 import Sort from "./view/sorting.js";
-import AllMovies from "./view/movies-all.js";
+import MoviesLists from "./view/movies-all.js";
 import NoMovies from "./view/no-movies.js";
 import MovieCard from "./view/movie-card.js";
 import MovieEdit from "./view/movie-edit.js";
@@ -34,9 +34,9 @@ function renderBoard(boardCards) {
   }
 
   render(siteMainElement, new Sort());
-  const films = new AllMovies();
-  render(siteMainElement, films);
-  const filmsLists = films.getElement().querySelectorAll(`.films-list`);
+  const moviesLists = new MoviesLists();
+  render(siteMainElement, moviesLists);
+  const filmsLists = moviesLists.getElement().querySelectorAll(`.films-list`);
 
   filmsLists.forEach((list, index) => {
     const container = list.querySelector(`.films-list__container`);
@@ -53,7 +53,7 @@ function renderBoard(boardCards) {
     render(filmsLists[0], showMoreButton);
 
     showMoreButton.setClickHandler(() => {
-      const container = films.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
+      const container = moviesLists.getElement().querySelector(`.films-list`).querySelector(`.films-list__container`);
       boardCards
         .slice(renderedCardsCount, renderedCardsCount + CARD_COUNT_STEP)
         .forEach((card) => renderCard(container, card));
