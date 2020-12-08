@@ -4,7 +4,7 @@ import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
 import MovieCard from "../view/movie-card.js";
-import MovieEdit from "./view/movie-edit.js";
+import MovieEdit from "../view/movie-edit.js";
 
 const body = document.querySelector(`body`);
 const siteMainElement = body.querySelector(`.main`);
@@ -26,6 +26,10 @@ export default class Board {
 
   _renderSort() {
     render(siteMainElement, new Sort());
+  }
+
+  _renderMoviesLists() {
+    render(siteMainElement, this._containerOfLists);
   }
 
   _renderCard(container, card) {
@@ -91,7 +95,7 @@ export default class Board {
     }
 
     this._renderSort();
-    render(siteMainElement, this._moviesListsComponent);
+    this._renderMoviesLists();
 
     this.listsComponents.forEach((list, index) => {
       const container = list.querySelector(`.films-list__container`);
