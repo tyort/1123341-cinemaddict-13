@@ -11,7 +11,7 @@ const siteMainElement = body.querySelector(`.main`);
 const EXTRA_CARD_COUNT = 2;
 const CARD_COUNT_STEP = 5;
 
-export default class Board {
+export default class InnerMain {
   constructor() {
     this._cardEditComponent = new MovieEdit();
     this._sortComponent = new Sort();
@@ -23,9 +23,9 @@ export default class Board {
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
   }
 
-  init(cards) {
+  updateInnerMain(cards) {
     this._moviesCards = cards.slice();
-    this._renderMain();
+    this._renderInnerMain();
   }
 
   _renderSort() {
@@ -91,7 +91,7 @@ export default class Board {
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
   }
 
-  _renderMain() {
+  _renderInnerMain() {
     if (this._moviesCards.length === 0) {
       this._renderNoMovies();
       return;
