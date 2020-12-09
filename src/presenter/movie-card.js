@@ -11,6 +11,7 @@ export default class CardPresenter {
     this._cardClickHandler = this._cardClickHandler.bind(this);
     this._closeClickhandler = this._closeClickhandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._allCardsPresenters = {};
   }
 
   init(container, card) {
@@ -19,6 +20,10 @@ export default class CardPresenter {
     this._cardComponent.setEditClickHandler(this._cardClickHandler);
 
     render(container, this._cardComponent);
+  }
+
+  destroy() {
+    removeExemplar(this._cardComponent);
   }
 
   _cardClickHandler() {

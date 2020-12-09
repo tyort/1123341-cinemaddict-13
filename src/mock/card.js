@@ -1,3 +1,4 @@
+import {nanoid} from "nanoid";
 import {getRandomInteger} from "../utils/common-tools.js";
 import {ages, moviesTitles, genres, descriptions} from "../const";
 
@@ -56,6 +57,7 @@ export const generateCard = () => {
   const title = generateTitle();
 
   return {
+    id: nanoid(5),
     poster: title.toLowerCase().replace(/\s+/g, `-`),
     title: title.slice(0, title.length - 4),
     rating: generateRating(),

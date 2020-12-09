@@ -19,8 +19,9 @@ export default class InnerMain {
     this._showMoreButtonComponent = new ShowMore();
     this._containerOfLists = new MoviesLists();
     this._cardCountStep = CARD_COUNT_STEP;
-    this.listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
+    this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
+    this._cardsPresentersList = {};
   }
 
   updateInnerMain(cards) {
@@ -39,6 +40,7 @@ export default class InnerMain {
   _renderCard(container, card) {
     const cardPresenter = new CardPresenter();
     cardPresenter.init(container, card);
+    this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
   }
 
   _renderCards(container, from, to) {
@@ -47,12 +49,24 @@ export default class InnerMain {
       .forEach((card) => this._renderCard(container, card));
   }
 
+  // удаляем все экземпляры и представления карточек
+  // удаляем экземпляр и представление кнопки
+  // очищаем список всех презентеров карточек
+  _clearInsideMain() {
+    Object
+      .values(this._cardsPresentersList)
+      .forEach((presenter) => presenter.destroy());
+    this._cardsPresentersList = {};
+    this._cardCountStep = CARD_COUNT_STEP;
+    removeExemplar(this._showMoreButtonComponent);
+  }
+
   _renderNoMovies() {
     render(siteMainElement, this._noMoviesComponent);
   }
 
   _showMoreClickHandler() {
-    const container = this.listsComponents[0].querySelector(`.films-list__container`);
+    const container = this._listsComponents[0].querySelector(`.films-list__container`);
 
     this._renderCards(container, this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
     this._cardCountStep += CARD_COUNT_STEP;
@@ -63,7 +77,7 @@ export default class InnerMain {
   }
 
   _renderShowMoreButton() {
-    render(this.listsComponents[0], this._showMoreButtonComponent);
+    render(this._listsComponents[0], this._showMoreButtonComponent);
     this._showMoreButtonComponent.setClickHandler(this._showMoreClickHandler);
   }
 
@@ -76,7 +90,7 @@ export default class InnerMain {
     this._renderSort();
     this._renderMoviesLists();
 
-    this.listsComponents.forEach((list, index) => {
+    this._listsComponents.forEach((list, index) => {
       const container = list.querySelector(`.films-list__container`);
       const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
       this._renderCards(container, 0, Math.min(this._moviesCards.length, count));
