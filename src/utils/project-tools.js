@@ -13,3 +13,8 @@ export const generateRecordDay = () => {
 
   return daysAgo ? dayjs().subtract(daysAgo, `day`).format(`YYYY/MM/DD HH:mm`) : `today`;
 };
+
+export const updateCard = (cards, updatedCard) => {
+  const index = cards.findIndex((card) => card.id === updatedCard.id);
+  return index === -1 ? cards : [...cards.slice(0, index), updatedCard, ...cards.slice(index + 1)];
+};

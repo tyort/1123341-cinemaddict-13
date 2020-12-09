@@ -17,6 +17,6 @@ const filters = generateFilter(cards);
 
 render(siteHeaderElement, new UserRank());
 render(siteMainElement, new Menu(filters));
-innerMainPresenter.updateInnerMain(cards);
+innerMainPresenter.createTotally(cards);
 
 

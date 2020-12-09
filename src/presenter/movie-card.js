@@ -14,11 +14,13 @@ export default class CardPresenter {
     this._allCardsPresenters = {};
   }
 
-  init(container, card) {
+  // создается экземпляр компонента карты с эксклюзивными данными
+  // запихиваем в него обработчик
+  // рисуем представление
+  createTotally(container, card) {
     this._card = card;
     this._cardComponent = new MovieCard(this._card);
     this._cardComponent.setEditClickHandler(this._cardClickHandler);
-
     render(container, this._cardComponent);
   }
 

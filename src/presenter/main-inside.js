@@ -1,4 +1,5 @@
 import {render, removeExemplar} from "../utils/view-tools";
+import {updateCard} from "../utils/project-tools";
 import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
@@ -22,11 +23,18 @@ export default class InnerMain {
     this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
     this._cardsPresentersList = {};
+    this._cardChangeAtAll = this._cardChangeAtAll.bind(this); // !!!!!!!!!!!!!!!!!!!!!!!
   }
 
-  updateInnerMain(cards) {
+  createTotally(cards) {
     this._moviesCards = cards.slice();
     this._renderInnerMain();
+  }
+
+  _cardChangeAtAll(container, updatedCard) {
+    updateCard(this._moviesCards, updatedCard); // возвращает обновленный массив
+    // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
+    this._cardsPresentersList[updatedCard.id].createTotally(container, updatedCard);
   }
 
   _renderSort() {
@@ -39,7 +47,7 @@ export default class InnerMain {
 
   _renderCard(container, card) {
     const cardPresenter = new CardPresenter();
-    cardPresenter.init(container, card);
+    cardPresenter.createTotally(container, card);
     this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
   }
 
