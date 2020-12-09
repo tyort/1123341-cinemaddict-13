@@ -18,8 +18,9 @@ export default class InnerMain {
     this._noMoviesComponent = new NoMovies();
     this._showMoreButtonComponent = new ShowMore();
     this._containerOfLists = new MoviesLists();
-    this._cardCountStep = CARD_COUNT_STEP;
     this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
+    this._cardContainer = this._listsComponents[0].querySelector(`.films-list__container`);
+    this._cardCountStep = CARD_COUNT_STEP;
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
     this._cardsPresentersList = {};
     this._cardChangeAtAll = this._cardChangeAtAll.bind(this); // !!!!!!!!!!!!!!!!!!!!!!!
@@ -30,10 +31,10 @@ export default class InnerMain {
     this._renderInnerMain();
   }
 
-  _cardChangeAtAll(container, updatedCard) {
+  _cardChangeAtAll(updatedCard) {
     updateCard(this._moviesCards, updatedCard); // возвращает обновленный массив
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
-    this._cardsPresentersList[updatedCard.id].createTotally(container, updatedCard);
+    this._cardsPresentersList[updatedCard.id].createTotally(updatedCard);
   }
 
   _renderSort() {
@@ -44,18 +45,16 @@ export default class InnerMain {
     render(siteMainElement, this._containerOfLists);
   }
 
-  _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(this._cardChangeAtAll);
-    // нужно учесть, что в три разных контейнера
-    // записывается 3 одинаковых карточки для двух фильмов
-    cardPresenter.createTotally(container, card);
+  _renderCard(card) {
+    const cardPresenter = new CardPresenter(this._cardContainer, this._cardChangeAtAll);
+    cardPresenter.createTotally(card);
     this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
   }
 
-  _renderCards(container, from, to) {
+  _renderCards(from, to) {
     this._moviesCards
       .slice(from, to)
-      .forEach((card) => this._renderCard(container, card));
+      .forEach((card) => this._renderCard(card));
   }
 
   // удаляем все экземпляры и представления карточек
@@ -75,9 +74,7 @@ export default class InnerMain {
   }
 
   _showMoreClickHandler() {
-    const container = this._listsComponents[0].querySelector(`.films-list__container`);
-
-    this._renderCards(container, this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
+    this._renderCards(this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
     this._cardCountStep += CARD_COUNT_STEP;
 
     if (this._cardCountStep >= this._moviesCards.length) {
@@ -99,8 +96,7 @@ export default class InnerMain {
     this._renderSort();
     this._renderMoviesLists();
 
-    const container = this._listsComponents[0].querySelector(`.films-list__container`);
-    this._renderCards(container, 0, Math.min(this._moviesCards.length, CARD_COUNT_STEP));
+    this._renderCards(0, Math.min(this._moviesCards.length, CARD_COUNT_STEP));
 
     if (this._moviesCards.length > CARD_COUNT_STEP) {
       this._renderShowMoreButton();

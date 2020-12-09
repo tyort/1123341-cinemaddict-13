@@ -5,7 +5,8 @@ const body = document.querySelector(`body`);
 
 
 export default class CardPresenter {
-  constructor(changeData) {
+  constructor(cardContainer, changeData) {
+    this._cardContainer = cardContainer;
     this._changeData = changeData; // ??????????????7
     this._cardComponent = null;
     this._cardEditComponent = new MovieEdit();
@@ -21,10 +22,8 @@ export default class CardPresenter {
   // создается экземпляр компонента карты с эксклюзивными данными
   // запихиваем в него обработчик
   // рисуем представление
-  createTotally(container, card) {
+  createTotally(card) {
     this._card = card;
-    this._cardContainer = container;
-
     const oldCard = this._cardComponent; // либо обновленная карта, либо ничего
     this._cardComponent = new MovieCard(this._card);
     this._cardComponent.setCardClickHandler(this._cardClickHandler);
@@ -33,13 +32,13 @@ export default class CardPresenter {
     this._cardComponent.setFavoriteClickHandler(this._favoriteClickHandler);
 
     if (oldCard === null) {
-      render(container, this._cardComponent);
+      render(this._cardContainer, this._cardComponent);
       return;
     }
 
     // Проверка на наличие в DOM необходима,
     // чтобы не пытаться заменить то, что не было отрисовано
-    if (container.contains(oldCard.getElement())) {
+    if (this._cardContainer.contains(oldCard.getElement())) {
       replace(this._cardComponent, oldCard);
     }
 
@@ -60,7 +59,6 @@ export default class CardPresenter {
 
   _willWatchClickHandler() {
     this._changeData(
-        this._cardContainer,
         Object.assign(
             {},
             this._card,
@@ -71,7 +69,6 @@ export default class CardPresenter {
 
   _watchedClickHandler() {
     this._changeData(
-        this._cardContainer,
         Object.assign(
             {},
             this._card,
@@ -82,7 +79,6 @@ export default class CardPresenter {
 
   _favoriteClickHandler() {
     this._changeData(
-        this._cardContainer,
         Object.assign(
             {},
             this._card,
