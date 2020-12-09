@@ -9,7 +9,6 @@ import CardPresenter from "./movie-card";
 
 const body = document.querySelector(`body`);
 const siteMainElement = body.querySelector(`.main`);
-const EXTRA_CARD_COUNT = 2;
 const CARD_COUNT_STEP = 5;
 
 export default class InnerMain {
@@ -100,11 +99,8 @@ export default class InnerMain {
     this._renderSort();
     this._renderMoviesLists();
 
-    this._listsComponents.forEach((list, index) => {
-      const container = list.querySelector(`.films-list__container`);
-      const count = index === 0 ? CARD_COUNT_STEP : EXTRA_CARD_COUNT;
-      this._renderCards(container, 0, Math.min(this._moviesCards.length, count));
-    });
+    const container = this._listsComponents[0].querySelector(`.films-list__container`);
+    this._renderCards(container, 0, Math.min(this._moviesCards.length, CARD_COUNT_STEP));
 
     if (this._moviesCards.length > CARD_COUNT_STEP) {
       this._renderShowMoreButton();
