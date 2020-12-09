@@ -23,7 +23,7 @@ export default class InnerMain {
     this._cardCountStep = CARD_COUNT_STEP;
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
     this._cardsPresentersList = {};
-    this._cardChangeAtAll = this._cardChangeAtAll.bind(this); // !!!!!!!!!!!!!!!!!!!!!!!
+    this._cardChangeAtAll = this._cardChangeAtAll.bind(this);
   }
 
   createTotally(cards) {
@@ -32,7 +32,8 @@ export default class InnerMain {
   }
 
   _cardChangeAtAll(updatedCard) {
-    updateCard(this._moviesCards, updatedCard); // возвращает обновленный массив
+    // возвращает обновленный массив карточек фильмов
+    updateCard(this._moviesCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     this._cardsPresentersList[updatedCard.id].createTotally(updatedCard);
   }
@@ -95,7 +96,6 @@ export default class InnerMain {
 
     this._renderSort();
     this._renderMoviesLists();
-
     this._renderCards(0, Math.min(this._moviesCards.length, CARD_COUNT_STEP));
 
     if (this._moviesCards.length > CARD_COUNT_STEP) {

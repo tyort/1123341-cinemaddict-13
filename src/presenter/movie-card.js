@@ -5,9 +5,9 @@ const body = document.querySelector(`body`);
 
 
 export default class CardPresenter {
-  constructor(cardContainer, changeData) {
+  constructor(cardContainer, cardChangeAtAll) {
     this._cardContainer = cardContainer;
-    this._changeData = changeData; // ??????????????7
+    this._cardChangeAtAll = cardChangeAtAll;
     this._cardComponent = null;
     this._cardEditComponent = new MovieEdit();
     this._cardClickHandler = this._cardClickHandler.bind(this);
@@ -58,7 +58,7 @@ export default class CardPresenter {
   }
 
   _willWatchClickHandler() {
-    this._changeData(
+    this._cardChangeAtAll(
         Object.assign(
             {},
             this._card,
@@ -68,7 +68,7 @@ export default class CardPresenter {
   }
 
   _watchedClickHandler() {
-    this._changeData(
+    this._cardChangeAtAll(
         Object.assign(
             {},
             this._card,
@@ -78,7 +78,7 @@ export default class CardPresenter {
   }
 
   _favoriteClickHandler() {
-    this._changeData(
+    this._cardChangeAtAll(
         Object.assign(
             {},
             this._card,
