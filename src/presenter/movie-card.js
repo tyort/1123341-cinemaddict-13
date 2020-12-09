@@ -5,7 +5,8 @@ const body = document.querySelector(`body`);
 
 
 export default class CardPresenter {
-  constructor() {
+  constructor(changeData) {
+    this._changeData = changeData; // ??????????????7
     this._cardComponent = null;
     this._cardEditComponent = new MovieEdit();
     this._cardClickHandler = this._cardClickHandler.bind(this);
@@ -22,6 +23,7 @@ export default class CardPresenter {
   // рисуем представление
   createTotally(container, card) {
     this._card = card;
+    this._cardContainer = container;
 
     const oldCard = this._cardComponent; // либо обновленная карта, либо ничего
     this._cardComponent = new MovieCard(this._card);
@@ -57,15 +59,36 @@ export default class CardPresenter {
   }
 
   _willWatchClickHandler() {
-    console.log(`Привет`);
+    this._changeData(
+        this._cardContainer,
+        Object.assign(
+            {},
+            this._card,
+            {watchPlan: !this._card.watchPlan}
+        )
+    );
   }
 
   _watchedClickHandler() {
-    console.log(`Привет`);
+    this._changeData(
+        this._cardContainer,
+        Object.assign(
+            {},
+            this._card,
+            {hasWatched: !this._card.hasWatched}
+        )
+    );
   }
 
   _favoriteClickHandler() {
-    console.log(`Привет`);
+    this._changeData(
+        this._cardContainer,
+        Object.assign(
+            {},
+            this._card,
+            {isFavorite: !this._card.isFavorite}
+        )
+    );
   }
 
   _closeClickHandler() {

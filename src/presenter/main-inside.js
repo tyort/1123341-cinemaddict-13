@@ -46,7 +46,9 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter();
+    const cardPresenter = new CardPresenter(this._cardChangeAtAll);
+    // нужно учесть, что в три разных контейнера
+    // записывается 3 одинаковых карточки для двух фильмов
     cardPresenter.createTotally(container, card);
     this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
   }
