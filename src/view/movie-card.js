@@ -46,26 +46,66 @@ export default class MovieCard extends Abstract {
   constructor(card) {
     super();
     this._card = card;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._handler = {
+      cardClick: null,
+      willWatchClick: null,
+      watchedClick: null,
+      favoriteClick: null
+    };
+    this._cardClickHandler = this._cardClickHandler.bind(this);
+    this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createMovieCardTemplate(this._card);
   }
 
-  _clickHandler(evt) {
+  _cardClickHandler(evt) {
     evt.preventDefault();
-    this._insideHandler.click();
+    this._handler.cardClick();
   }
 
-  setEditClickHandler(exactFormula) {
-    this._insideHandler = {
-      click: exactFormula
-    };
+  _willWatchClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.willWatchClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.favoriteClick();
+  }
+
+  setCardClickHandler(exactFormula) {
+    this._handler.cardClick = exactFormula;
 
     Array.of(`.film-card__poster`, `.film-card__title`, `.film-card__comments`)
     .forEach((elementInCard) => {
-      this.getElement().querySelector(elementInCard).addEventListener(`click`, this._clickHandler);
+      this.getElement().querySelector(elementInCard).addEventListener(`click`, this._cardClickHandler);
     });
+  }
+
+  setWillWatchClickHandler(exactFormula) {
+    this._handler.willWatchClick = exactFormula;
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, this._willWatchClickHandler);
+  }
+
+  setWatchedClickHandler(exactFormula) {
+    this._handler.watchedClick = exactFormula;
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(exactFormula) {
+    this._handler.favoriteClick = exactFormula;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, this._favoriteClickHandler);
   }
 }
