@@ -14,7 +14,9 @@ export default class Abstract {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
-  getElement() { // метод превращает в DOM-элемент полученную строку сверху
+  // метод превращает полученную строку сверху в DOM-элемент
+  // т.е. экземпляр.getElement() === querySelector(`класс экземпляра`)
+  getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
