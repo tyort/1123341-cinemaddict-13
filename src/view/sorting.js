@@ -12,7 +12,7 @@ const createSortTemplate = () => {
 export default class Sort extends Abstract {
   constructor() {
     super();
-
+    this._handler = {};
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 

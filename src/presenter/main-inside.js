@@ -25,6 +25,7 @@ export default class InnerMain {
     this._cardsPresentersList = {};
     this._cardChangeAtAll = this._cardChangeAtAll.bind(this);
     this._deleteAllPopups = this._deleteAllPopups.bind(this);
+    this._sdcdscsdcsdcsd = this._sdcdscsdcsdcsd.bind(this);
   }
 
   createTotally(cards) {
@@ -47,6 +48,11 @@ export default class InnerMain {
 
   _renderSort() {
     render(siteMainElement, this._sortComponent);
+    this._sortComponent.setSortTypeChangeHandler(this._sdcdscsdcsdcsd);
+  }
+
+  _sdcdscsdcsdcsd(sortType) {
+    console.log(`привет`);
   }
 
   _renderMoviesLists() {
