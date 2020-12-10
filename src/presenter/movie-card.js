@@ -3,13 +3,12 @@ import MovieEdit from "../view/movie-edit.js";
 import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
-
 export default class CardPresenter {
   constructor(cardContainer, cardChangeAtAll) {
     this._cardContainer = cardContainer;
     this._cardChangeAtAll = cardChangeAtAll;
     this._cardComponent = null;
-    this._cardEditComponent = new MovieEdit();
+    this._cardEditComponent = null;
     this._cardClickHandler = this._cardClickHandler.bind(this);
     this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -24,14 +23,20 @@ export default class CardPresenter {
   // рисуем представление
   createTotally(card) {
     this._card = card;
+
     const oldCard = this._cardComponent; // либо обновленная карта, либо ничего
+    const oldEdit = this._cardEditComponent;
+
     this._cardComponent = new MovieCard(this._card);
+    this._cardEditComponent = new MovieEdit(this._card);
+
     this._cardComponent.setCardClickHandler(this._cardClickHandler);
     this._cardComponent.setWillWatchClickHandler(this._willWatchClickHandler);
     this._cardComponent.setWatchedClickHandler(this._watchedClickHandler);
     this._cardComponent.setFavoriteClickHandler(this._favoriteClickHandler);
+    this._cardEditComponent.setCloseClickHandler(this._closeClickHandler);
 
-    if (oldCard === null) {
+    if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
       return;
     }
@@ -42,19 +47,29 @@ export default class CardPresenter {
       replace(this._cardComponent, oldCard);
     }
 
+    if (body.contains(oldEdit.getElement())) {
+      replace(this._cardEditComponent, oldEdit);
+    }
+
     removeExemplar(oldCard);
+    removeExemplar(oldEdit);
   }
 
   destroy() {
     removeExemplar(this._cardComponent);
+    removeExemplar(this._cardEditComponent);
   }
 
   _cardClickHandler() {
-    this._cardEditComponent.currentCard = this._card;
     render(body, this._cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._cardEditComponent.setCloseClickHandler(this._closeClickHandler);
+  }
+
+  _closeClickHandler() {
+    this._cardEditComponent.getElement().remove();
+    body.classList.toggle(`hide-overflow`, false);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _willWatchClickHandler() {
@@ -85,12 +100,6 @@ export default class CardPresenter {
             {isFavorite: !this._card.isFavorite}
         )
     );
-  }
-
-  _closeClickHandler() {
-    removeExemplar(this._cardEditComponent);
-    body.classList.toggle(`hide-overflow`, false);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _onEscKeyDown(evt) {

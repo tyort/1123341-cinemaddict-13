@@ -158,9 +158,9 @@ const createMovieEditTemplate = (card = {}) => {
 };
 
 export default class MovieEdit extends Abstract {
-  constructor() {
+  constructor(card) {
     super();
-    this._card = null;
+    this._card = card;
     this._closeClickHandler = this._closeClickHandler.bind(this);
   }
 
