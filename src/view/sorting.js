@@ -10,7 +10,27 @@ const createSortTemplate = () => {
 };
 
 export default class Sort extends Abstract {
+  constructor() {
+    super();
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+  }
+
   getTemplate() {
     return createSortTemplate();
+  }
+
+  _sortTypeChangeHandler(evt) {
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
+    evt.preventDefault();
+    this._handler.sortTypeChange(evt.target.dataset.sortType);
+  }
+
+  setSortTypeChangeHandler(exactFormula) {
+    this._handler.sortTypeChange = exactFormula;
+    this.getElement().addEventListener(`click`, this._sortTypeChangeHandler);
   }
 }
