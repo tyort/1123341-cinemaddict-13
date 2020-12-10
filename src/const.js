@@ -71,3 +71,10 @@ export const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit`
 ];
 
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
+
+
