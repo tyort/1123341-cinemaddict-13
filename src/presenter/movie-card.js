@@ -4,9 +4,10 @@ import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
-  constructor(cardContainer, cardChangeAtAll) {
+  constructor(cardContainer, cardChangeAtAll, deleteAllPopups) {
     this._cardContainer = cardContainer;
     this._cardChangeAtAll = cardChangeAtAll;
+    this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
     this._cardEditComponent = null;
     this._cardClickHandler = this._cardClickHandler.bind(this);
@@ -21,6 +22,8 @@ export default class CardPresenter {
   // создается экземпляр компонента карты с эксклюзивными данными
   // запихиваем в него обработчик
   // рисуем представление
+  // ------------------------------------------------------------
+  // также перезаписываем обновленную карту и попап
   createTotally(card) {
     this._card = card;
 
@@ -35,6 +38,9 @@ export default class CardPresenter {
     this._cardComponent.setWatchedClickHandler(this._watchedClickHandler);
     this._cardComponent.setFavoriteClickHandler(this._favoriteClickHandler);
     this._cardEditComponent.setCloseClickHandler(this._closeClickHandler);
+    this._cardEditComponent.setWillWatchClickHandler(this._willWatchClickHandler);
+    this._cardEditComponent.setWatchedClickHandler(this._watchedClickHandler);
+    this._cardEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
 
     if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
@@ -61,6 +67,7 @@ export default class CardPresenter {
   }
 
   _cardClickHandler() {
+    this._deleteAllPopups();
     render(body, this._cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
@@ -70,6 +77,10 @@ export default class CardPresenter {
     this._cardEditComponent.getElement().remove();
     body.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  deletePopup() {
+    this._closeClickHandler();
   }
 
   _willWatchClickHandler() {

@@ -24,11 +24,18 @@ export default class InnerMain {
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
     this._cardsPresentersList = {};
     this._cardChangeAtAll = this._cardChangeAtAll.bind(this);
+    this._deleteAllPopups = this._deleteAllPopups.bind(this);
   }
 
   createTotally(cards) {
     this._moviesCards = cards.slice();
     this._renderInnerMain();
+  }
+
+  _deleteAllPopups() {
+    Object
+      .values(this._cardsPresentersList)
+      .forEach((cardPresenter) => cardPresenter.deletePopup());
   }
 
   _cardChangeAtAll(updatedCard) {
@@ -47,7 +54,7 @@ export default class InnerMain {
   }
 
   _renderCard(card) {
-    const cardPresenter = new CardPresenter(this._cardContainer, this._cardChangeAtAll);
+    const cardPresenter = new CardPresenter(this._cardContainer, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
   }

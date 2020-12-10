@@ -52,7 +52,10 @@ const createMovieEditTemplate = (card = {}) => {
     description,
     commentsSum,
     ageLimit,
-    genres
+    genres,
+    watchPlan,
+    hasWatched,
+    isFavorite
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
@@ -121,13 +124,13 @@ const createMovieEditTemplate = (card = {}) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchPlan ? `checked` : ``}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${hasWatched ? `checked` : ``}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>
@@ -161,7 +164,16 @@ export default class MovieEdit extends Abstract {
   constructor(card) {
     super();
     this._card = card;
+    this._handler = {
+      cardClick: null,
+      willWatchClick: null,
+      watchedClick: null,
+      favoriteClick: null
+    };
     this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   get currentCard() {
@@ -181,6 +193,21 @@ export default class MovieEdit extends Abstract {
     this._insideHandler.click();
   }
 
+  _willWatchClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.willWatchClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.favoriteClick();
+  }
+
   setCloseClickHandler(exactFormula) {
     this._insideHandler = {
       click: exactFormula
@@ -188,5 +215,23 @@ export default class MovieEdit extends Abstract {
 
     const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
     closeButton.addEventListener(`click`, this._closeClickHandler);
+  }
+
+  setWillWatchClickHandler(exactFormula) {
+    this._handler.willWatchClick = exactFormula;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._willWatchClickHandler);
+  }
+
+  setWatchedClickHandler(exactFormula) {
+    this._handler.watchedClick = exactFormula;
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(exactFormula) {
+    this._handler.favoriteClick = exactFormula;
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._favoriteClickHandler);
   }
 }
