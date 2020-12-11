@@ -1,5 +1,5 @@
 import {render, removeExemplar} from "../utils/view-tools";
-import {updateCard, compareDate, compareRating} from "../utils/project-tools";
+import {updateCard, compareDate, compareRating, compareCommentsCount} from "../utils/project-tools";
 import {SortType} from "../const.js";
 import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
@@ -32,7 +32,9 @@ export default class InnerMain {
   }
 
   createTotally(cards) {
-    this._moviesCards = cards.slice();
+    this._mainCards = cards.slice();
+    this._topRatedCards = cards.slice().sort(compareRating).slice(0, 2);
+    this._mostCommentedCards = cards.slice().sort(compareCommentsCount).slice(0, 2);
     this._defaultCardsList = cards.slice();
     this._renderInnerMain();
   }
@@ -45,7 +47,7 @@ export default class InnerMain {
 
   _cardChangeAtAll(updatedCard) {
     // возвращает обновленный массив карточек фильмов
-    updateCard(this._moviesCards, updatedCard);
+    updateCard(this._mainCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     this._cardsPresentersList[updatedCard.id].createTotally(updatedCard);
   }
@@ -58,13 +60,13 @@ export default class InnerMain {
   _sortCards(sortType) {
     switch (sortType) {
       case SortType.DATE:
-        this._moviesCards.sort(compareDate);
+        this._mainCards.sort(compareDate);
         break;
       case SortType.RATING:
-        this._moviesCards.sort(compareRating);
+        this._mainCards.sort(compareRating);
         break;
       default:
-        this._moviesCards = this._defaultCardsList.slice();
+        this._mainCards = this._defaultCardsList.slice();
     }
 
     this._currentSortType = sortType;
@@ -92,7 +94,7 @@ export default class InnerMain {
   }
 
   _renderCards(from, to) {
-    this._moviesCards
+    this._mainCards
       .slice(from, to)
       .forEach((card) => this._renderCard(card));
   }
@@ -117,7 +119,7 @@ export default class InnerMain {
     this._renderCards(this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
     this._cardCountStep += CARD_COUNT_STEP;
 
-    if (this._cardCountStep >= this._moviesCards.length) {
+    if (this._cardCountStep >= this._mainCards.length) {
       removeExemplar(this._showMoreButtonComponent);
     }
   }
@@ -128,16 +130,16 @@ export default class InnerMain {
   }
 
   _renderInnerMain() {
-    if (this._moviesCards.length === 0) {
+    if (this._mainCards.length === 0) {
       this._renderNoMovies();
       return;
     }
 
     this._renderSort();
     this._renderMoviesLists();
-    this._renderCards(0, Math.min(this._moviesCards.length, CARD_COUNT_STEP));
+    this._renderCards(0, Math.min(this._mainCards.length, CARD_COUNT_STEP));
 
-    if (this._moviesCards.length > CARD_COUNT_STEP) {
+    if (this._mainCards.length > CARD_COUNT_STEP) {
       this._renderShowMoreButton();
     }
   }

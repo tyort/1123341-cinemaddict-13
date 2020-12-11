@@ -33,4 +33,7 @@ export const compareRating = (cardA, cardB) => {
   return Number(cardB.rating) - Number(cardA.rating);
 };
 
+export const compareCommentsCount = (cardA, cardB) => {
+  return Number(cardB.commentsSum) - Number(cardA.commentsSum);
+};
 

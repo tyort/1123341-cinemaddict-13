@@ -74,7 +74,8 @@ export const descriptions = [
 export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
-  RATING: `rating`
+  RATING: `rating`,
+  MOST_COMMENTED: `most-commented`
 };
 
 
