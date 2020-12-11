@@ -4,10 +4,8 @@ import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
-  constructor(cardContainers, cardChangeAtAll, deleteAllPopups) {
-    this._mainContainer = cardContainers[0];
-    this._rateContainer = cardContainers[1];
-    this._commentsContainer = cardContainers[2];
+  constructor(cardContainer, cardChangeAtAll, deleteAllPopups) {
+    this._mainContainer = cardContainer;
     this._cardChangeAtAll = cardChangeAtAll;
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;

@@ -11,6 +11,7 @@ import CardPresenter from "./movie-card";
 const body = document.querySelector(`body`);
 const siteMainElement = body.querySelector(`.main`);
 const CARD_COUNT_STEP = 5;
+const EXTRA_CARD_COUNT = 2;
 
 export default class InnerMain {
   constructor() {
@@ -33,8 +34,8 @@ export default class InnerMain {
 
   createTotally(cards) {
     this._mainCards = cards.slice();
-    this._topRatedCards = cards.slice().sort(compareRating).slice(0, 2);
-    this._mostCommentedCards = cards.slice().sort(compareCommentsCount).slice(0, 2);
+    this._topRatedCards = cards.slice().sort(compareRating);
+    this._mostCommentedCards = cards.slice().sort(compareCommentsCount);
     this._defaultCardsList = cards.slice();
     this._renderInnerMain();
   }
@@ -86,17 +87,17 @@ export default class InnerMain {
     render(siteMainElement, this._containerOfLists);
   }
 
-  _renderCard(card) {
-    const cardPresenter = new CardPresenter(this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
+  _renderCard(container, card) {
+    const cardPresenter = new CardPresenter(container, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
     this._cardsPresentersList[card.id] = cardPresenter;
   }
 
-  _renderCards(from, to) {
-    this._mainCards
+  _renderCards(cardList, container, from, to) {
+    cardList
       .slice(from, to)
-      .forEach((card) => this._renderCard(card));
+      .forEach((card) => this._renderCard(container, card));
   }
 
   // удаляем все экземпляры и представления карточек
@@ -137,7 +138,9 @@ export default class InnerMain {
 
     this._renderSort();
     this._renderMoviesLists();
-    this._renderCards(0, Math.min(this._mainCards.length, CARD_COUNT_STEP));
+    this._renderCards(this._mainCards, this._cardContainers[0], 0, Math.min(this._mainCards.length, CARD_COUNT_STEP));
+    this._renderCards(this._topRatedCards, this._cardContainers[1], 0, Math.min(this._topRatedCards.length, EXTRA_CARD_COUNT));
+    this._renderCards(this._mostCommentedCards, this._cardContainers[2], 0, Math.min(this._mostCommentedCards.length, EXTRA_CARD_COUNT));
 
     if (this._mainCards.length > CARD_COUNT_STEP) {
       this._renderShowMoreButton();
