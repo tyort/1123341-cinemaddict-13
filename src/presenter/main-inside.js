@@ -33,6 +33,7 @@ export default class InnerMain {
 
   createTotally(cards) {
     this._moviesCards = cards.slice();
+    this._defaultCardsList = cards.slice();
     this._renderInnerMain();
   }
 
@@ -55,8 +56,6 @@ export default class InnerMain {
   }
 
   _sortCards(sortType) {
-    this._defaultCardsList = this._moviesCards;
-
     switch (sortType) {
       case SortType.DATE:
         this._moviesCards.sort(compareDate);
@@ -77,6 +76,8 @@ export default class InnerMain {
     }
 
     this._sortCards(sortType);
+    this._clearInsideMain();
+    this._renderInnerMain();
   }
 
   _renderMoviesLists() {
