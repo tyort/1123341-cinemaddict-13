@@ -20,7 +20,7 @@ export default class InnerMain {
     this._showMoreButtonComponent = new ShowMore();
     this._containerOfLists = new MoviesLists();
     this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
-    this._cardContainer = this._listsComponents[0].querySelector(`.films-list__container`);
+    this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
     this._cardCountStep = CARD_COUNT_STEP;
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
     this._cardsPresentersList = {};
@@ -85,9 +85,10 @@ export default class InnerMain {
   }
 
   _renderCard(card) {
-    const cardPresenter = new CardPresenter(this._cardContainer, this._cardChangeAtAll, this._deleteAllPopups);
+    const cardPresenter = new CardPresenter(this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
-    this._cardsPresentersList[card.id] = cardPresenter; // получается объект {id: презентер, id: презентер}
+    // получается объект (список презентеров) {id: презентер, id: презентер}
+    this._cardsPresentersList[card.id] = cardPresenter;
   }
 
   _renderCards(from, to) {

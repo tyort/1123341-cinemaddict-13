@@ -4,8 +4,10 @@ import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
-  constructor(cardContainer, cardChangeAtAll, deleteAllPopups) {
-    this._cardContainer = cardContainer;
+  constructor(cardContainers, cardChangeAtAll, deleteAllPopups) {
+    this._mainContainer = cardContainers[0];
+    this._rateContainer = cardContainers[1];
+    this._commentsContainer = cardContainers[2];
     this._cardChangeAtAll = cardChangeAtAll;
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
@@ -43,13 +45,13 @@ export default class CardPresenter {
     this._cardEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
 
     if (oldCard === null || oldEdit === null) {
-      render(this._cardContainer, this._cardComponent);
+      render(this._mainContainer, this._cardComponent);
       return;
     }
 
     // Проверка на наличие в DOM необходима,
     // чтобы не пытаться заменить то, что не было отрисовано
-    if (this._cardContainer.contains(oldCard.getElement())) {
+    if (this._mainContainer.contains(oldCard.getElement())) {
       replace(this._cardComponent, oldCard);
     }
 
