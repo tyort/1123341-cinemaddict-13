@@ -4,8 +4,9 @@ import MovieCard from "../view/movie-card.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
-  constructor(cardContainer, cardChangeAtAll, deleteAllPopups) {
-    this._mainContainer = cardContainer;
+  constructor(cardContainer, cardContainers, cardChangeAtAll, deleteAllPopups) {
+    this._cardContainer = cardContainer;
+    this._cardContainers = cardContainers;
     this._cardChangeAtAll = cardChangeAtAll;
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
@@ -27,7 +28,7 @@ export default class CardPresenter {
   createTotally(card) {
     this._card = card;
 
-    const oldCard = this._cardComponent; // либо обновленная карта, либо ничего
+    const oldCard = this._cardComponent; // либо старая карта, либо ничего
     const oldEdit = this._cardEditComponent;
 
     this._cardComponent = new MovieCard(this._card);
@@ -43,13 +44,13 @@ export default class CardPresenter {
     this._cardEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
 
     if (oldCard === null || oldEdit === null) {
-      render(this._mainContainer, this._cardComponent);
+      render(this._cardContainer, this._cardComponent);
       return;
     }
 
     // Проверка на наличие в DOM необходима,
     // чтобы не пытаться заменить то, что не было отрисовано
-    if (this._mainContainer.contains(oldCard.getElement())) {
+    if (this._cardContainer.contains(oldCard.getElement())) {
       replace(this._cardComponent, oldCard);
     }
 

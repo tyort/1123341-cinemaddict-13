@@ -47,9 +47,12 @@ export default class InnerMain {
   }
 
   _cardChangeAtAll(updatedCard) {
-    // возвращает обновленный массив карточек фильмов
+    // возвращает обновленные массивы карточек фильмов
     updateCard(this._mainCards, updatedCard);
+    updateCard(this._topRatedCards, updatedCard);
+    updateCard(this._mostCommentedCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
+    // перерисовываем карточку
     this._cardsPresentersList[updatedCard.id].createTotally(updatedCard);
   }
 
@@ -88,7 +91,7 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._cardChangeAtAll, this._deleteAllPopups);
+    const cardPresenter = new CardPresenter(container, this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
     this._cardsPresentersList[card.id] = cardPresenter;
@@ -117,7 +120,7 @@ export default class InnerMain {
   }
 
   _showMoreClickHandler() {
-    this._renderCards(this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
+    this._renderCards(this._mainCards, this._cardContainers[0], this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
     this._cardCountStep += CARD_COUNT_STEP;
 
     if (this._cardCountStep >= this._mainCards.length) {
