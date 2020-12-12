@@ -2,6 +2,21 @@ import dayjs from "dayjs";
 import Abstract from "./abstract.js";
 import {allEmojies, allComments} from "../const";
 
+const BLANK_CARD = {
+  poster: ``,
+  title: ``,
+  rating: ``,
+  releaseDate: null,
+  duration: ``,
+  genres: [],
+  description: ``,
+  commentsSum: null,
+  watchPlan: false,
+  hasWatched: false,
+  isFavorite: false,
+  ageLimit: ``
+};
+
 const createCommentsTemplate = (count) => {
   return new Array(count)
     .fill()
@@ -55,7 +70,7 @@ const createMovieEditTemplate = (card = {}) => {
     genres,
     watchPlan,
     hasWatched,
-    isFavorite
+    isFavorite,
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
@@ -161,9 +176,9 @@ const createMovieEditTemplate = (card = {}) => {
 };
 
 export default class MovieEdit extends Abstract {
-  constructor(card) {
+  constructor(card = BLANK_CARD) {
     super();
-    this._card = card;
+    this._parsedCard = MovieEdit.parseCardToData(card);
     this._handler = {
       cardClick: null,
       willWatchClick: null,
@@ -177,15 +192,35 @@ export default class MovieEdit extends Abstract {
   }
 
   get currentCard() {
-    return this._card;
+    return this._parsedCard;
   }
 
   set currentCard(card) {
-    this._card = card;
+    this._parsedCard = MovieEdit.parseCardToData(card);
+  }
+
+  // можно добавить к исходным свойствам карточки новые свойства
+  static parseCardToData(card) {
+    return Object.assign(
+        {},
+        card,
+        {
+          isRatingGood: card.rating > 7, // ??????? измени или удали ???????
+          isHated: !card.isFavorite // ??????? измени или удали ???????
+        }
+    );
+  }
+
+  static parseDataToCard(parsedCard) { //  ??????? для сохранения изменений карточки внесенных на сайте ???????
+    parsedCard = Object.assign({}, parsedCard);
+    parsedCard.isFavorite = parsedCard.isHated ? false : true;
+    delete parsedCard.isRatingGood;
+    delete parsedCard.isHated;
+    return parsedCard;
   }
 
   getTemplate() {
-    return createMovieEditTemplate(this._card);
+    return createMovieEditTemplate(this._parsedCard);
   }
 
   _closeClickHandler(evt) {
