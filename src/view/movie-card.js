@@ -10,10 +10,10 @@ const createMovieCardTemplate = (card) => {
     duration,
     genres,
     description,
-    commentsSum,
     watchPlan,
     hasWatched,
-    isFavorite
+    isFavorite,
+    allComments
   } = card;
 
   const year = dayjs(releaseDate).format(`YYYY`);
@@ -33,7 +33,7 @@ const createMovieCardTemplate = (card) => {
     </p>
     <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
     <p class="film-card__description">${description}</p>
-    <a class="film-card__comments">${commentsSum} comments</a>
+    <a class="film-card__comments">${allComments.length} comments</a>
     <div class="film-card__controls">
       <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${planClassName}" type="button">Add to watchlist</button>
       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${watchedClassName}" type="button">Mark as watched</button>

@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import Abstract from "./abstract.js";
-import {allEmojies, allComments} from "../const";
-import {createElement} from "../utils/view-tools.js";
+import {allEmojies} from "../const";
 
 const BLANK_CARD = {
   poster: ``,
@@ -11,11 +10,11 @@ const BLANK_CARD = {
   duration: ``,
   genres: [],
   description: ``,
-  commentsSum: null,
   watchPlan: false,
   hasWatched: false,
   isFavorite: false,
-  ageLimit: ``
+  ageLimit: ``,
+  allComments: []
 };
 
 const createCommentsTemplate = (count, comments) => {
@@ -72,6 +71,7 @@ const createMovieEditTemplate = (card = {}) => {
     watchPlan,
     hasWatched,
     isFavorite,
+    allComments
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
@@ -179,7 +179,7 @@ const createMovieEditTemplate = (card = {}) => {
 export default class MovieEdit extends Abstract {
   constructor(card = BLANK_CARD) {
     super();
-    this._parsedCard = MovieEdit.parseCardToData(card);
+    this._parsedCard = MovieEdit.parseCardToData(card); // уже при первой загрузке получаем распарсенные данные
     this._handler = {
       cardClick: null,
       willWatchClick: null,
@@ -194,9 +194,7 @@ export default class MovieEdit extends Abstract {
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-
-    this.getElement().addEventListener(`click`, this._emojiClickHandler);
-    this.getElement().querySelector(`textarea`).addEventListener(`keydown`, this._enterKeydownHandler);
+    this._setInnerHandlers();
   }
 
   get currentCard() {
@@ -214,7 +212,8 @@ export default class MovieEdit extends Abstract {
         card,
         {
           isRatingGood: card.rating > 7, // ??????? измени или удали ???????
-          isHated: !card.isFavorite // ??????? измени или удали ???????
+          isHated: !card.isFavorite, // ??????? измени или удали ???????
+          commentsSum: card.allComments.length
         }
     );
   }
@@ -224,6 +223,7 @@ export default class MovieEdit extends Abstract {
     parsedCard.isFavorite = parsedCard.isHated ? false : true;
     delete parsedCard.isRatingGood;
     delete parsedCard.isHated;
+    delete parsedCard.commentsSum;
     return parsedCard;
   }
 
@@ -251,6 +251,7 @@ export default class MovieEdit extends Abstract {
     this.removeElement();
     const newElement = this.getElement();
     parent.replaceChild(newElement, prevElement);
+    this.restoreHandlers();
   }
 
   _emojiClickHandler(evt) {
@@ -279,25 +280,26 @@ export default class MovieEdit extends Abstract {
       const img = child.querySelector(`img`);
 
       if (this.getElement().querySelector(`textarea`).value !== `` && img !== null) {
-        const comment = [{
+        const comment = {
           text: this.getElement().querySelector(`textarea`).value,
           author: `Noname`,
           emoji: img.dataset.emoji,
           day: `today`
-        }];
+        };
 
-        const newComent = createElement(createCommentsTemplate(1, comment));
-        const parent = this.getElement().querySelector(`.film-details__comments-list`);
-        parent.appendChild(newComent);
-        child.innerHTML = ``;
+        const allComments = this._parsedCard.allComments;
+        allComments.push(comment);
 
-        // this.updateParsedCard({
-        //   commentsSum: this._parsedCard.commentsSum + 1
-        // });
+        this.updateParsedCard({
+          allComments,
+          commentsSum: allComments.length
+        });
       }
 
+      child.innerHTML = ``;
       this.getElement().querySelector(`textarea`).value = ``;
       this.getElement().querySelector(`textarea`).blur();
+      this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
 
@@ -324,6 +326,15 @@ export default class MovieEdit extends Abstract {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._handler.favoriteClick();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+  }
+
+  _setInnerHandlers() {
+    this.getElement().addEventListener(`click`, this._emojiClickHandler);
+    this.getElement().querySelector(`textarea`).addEventListener(`keydown`, this._enterKeydownHandler);
   }
 
   setCloseClickHandler(exactFormula) {

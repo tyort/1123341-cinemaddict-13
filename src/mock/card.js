@@ -1,6 +1,14 @@
 import {nanoid} from "nanoid";
 import {getRandomInteger} from "../utils/common-tools.js";
-import {ages, moviesTitles, genres, descriptions} from "../const";
+import {ages, moviesTitles, genres, descriptions, allComments} from "../const";
+
+const generateComments = () => {
+  return new Array(getRandomInteger(0, allComments.length - 1))
+    .fill()
+    .map((it, index) => {
+      return allComments[index];
+    });
+};
 
 const generateRating = () => {
   const integer = getRandomInteger(1, 10);
@@ -65,11 +73,11 @@ export const generateCard = () => {
     duration: generateDuration(),
     genres: generateGenres(),
     description: generateDescription(),
-    commentsSum: getRandomInteger(0, 5),
     watchPlan: Boolean(getRandomInteger(0, 1)),
     hasWatched: Boolean(getRandomInteger(0, 1)),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    ageLimit: generateAgeLimits()
+    ageLimit: generateAgeLimits(),
+    allComments: generateComments(),
   };
 };
 
