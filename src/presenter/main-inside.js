@@ -24,7 +24,9 @@ export default class InnerMain {
     this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
     this._cardCountStep = CARD_COUNT_STEP;
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
-    this._cardsPresentersList = {};
+    this._mainPresentersList = {};
+    this._ratePresentersList = {};
+    this._comsPresentersList = {};
     this._cardChangeAtAll = this._cardChangeAtAll.bind(this);
     this._deleteAllPopups = this._deleteAllPopups.bind(this);
     this._doStartSorting = this._doStartSorting.bind(this);
@@ -42,7 +44,13 @@ export default class InnerMain {
 
   _deleteAllPopups() {
     Object
-      .values(this._cardsPresentersList)
+      .values(this._mainPresentersList)
+      .forEach((cardPresenter) => cardPresenter.deletePopup());
+    Object
+      .values(this._ratePresentersList)
+      .forEach((cardPresenter) => cardPresenter.deletePopup());
+    Object
+      .values(this._comsPresentersList)
       .forEach((cardPresenter) => cardPresenter.deletePopup());
   }
 
@@ -53,7 +61,17 @@ export default class InnerMain {
     updateCard(this._mostCommentedCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     // перерисовываем карточку
-    this._cardsPresentersList[updatedCard.id].createTotally(updatedCard);
+    if (this._mainPresentersList[updatedCard.id]) {
+      this._mainPresentersList[updatedCard.id].createTotally(updatedCard);
+    }
+
+    if (this._ratePresentersList[updatedCard.id]) {
+      this._ratePresentersList[updatedCard.id].createTotally(updatedCard);
+    }
+
+    if (this._comsPresentersList[updatedCard.id]) {
+      this._comsPresentersList[updatedCard.id].createTotally(updatedCard);
+    }
   }
 
   _renderSort() {
@@ -94,7 +112,13 @@ export default class InnerMain {
     const cardPresenter = new CardPresenter(container, this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
-    this._cardsPresentersList[card.id] = cardPresenter;
+    if (container === this._cardContainers[0]) {
+      this._mainPresentersList[card.id] = cardPresenter;
+    } else if (container === this._cardContainers[1]) {
+      this._ratePresentersList[card.id] = cardPresenter;
+    } else {
+      this._comsPresentersList[card.id] = cardPresenter;
+    }
   }
 
   _renderCards(cardList, container, from, to) {
@@ -108,9 +132,17 @@ export default class InnerMain {
   // очищаем список всех презентеров карточек
   _clearInsideMain() {
     Object
-      .values(this._cardsPresentersList)
+      .values(this._mainPresentersList)
       .forEach((presenter) => presenter.destroy());
-    this._cardsPresentersList = {};
+    Object
+      .values(this._ratePresentersList)
+      .forEach((presenter) => presenter.destroy());
+    Object
+      .values(this._comsPresentersList)
+      .forEach((presenter) => presenter.destroy());
+    this._mainPresentersList = {};
+    this._ratePresentersList = {};
+    this._comsPresentersList = {};
     this._cardCountStep = CARD_COUNT_STEP;
     removeExemplar(this._showMoreButtonComponent);
   }
