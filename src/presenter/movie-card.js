@@ -42,6 +42,7 @@ export default class CardPresenter {
     this._cardEditComponent.setWillWatchClickHandler(this._willWatchClickHandler);
     this._cardEditComponent.setWatchedClickHandler(this._watchedClickHandler);
     this._cardEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
+    this._cardEditComponent.setFormSubmitHandler(this._formSubmitHandler);
 
     if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
@@ -112,6 +113,10 @@ export default class CardPresenter {
             {isFavorite: !this._card.isFavorite}
         )
     );
+  }
+
+  _formSubmitHandler(card) {
+    this._cardChangeAtAll(card);
   }
 
   _onEscKeyDown(evt) {

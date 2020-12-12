@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import Abstract from "./abstract.js";
 import {allEmojies, allComments} from "../const";
+import {createElement} from "../utils/view-tools.js";
 
 const BLANK_CARD = {
   poster: ``,
@@ -17,19 +18,19 @@ const BLANK_CARD = {
   ageLimit: ``
 };
 
-const createCommentsTemplate = (count) => {
+const createCommentsTemplate = (count, comments) => {
   return new Array(count)
     .fill()
     .map((_comment, index) => {
       return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${allComments[index].emoji}.png" width="55" height="55" alt="emoji-${allComments[index].emoji}">
+          <img data-emoji="${comments[index].emoji}" src="./images/emoji/${comments[index].emoji}.png" width="55" height="55" alt="emoji-${comments[index].emoji}">
         </span>
         <div>
-          <p class="film-details__comment-text">${allComments[index].text}</p>
+          <p class="film-details__comment-text">${comments[index].text}</p>
           <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${allComments[index].author}</span>
-            <span class="film-details__comment-day">${allComments[index].day}</span>
+            <span class="film-details__comment-author">${comments[index].author}</span>
+            <span class="film-details__comment-day">${comments[index].day}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -43,7 +44,7 @@ const createEmojiesTemplate = (emojies) => {
     .map((emoji) => {
       return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
         <label class="film-details__emoji-label" for="emoji-${emoji}">
-          <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+          <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji" data-emoji="${emoji}">
         </label>`;
     })
     .join(``);
@@ -74,7 +75,7 @@ const createMovieEditTemplate = (card = {}) => {
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
-  const comments = createCommentsTemplate(commentsSum);
+  const comments = createCommentsTemplate(commentsSum, allComments);
   const emojies = createEmojiesTemplate(allEmojies);
   const actualGenres = generateGenresTemplate(genres);
 
@@ -183,12 +184,19 @@ export default class MovieEdit extends Abstract {
       cardClick: null,
       willWatchClick: null,
       watchedClick: null,
-      favoriteClick: null
+      favoriteClick: null,
+      formSubmit: null
     };
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+
+    this.getElement().addEventListener(`click`, this._emojiClickHandler);
+    this.getElement().querySelector(`textarea`).addEventListener(`keydown`, this._enterKeydownHandler);
   }
 
   get currentCard() {
@@ -245,9 +253,62 @@ export default class MovieEdit extends Abstract {
     parent.replaceChild(newElement, prevElement);
   }
 
+  _emojiClickHandler(evt) {
+    evt.preventDefault();
+    const parent = evt.target.parentElement;
+    if (parent.className !== `film-details__emoji-label`) {
+      return;
+    }
+
+    const emojiName = evt.target.dataset.emoji;
+    const newComment = this.getElement().querySelector(`.film-details__new-comment`);
+    newComment.firstElementChild.innerHTML = (
+      `<img
+        data-emoji="${emojiName}"
+        src="./images/emoji/${emojiName}.png"
+        width="55" height="55"
+        alt="emoji-${emojiName}"
+      >`
+    );
+  }
+
+  _enterKeydownHandler(evt) {
+    if (evt.keyCode === 13 && !evt.shiftKey) { // когда просто нажимаем enter
+      const commentPattern = this.getElement().querySelector(`.film-details__new-comment`);
+      const child = commentPattern.firstElementChild;
+      const img = child.querySelector(`img`);
+
+      if (this.getElement().querySelector(`textarea`).value !== `` && img !== null) {
+        const comment = [{
+          text: this.getElement().querySelector(`textarea`).value,
+          author: `Noname`,
+          emoji: img.dataset.emoji,
+          day: `today`
+        }];
+
+        const newComent = createElement(createCommentsTemplate(1, comment));
+        const parent = this.getElement().querySelector(`.film-details__comments-list`);
+        parent.appendChild(newComent);
+        child.innerHTML = ``;
+
+        // this.updateParsedCard({
+        //   commentsSum: this._parsedCard.commentsSum + 1
+        // });
+      }
+
+      this.getElement().querySelector(`textarea`).value = ``;
+      this.getElement().querySelector(`textarea`).blur();
+    }
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
+  }
+
   _closeClickHandler(evt) {
     evt.preventDefault();
-    this._insideHandler.click();
+    this._handler.cardClick();
   }
 
   _willWatchClickHandler(evt) {
@@ -266,10 +327,7 @@ export default class MovieEdit extends Abstract {
   }
 
   setCloseClickHandler(exactFormula) {
-    this._insideHandler = {
-      click: exactFormula
-    };
-
+    this._handler.cardClick = exactFormula;
     const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
     closeButton.addEventListener(`click`, this._closeClickHandler);
   }
@@ -290,5 +348,11 @@ export default class MovieEdit extends Abstract {
     this._handler.favoriteClick = exactFormula;
     this.getElement().querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setFormSubmitHandler(exactFormula) {
+    this._handler.formSubmit = exactFormula;
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, this._formSubmitHandler);
   }
 }
