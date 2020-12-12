@@ -223,6 +223,20 @@ export default class MovieEdit extends Abstract {
     return createMovieEditTemplate(this._parsedCard);
   }
 
+  updateParsedCard(usersUpdate) {
+    if (!usersUpdate) {
+      return;
+    }
+
+    this._parsedCard = Object.assign(
+        {},
+        this._parsedCard,
+        usersUpdate
+    );
+
+    this.updateElement();
+  }
+
   updateElement() {
     let prevElement = this.getElement();
     const parent = prevElement.parentElement;
