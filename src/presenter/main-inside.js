@@ -56,9 +56,9 @@ export default class InnerMain {
 
   _cardChangeAtAll(updatedCard) {
     // возвращает обновленные массивы карточек фильмов
-    updateCard(this._mainCards, updatedCard);
-    updateCard(this._topRatedCards, updatedCard);
-    updateCard(this._mostCommentedCards, updatedCard);
+    this._mainCards = updateCard(this._mainCards, updatedCard);
+    this._topRatedCards = updateCard(this._topRatedCards, updatedCard);
+    this._mostCommentedCards = updateCard(this._mostCommentedCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     // перерисовываем карточку
     if (this._mainPresentersList[updatedCard.id]) {
