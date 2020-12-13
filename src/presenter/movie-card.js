@@ -16,6 +16,7 @@ export default class CardPresenter {
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._allCardsPresenters = {};
   }
@@ -115,6 +116,10 @@ export default class CardPresenter {
     );
   }
 
+
+  // в отличие от this_favoriteClickHandler (см.выше)
+  // мы передаем новые данные карточки во вьюхе попапа
+  // а данные обновляются также у карточки!!!
   _formSubmitHandler(card) {
     this._cardChangeAtAll(card);
   }

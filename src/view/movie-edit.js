@@ -193,7 +193,6 @@ export default class MovieEdit extends Abstract {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -289,11 +288,7 @@ export default class MovieEdit extends Abstract {
 
         const allComments = this._parsedCard.allComments;
         allComments.push(comment);
-
-        this.updateParsedCard({
-          allComments,
-          commentsSum: allComments.length
-        });
+        this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
       }
 
       child.innerHTML = ``;
@@ -301,11 +296,6 @@ export default class MovieEdit extends Abstract {
       this.getElement().querySelector(`textarea`).blur();
       this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
-  }
-
-  _formSubmitHandler(evt) {
-    evt.preventDefault();
-    this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
   }
 
   _closeClickHandler(evt) {
@@ -363,7 +353,5 @@ export default class MovieEdit extends Abstract {
 
   setFormSubmitHandler(exactFormula) {
     this._handler.formSubmit = exactFormula;
-    this.getElement().querySelector(`form`)
-      .addEventListener(`submit`, this._formSubmitHandler);
   }
 }
