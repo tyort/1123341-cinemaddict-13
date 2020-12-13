@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
-import flatpickr from "flatpickr";
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const BLANK_CARD = {
   poster: ``,

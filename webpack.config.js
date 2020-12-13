@@ -10,13 +10,5 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     watchContentBase: true,
-  },
-  module: {
-    rules: [
-        {
-            test: /\.css$/i,
-            use: ['style-loader', 'css-loader']
-        }
-    ]
   }
 };
