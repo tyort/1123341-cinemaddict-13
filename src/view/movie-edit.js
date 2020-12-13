@@ -290,11 +290,6 @@ export default class MovieEdit extends Abstract {
         allComments.push(comment);
         this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
       }
-
-      child.innerHTML = ``;
-      this.getElement().querySelector(`textarea`).value = ``;
-      this.getElement().querySelector(`textarea`).blur();
-      this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
 

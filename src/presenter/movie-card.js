@@ -121,6 +121,9 @@ export default class CardPresenter {
   // а данные обновляются также у карточки!!!
   _formSubmitHandler(card) {
     this._cardChangeAtAll(card);
+    this._cardEditComponent.getElement()
+      .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
+
   }
 
   _onEscKeyDown(evt) {
