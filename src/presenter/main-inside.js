@@ -104,7 +104,6 @@ export default class InnerMain {
     const cardPresenter = new CardPresenter(container, this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
-
     switch (container) {
       case this._cardContainers[2]:
         this._allPresenters.commentsList[card.id] = cardPresenter;
@@ -132,7 +131,12 @@ export default class InnerMain {
         .forEach((cardPresenter) => cardPresenter.destroy());
     });
 
-    this._allPresenters = {};
+    this._allPresenters = this._allPresenters = {
+      mainList: {},
+      rateList: {},
+      commentsList: {}
+    };
+
     this._cardCountStep = CARD_COUNT_STEP;
     removeExemplar(this._showMoreButtonComponent);
   }
