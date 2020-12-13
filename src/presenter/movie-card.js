@@ -123,7 +123,6 @@ export default class CardPresenter {
     this._cardChangeAtAll(card);
     this._cardEditComponent.getElement()
       .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
-
   }
 
   _onEscKeyDown(evt) {

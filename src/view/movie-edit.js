@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import Abstract from "./abstract.js";
+import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
 
 const BLANK_CARD = {
@@ -176,7 +176,7 @@ const createMovieEditTemplate = (card = {}) => {
   </section>`;
 };
 
-export default class MovieEdit extends Abstract {
+export default class MovieEdit extends AbstractSmart {
   constructor(card = BLANK_CARD) {
     super();
     this._parsedCard = MovieEdit.parseCardToData(card); // уже при первой загрузке получаем распарсенные данные
@@ -228,29 +228,6 @@ export default class MovieEdit extends Abstract {
 
   getTemplate() {
     return createMovieEditTemplate(this._parsedCard);
-  }
-
-  updateParsedCard(usersUpdate) {
-    if (!usersUpdate) {
-      return;
-    }
-
-    this._parsedCard = Object.assign(
-        {},
-        this._parsedCard,
-        usersUpdate
-    );
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-    this.restoreHandlers();
   }
 
   _emojiClickHandler(evt) {
