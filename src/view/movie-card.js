@@ -17,8 +17,6 @@ const createMovieCardTemplate = (card) => {
   } = card;
 
   const year = dayjs(releaseDate).format(`YYYY`);
-
-
   const planClassName = watchPlan ? `film-card__controls-item--active` : ``;
   const watchedClassName = hasWatched ? `film-card__controls-item--active` : ``;
   const favoriteClassName = isFavorite ? `film-card__controls-item--active` : ``;

@@ -1,5 +1,6 @@
 import {nanoid} from "nanoid";
 import {getRandomInteger} from "../utils/common-tools.js";
+import {generateDuration, generateDate} from "../utils/project-tools.js";
 import {ages, moviesTitles, genres, descriptions, allComments} from "../const";
 
 const generateComments = () => {
@@ -15,14 +16,6 @@ const generateRating = () => {
   const fractional = getRandomInteger(0, 9);
 
   return `${integer}.${fractional}`;
-};
-
-const generateDuration = () => {
-  const duration = getRandomInteger(80, 150);
-  const hours = Math.trunc(duration / 60) !== 0 ? `${Math.trunc(duration / 60)}h` : ``;
-  const minutes = duration % 60 !== 0 ? `${duration % 60}m` : ``;
-
-  return hours + ` ` + minutes;
 };
 
 const generateAgeLimits = () => {
@@ -55,12 +48,6 @@ const generateDescription = () => {
   return description;
 };
 
-const generateDate = () => {
-  const milliseconds = getRandomInteger(315522000000, 1577739600000);
-
-  return new Date(milliseconds);
-};
-
 export const generateCard = () => {
   const title = generateTitle();
 
@@ -70,7 +57,7 @@ export const generateCard = () => {
     title: title.slice(0, title.length - 4),
     rating: generateRating(),
     releaseDate: generateDate(),
-    duration: generateDuration(),
+    duration: generateDuration(), // это файл dayjs
     genres: generateGenres(),
     description: generateDescription(),
     watchPlan: Boolean(getRandomInteger(0, 1)),
