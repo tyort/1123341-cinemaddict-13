@@ -24,9 +24,11 @@ export default class InnerMain {
     this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
     this._cardCountStep = CARD_COUNT_STEP;
     this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
-    this._mainPresentersList = {};
-    this._ratePresentersList = {};
-    this._comsPresentersList = {};
+    this._allPresenters = {
+      mainList: {},
+      rateList: {},
+      commentsList: {}
+    };
     this._cardChangeAtAll = this._cardChangeAtAll.bind(this);
     this._deleteAllPopups = this._deleteAllPopups.bind(this);
     this._doStartSorting = this._doStartSorting.bind(this);
@@ -43,15 +45,10 @@ export default class InnerMain {
   }
 
   _deleteAllPopups() {
-    Object
-      .values(this._mainPresentersList)
-      .forEach((cardPresenter) => cardPresenter.deletePopup());
-    Object
-      .values(this._ratePresentersList)
-      .forEach((cardPresenter) => cardPresenter.deletePopup());
-    Object
-      .values(this._comsPresentersList)
-      .forEach((cardPresenter) => cardPresenter.deletePopup());
+    Object.keys(this._allPresenters).forEach((list) => {
+      Object.values(this._allPresenters[list])
+        .forEach((cardPresenter) => cardPresenter.deletePopup());
+    });
   }
 
   _cardChangeAtAll(updatedCard) {
@@ -61,17 +58,12 @@ export default class InnerMain {
     this._mostCommentedCards = updateCard(this._mostCommentedCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     // перерисовываем карточку
-    if (this._mainPresentersList[updatedCard.id]) {
-      this._mainPresentersList[updatedCard.id].createTotally(updatedCard);
-    }
 
-    if (this._ratePresentersList[updatedCard.id]) {
-      this._ratePresentersList[updatedCard.id].createTotally(updatedCard);
-    }
-
-    if (this._comsPresentersList[updatedCard.id]) {
-      this._comsPresentersList[updatedCard.id].createTotally(updatedCard);
-    }
+    Object.keys(this._allPresenters).forEach((list) => {
+      if (this._allPresenters[list][updatedCard.id]) {
+        this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
+      }
+    });
   }
 
   _renderSort() {
@@ -112,12 +104,16 @@ export default class InnerMain {
     const cardPresenter = new CardPresenter(container, this._cardContainers, this._cardChangeAtAll, this._deleteAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
-    if (container === this._cardContainers[0]) {
-      this._mainPresentersList[card.id] = cardPresenter;
-    } else if (container === this._cardContainers[1]) {
-      this._ratePresentersList[card.id] = cardPresenter;
-    } else {
-      this._comsPresentersList[card.id] = cardPresenter;
+
+    switch (container) {
+      case this._cardContainers[2]:
+        this._allPresenters.commentsList[card.id] = cardPresenter;
+        break;
+      case this._cardContainers[1]:
+        this._allPresenters.rateList[card.id] = cardPresenter;
+        break;
+      default:
+        this._allPresenters.mainList[card.id] = cardPresenter;
     }
   }
 
@@ -131,18 +127,12 @@ export default class InnerMain {
   // удаляем экземпляр и представление кнопки
   // очищаем список всех презентеров карточек
   _clearInsideMain() {
-    Object
-      .values(this._mainPresentersList)
-      .forEach((presenter) => presenter.destroy());
-    Object
-      .values(this._ratePresentersList)
-      .forEach((presenter) => presenter.destroy());
-    Object
-      .values(this._comsPresentersList)
-      .forEach((presenter) => presenter.destroy());
-    this._mainPresentersList = {};
-    this._ratePresentersList = {};
-    this._comsPresentersList = {};
+    Object.keys(this._allPresenters).forEach((list) => {
+      Object.values(this._allPresenters[list])
+        .forEach((cardPresenter) => cardPresenter.destroy());
+    });
+
+    this._allPresenters = {};
     this._cardCountStep = CARD_COUNT_STEP;
     removeExemplar(this._showMoreButtonComponent);
   }

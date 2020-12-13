@@ -18,7 +18,6 @@ export default class CardPresenter {
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._allCardsPresenters = {};
   }
 
   // создается экземпляр компонента карты с эксклюзивными данными
