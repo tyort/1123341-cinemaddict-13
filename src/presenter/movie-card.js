@@ -11,12 +11,12 @@ export default class CardPresenter {
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
     this._cardEditComponent = null;
-    this._cardClickHandler = this._cardClickHandler.bind(this);
-    this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
-    this._watchedClickHandler = this._watchedClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    this._closeClickHandler = this._closeClickHandler.bind(this);
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._handleCardClick = this._handleCardClick.bind(this);
+    this._handleWillWatchClick = this._handleWillWatchClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleCloseClick = this._handleCloseClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
@@ -34,15 +34,15 @@ export default class CardPresenter {
     this._cardComponent = new MovieCard(this._card);
     this._cardEditComponent = new MovieEdit(this._card);
 
-    this._cardComponent.setCardClickHandler(this._cardClickHandler);
-    this._cardComponent.setWillWatchClickHandler(this._willWatchClickHandler);
-    this._cardComponent.setWatchedClickHandler(this._watchedClickHandler);
-    this._cardComponent.setFavoriteClickHandler(this._favoriteClickHandler);
-    this._cardEditComponent.setCloseClickHandler(this._closeClickHandler);
-    this._cardEditComponent.setWillWatchClickHandler(this._willWatchClickHandler);
-    this._cardEditComponent.setWatchedClickHandler(this._watchedClickHandler);
-    this._cardEditComponent.setFavoriteClickHandler(this._favoriteClickHandler);
-    this._cardEditComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._cardComponent.setCardClickHandler(this._handleCardClick);
+    this._cardComponent.setWillWatchClickHandler(this._handleWillWatchClick);
+    this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._cardEditComponent.setCloseClickHandler(this._handleCloseClick);
+    this._cardEditComponent.setWillWatchClickHandler(this._handleWillWatchClick);
+    this._cardEditComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._cardEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._cardEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
@@ -68,24 +68,24 @@ export default class CardPresenter {
     removeExemplar(this._cardEditComponent);
   }
 
-  _cardClickHandler() {
+  _handleCardClick() {
     this._deleteAllPopups();
     render(body, this._cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  _closeClickHandler() {
+  _handleCloseClick() {
     this._cardEditComponent.getElement().remove();
     body.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   deletePopup() {
-    this._closeClickHandler();
+    this._handleCloseClick();
   }
 
-  _willWatchClickHandler() {
+  _handleWillWatchClick() {
     this._cardChangeAtAll(
         Object.assign(
             {},
@@ -95,7 +95,7 @@ export default class CardPresenter {
     );
   }
 
-  _watchedClickHandler() {
+  _handleWatchedClick() {
     this._cardChangeAtAll(
         Object.assign(
             {},
@@ -105,7 +105,7 @@ export default class CardPresenter {
     );
   }
 
-  _favoriteClickHandler() {
+  _handleFavoriteClick() {
     this._cardChangeAtAll(
         Object.assign(
             {},
@@ -116,10 +116,10 @@ export default class CardPresenter {
   }
 
 
-  // в отличие от this_favoriteClickHandler (см.выше)
+  // в отличие от this_handleFavoriteClick (см.выше)
   // мы передаем новые данные карточки во вьюхе попапа
   // а данные обновляются также у карточки!!!
-  _formSubmitHandler(card) {
+  _handleFormSubmit(card) {
     this._cardChangeAtAll(card);
     this._cardEditComponent.getElement()
       .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
@@ -128,7 +128,7 @@ export default class CardPresenter {
   _onEscKeyDown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      this._closeClickHandler();
+      this._handleCloseClick();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
