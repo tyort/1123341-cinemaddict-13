@@ -16,7 +16,7 @@ const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
 const filters = generateFilter(cards);
 
 const cardsModel = new CardsModel();
-cardsModel.setCards(cards);
+cardsModel.setCards(cards); // возвращается копия cards в переменную this._cards. Ничего не возвращаем!
 
 const innerMainPresenter = new InnerMain(cardsModel);
 
