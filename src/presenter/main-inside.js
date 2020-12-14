@@ -14,7 +14,8 @@ const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
 
 export default class InnerMain {
-  constructor() {
+  constructor(cardsModel) {
+    this._cardsModel = cardsModel; // экземпляр другого класса
     this._cardEditComponent = new MovieEdit();
     this._sortComponent = new Sort();
     this._noMoviesComponent = new NoMovies();
@@ -42,6 +43,13 @@ export default class InnerMain {
     this._mostCommentedCards = cards.slice().sort(compareCommentsCount);
     this._defaultCardsList = cards.slice();
     this._renderInnerMain();
+  }
+
+  // ниже получаем this._cards
+  _getCards() {
+    // у экземпляра другого класса вызываем метод getCards()
+    // тот в свою очередб возвращает this._cards
+    return this._cardsModel.getCards();
   }
 
   _deleteAllPopups() {
