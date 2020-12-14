@@ -23,6 +23,6 @@ const innerMainPresenter = new InnerMain(cardsModel);
 render(siteHeaderElement, new UserRank());
 render(siteMainElement, new Menu(filters));
 
-innerMainPresenter.createTotally(cards);
+innerMainPresenter.createTotally();
 
 
