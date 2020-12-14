@@ -38,18 +38,28 @@ export default class InnerMain {
   }
 
   createTotally(cards) {
-    this._mainCards = cards.slice();
-    this._topRatedCards = cards.slice().sort(compareRating);
-    this._mostCommentedCards = cards.slice().sort(compareCommentsCount);
+    // this._mainCards = cards.slice(); !!!!!!!!!! УДАЛЯЕМ
+    // this._topRatedCards = cards.slice().sort(compareRating); !!!!!!!!!! УДАЛЯЕМ
+    // this._mostCommentedCards = cards.slice().sort(compareCommentsCount); !!!!!!!!!! УДАЛЯЕМ
     this._defaultCardsList = cards.slice();
     this._renderInnerMain();
   }
 
-  // ниже получаем this._cards
-  _getCards() {
+  // пока не запустилось??????????????
+  // ниже получаем this._cards только из модели
+  _getSortedCards() {
     // у экземпляра другого класса вызываем метод getCards()
-    // тот в свою очередб возвращает this._cards
-    return this._cardsModel.getCards();
+    // тот в свою очередь возвращает this._cards
+    switch (this._currentSortType) {
+      case SortType.RATING:
+        return this._cardsModel.getCards().slice().sort(compareRating);
+      case SortType.MOST_COMMENTED:
+        return this._cardsModel.getCards().slice().sort(compareCommentsCount);
+      case SortType.DATE:
+        return this._cardsModel.getCards().slice().sort(compareDate);
+      default:
+        return this._cardsModel.getCards(); // this._cards в исходном виде
+    }
   }
 
   _deleteAllPopups() {
