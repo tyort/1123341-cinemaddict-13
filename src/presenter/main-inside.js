@@ -23,8 +23,8 @@ export default class InnerMain {
     this._containerOfLists = new MoviesLists();
     this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
     this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
-    this._cardCountStep = CARD_COUNT_STEP;
-    this._showMoreClickHandler = this._showMoreClickHandler.bind(this);
+    this._renderedCardsCount = CARD_COUNT_STEP;
+    this._handleShowMoreClick = this._handleShowMoreClick.bind(this);
     this._allPresenters = {
       mainList: {},
       rateList: {},
@@ -38,7 +38,7 @@ export default class InnerMain {
   }
 
   createTotally(cards) {
-    // this._mainCards = cards.slice(); !!!!!!!!!! УДАЛЯЕМ
+    // this._getSortedCards().main = cards.slice(); !!!!!!!!!! УДАЛЯЕМ
     // this._topRatedCards = cards.slice().sort(compareRating); !!!!!!!!!! УДАЛЯЕМ
     // this._mostCommentedCards = cards.slice().sort(compareCommentsCount); !!!!!!!!!! УДАЛЯЕМ
     this._defaultCardsList = cards.slice();
@@ -48,18 +48,27 @@ export default class InnerMain {
   // пока не запустилось??????????????
   // ниже получаем this._cards только из модели
   _getSortedCards() {
+    let cardsGroup = {main: [], rated: [], commented: [], default: []};
     // у экземпляра другого класса вызываем метод getCards()
     // тот в свою очередь возвращает this._cards
     switch (this._currentSortType) {
       case SortType.RATING:
-        return this._cardsModel.getCards().slice().sort(compareRating);
+        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareRating);
+        break;
       case SortType.MOST_COMMENTED:
-        return this._cardsModel.getCards().slice().sort(compareCommentsCount);
+        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareCommentsCount);
+        break;
       case SortType.DATE:
-        return this._cardsModel.getCards().slice().sort(compareDate);
+        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareDate);
+        break;
       default:
-        return this._cardsModel.getCards(); // this._cards в исходном виде
+        cardsGroup.main = this._cardsModel.getCards().slice(); // this._cards в исходном виде
     }
+
+    cardsGroup.rated = this._cardsModel.getCards().slice().sort(compareRating);
+    cardsGroup.commented = this._cardsModel.getCards().slice().sort(compareCommentsCount);
+
+    return cardsGroup;
   }
 
   _deleteAllPopups() {
@@ -71,7 +80,7 @@ export default class InnerMain {
 
   _cardChangeAtAll(updatedCard) {
     // возвращает обновленные массивы карточек фильмов
-    this._mainCards = updateCard(this._mainCards, updatedCard);
+    this._getSortedCards().main = updateCard(this._getSortedCards().main, updatedCard);
     this._topRatedCards = updateCard(this._topRatedCards, updatedCard);
     this._mostCommentedCards = updateCard(this._mostCommentedCards, updatedCard);
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
@@ -92,13 +101,13 @@ export default class InnerMain {
   _sortCards(sortType) {
     switch (sortType) {
       case SortType.DATE:
-        this._mainCards.sort(compareDate);
+        this._getSortedCards().main.sort(compareDate);
         break;
       case SortType.RATING:
-        this._mainCards.sort(compareRating);
+        this._getSortedCards().main.sort(compareRating);
         break;
       default:
-        this._mainCards = this._defaultCardsList.slice();
+        this._getSortedCards().main = this._defaultCardsList.slice();
     }
 
     this._currentSortType = sortType;
@@ -155,7 +164,7 @@ export default class InnerMain {
       commentsList: {}
     };
 
-    this._cardCountStep = CARD_COUNT_STEP;
+    this._renderedCardsCount = CARD_COUNT_STEP;
     removeExemplar(this._showMoreButtonComponent);
   }
 
@@ -163,33 +172,37 @@ export default class InnerMain {
     render(siteMainElement, this._noMoviesComponent);
   }
 
-  _showMoreClickHandler() {
-    this._renderCards(this._mainCards, this._cardContainers[0], this._cardCountStep, this._cardCountStep + CARD_COUNT_STEP);
-    this._cardCountStep += CARD_COUNT_STEP;
+  _handleShowMoreClick() {
+    const cardsCount = this._getSortedCards().main.length;
+    const newRenderedCardsCount = Math.min(cardsCount, this._renderedCardsCount + CARD_COUNT_STEP);
+    const cards = this._getSortedCards().main.slice(this._renderedCardsCount, newRenderedCardsCount);
 
-    if (this._cardCountStep >= this._mainCards.length) {
+    this._renderCards(cards);
+    this._renderedCardsCount = newRenderedCardsCount;
+
+    if (this._renderedCardsCount >= cardsCount) {
       removeExemplar(this._showMoreButtonComponent);
     }
   }
 
   _renderShowMoreButton() {
     render(this._listsComponents[0], this._showMoreButtonComponent);
-    this._showMoreButtonComponent.setClickHandler(this._showMoreClickHandler);
+    this._showMoreButtonComponent.setClickHandler(this._handleShowMoreClick);
   }
 
   _renderInnerMain() {
-    if (this._mainCards.length === 0) {
+    if (this._getSortedCards().main.length === 0) {
       this._renderNoMovies();
       return;
     }
 
     this._renderSort();
     this._renderMoviesLists();
-    this._renderCards(this._mainCards, this._cardContainers[0], 0, Math.min(this._mainCards.length, CARD_COUNT_STEP));
-    this._renderCards(this._topRatedCards, this._cardContainers[1], 0, Math.min(this._topRatedCards.length, EXTRA_CARD_COUNT));
-    this._renderCards(this._mostCommentedCards, this._cardContainers[2], 0, Math.min(this._mostCommentedCards.length, EXTRA_CARD_COUNT));
+    this._renderCards(this._getSortedCards().main, this._cardContainers[0], 0, Math.min(this._getSortedCards().main.length, CARD_COUNT_STEP));
+    this._renderCards(this._getSortedCards().rated, this._cardContainers[1], 0, Math.min(this._getSortedCards().rated.length, EXTRA_CARD_COUNT));
+    this._renderCards(this._getSortedCards().commented, this._cardContainers[2], 0, Math.min(this._getSortedCards().commented.length, EXTRA_CARD_COUNT));
 
-    if (this._mainCards.length > CARD_COUNT_STEP) {
+    if (this._getSortedCards().main.length > CARD_COUNT_STEP) {
       this._renderShowMoreButton();
     }
   }
