@@ -28,8 +28,10 @@ export default class InnerMain {
     this._allPresenters = {mainList: {}, rateList: {}, commentsList: {}};
     this._handleShowMoreClick = this._handleShowMoreClick.bind(this);
     this._handleCardChangeAtAll = this._handleCardChangeAtAll.bind(this);
-    this._handleDeletePopups = this._handleDeletePopups.bind(this);
+    this._dsfsdfdsfsdfdsf = this._dsfsdfdsfsdfdsf.bind(this);
+    this._handleDelAllPopups = this._handleDelAllPopups.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
+    this._cardsModel.addObserver(this._dsfsdfdsfsdfdsf);
   }
 
   aboveRenderInnerMain() {
@@ -61,21 +63,30 @@ export default class InnerMain {
     return cardsGroup;
   }
 
-  _handleDeletePopups() {
+  _handleDelAllPopups() {
     Object.keys(this._allPresenters).forEach((list) => {
       Object.values(this._allPresenters[list])
         .forEach((cardPresenter) => cardPresenter.deletePopup());
     });
   }
 
-  _handleCardChangeAtAll(updatedCard) {
+  _handleCardChangeAtAll(updateType, updatedVersion, updatedCard) {
     // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
     // перерисовываем карточку
-    Object.keys(this._allPresenters).forEach((list) => {
-      if (this._allPresenters[list][updatedCard.id]) {
-        this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
-      }
-    });
+    // Object.keys(this._allPresenters).forEach((list) => {
+    //   if (this._allPresenters[list][updatedCard.id]) {
+    //     this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
+    //   }
+    // });
+    console.log(updateType, updatedVersion, updatedCard);
+  }
+
+  _dsfsdfdsfsdfdsf(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleStartSorting(sortType) {
@@ -89,7 +100,7 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardChangeAtAll, this._handleDeletePopups);
+    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardChangeAtAll, this._handleDelAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
     switch (container) {

@@ -1,6 +1,7 @@
 import {render, removeExemplar, replace} from "../utils/view-tools";
 import MovieEdit from "../view/movie-edit.js";
 import MovieCard from "../view/movie-card.js";
+import {UpdateType, UpdatedVersion} from "../const.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
@@ -87,6 +88,8 @@ export default class CardPresenter {
 
   _handleWillWatchClick() {
     this._cardChangeAtAll(
+        UpdateType.UPDATE_CARD,
+        UpdatedVersion.MINOR,
         Object.assign(
             {},
             this._card,
@@ -97,6 +100,8 @@ export default class CardPresenter {
 
   _handleWatchedClick() {
     this._cardChangeAtAll(
+        UpdateType.UPDATE_CARD,
+        UpdatedVersion.MINOR,
         Object.assign(
             {},
             this._card,
@@ -107,6 +112,8 @@ export default class CardPresenter {
 
   _handleFavoriteClick() {
     this._cardChangeAtAll(
+        UpdateType.UPDATE_CARD,
+        UpdatedVersion.MINOR,
         Object.assign(
             {},
             this._card,

@@ -78,4 +78,16 @@ export const SortType = {
   MOST_COMMENTED: `most-commented`
 };
 
+export const UpdateType = {
+  UPDATE_CARD: `UPDATE_TASK`,
+  ADD_CARD: `ADD_TASK`,
+  DELETE_CARD: `DELETE_TASK`
+};
+
+export const UpdatedVersion = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
 
