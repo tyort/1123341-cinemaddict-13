@@ -1,6 +1,6 @@
 import {render, removeExemplar} from "../utils/view-tools";
 import {compareDate, compareRating, compareCommentsCount} from "../utils/project-tools";
-import {SortType} from "../const.js";
+import {SortType, UpdatePopup, UpdatedVersion} from "../const.js";
 import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
@@ -27,11 +27,11 @@ export default class InnerMain {
     this._currentSortType = SortType.DEFAULT;
     this._allPresenters = {mainList: {}, rateList: {}, commentsList: {}};
     this._handleShowMoreClick = this._handleShowMoreClick.bind(this);
-    this._handleCardChangeAtAll = this._handleCardChangeAtAll.bind(this);
-    this._dsfsdfdsfsdfdsf = this._dsfsdfdsfsdfdsf.bind(this);
+    this._handleCardDataChange = this._handleCardDataChange.bind(this);
+    this._handleSomeWhatRerender = this._handleSomeWhatRerender.bind(this);
     this._handleDelAllPopups = this._handleDelAllPopups.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
-    this._cardsModel.addObserver(this._dsfsdfdsfsdfdsf);
+    this._cardsModel.addObserver(this._handleSomeWhatRerender);
   }
 
   aboveRenderInnerMain() {
@@ -70,23 +70,40 @@ export default class InnerMain {
     });
   }
 
-  _handleCardChangeAtAll(updateType, updatedVersion, updatedCard) {
-    // Ниже. Возвращаем презентер по id. Полностью создаем или перезаписываем карточку
-    // перерисовываем карточку
-    // Object.keys(this._allPresenters).forEach((list) => {
-    //   if (this._allPresenters[list][updatedCard.id]) {
-    //     this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
-    //   }
-    // });
-    console.log(updateType, updatedVersion, updatedCard);
+  _handleCardDataChange(updateType, updatedVersion, updatedCard) {
+    // здесь только создаются массивы за счет например this._cardsModel.deleteComment;
+    // и вызывается функция, что ниже
+    switch (updateType) {
+      case UpdatePopup.DELETE_COMMENT:
+        this._cardsModel.deleteComment(updatedVersion, updatedCard);
+        break;
+      case UpdatePopup.ADD_COMMENT:
+        this._cardsModel.addComment(updatedVersion, updatedCard);
+        break;
+      case UpdatePopup.CHANGE_DESIRE:
+        this._cardsModel.changeDesire(updatedVersion, updatedCard);
+        break;
+      default:
+        this._cardsModel.returnBack(updatedVersion, updatedCard);
+    }
   }
 
-  _dsfsdfdsfsdfdsf(updateType, data) {
-    console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+  _handleSomeWhatRerender(updateType, updatedCard) {
+    // Создаем или перезаписываем карточку или весь список
+    // Короче занимаемся перерисовкой
+    switch (updateType) {
+      case UpdatedVersion.PATCH:
+        break;
+      case UpdatedVersion.MINOR:
+        Object.keys(this._allPresenters).forEach((list) => {
+          if (this._allPresenters[list][updatedCard.id]) {
+            this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
+          }
+        });
+        break;
+      case UpdatedVersion.MAJOR:
+        break;
+    }
   }
 
   _handleStartSorting(sortType) {
@@ -100,7 +117,7 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardChangeAtAll, this._handleDelAllPopups);
+    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardDataChange, this._handleDelAllPopups);
     cardPresenter.createTotally(card);
     // получается объект (список презентеров) {id: презентер, id: презентер}
     switch (container) {

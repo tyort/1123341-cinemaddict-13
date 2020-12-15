@@ -1,14 +1,14 @@
 import {render, removeExemplar, replace} from "../utils/view-tools";
 import MovieEdit from "../view/movie-edit.js";
 import MovieCard from "../view/movie-card.js";
-import {UpdateType, UpdatedVersion} from "../const.js";
+import {UpdatePopup, UpdatedVersion} from "../const.js";
 const body = document.querySelector(`body`);
 
 export default class CardPresenter {
-  constructor(cardContainer, cardContainers, cardChangeAtAll, deleteAllPopups) {
+  constructor(cardContainer, cardContainers, cardDataChange, deleteAllPopups) {
     this._cardContainer = cardContainer;
     this._cardContainers = cardContainers;
-    this._cardChangeAtAll = cardChangeAtAll;
+    this._cardDataChange = cardDataChange;
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
     this._cardEditComponent = null;
@@ -87,8 +87,8 @@ export default class CardPresenter {
   }
 
   _handleWillWatchClick() {
-    this._cardChangeAtAll(
-        UpdateType.UPDATE_CARD,
+    this._cardDataChange(
+        UpdatePopup.CHANGE_DESIRE,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -99,8 +99,8 @@ export default class CardPresenter {
   }
 
   _handleWatchedClick() {
-    this._cardChangeAtAll(
-        UpdateType.UPDATE_CARD,
+    this._cardDataChange(
+        UpdatePopup.CHANGE_DESIRE,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -111,8 +111,8 @@ export default class CardPresenter {
   }
 
   _handleFavoriteClick() {
-    this._cardChangeAtAll(
-        UpdateType.UPDATE_CARD,
+    this._cardDataChange(
+        UpdatePopup.CHANGE_DESIRE,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -127,7 +127,7 @@ export default class CardPresenter {
   // мы передаем новые данные карточки во вьюхе попапа
   // а данные обновляются также у карточки!!!
   _handleFormSubmit(card) {
-    this._cardChangeAtAll(card);
+    this._cardDataChange(card);
     this._cardEditComponent.getElement()
       .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
   }

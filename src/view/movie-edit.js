@@ -193,6 +193,7 @@ export default class MovieEdit extends AbstractSmart {
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -270,6 +271,23 @@ export default class MovieEdit extends AbstractSmart {
     }
   }
 
+  _deleteClickHandler(evt) {
+    if (evt.target.className === `film-details__comment-delete`) {
+      const index = this._parsedCard.allComments.findIndex((user) => {
+        return user.author === evt.target.parentElement.querySelector(`.film-details__comment-author`).textContent;
+      });
+
+      const firstPart = index !== 0 ? this._parsedCard.allComments.slice(0, index) : [];
+      this._parsedCard.allComments = [
+        ...firstPart,
+        ...this._parsedCard.allComments.slice(index + 1)
+      ];
+
+      evt.target.parentElement.parentElement.parentElement.remove();
+      this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
+    }
+  }
+
   _closeClickHandler(evt) {
     evt.preventDefault();
     this._handler.cardClick();
@@ -297,6 +315,7 @@ export default class MovieEdit extends AbstractSmart {
   _setInnerHandlers() {
     this.getElement().addEventListener(`click`, this._emojiClickHandler);
     this.getElement().querySelector(`textarea`).addEventListener(`keydown`, this._enterKeydownHandler);
+    this.getElement().addEventListener(`click`, this._deleteClickHandler);
   }
 
   setCloseClickHandler(exactFormula) {

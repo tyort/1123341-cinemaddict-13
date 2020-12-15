@@ -78,10 +78,11 @@ export const SortType = {
   MOST_COMMENTED: `most-commented`
 };
 
-export const UpdateType = {
-  UPDATE_CARD: `UPDATE_TASK`,
-  ADD_CARD: `ADD_TASK`,
-  DELETE_CARD: `DELETE_TASK`
+export const UpdatePopup = {
+  DELETE_COMMENT: `DELETE_COMMENT`,
+  ADD_COMMENT: `ADD_COMMENT`,
+  RETURN_BACK: `RETURN_CARD`,
+  CHANGE_DESIRE: `CHANGE_DESIRE`
 };
 
 export const UpdatedVersion = {
