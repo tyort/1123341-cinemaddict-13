@@ -277,9 +277,8 @@ export default class MovieEdit extends AbstractSmart {
         return user.author === evt.target.parentElement.querySelector(`.film-details__comment-author`).textContent;
       });
 
-      const firstPart = index !== 0 ? this._parsedCard.allComments.slice(0, index) : [];
       this._parsedCard.allComments = [
-        ...firstPart,
+        ...this._parsedCard.allComments.slice(0, index),
         ...this._parsedCard.allComments.slice(index + 1)
       ];
 
