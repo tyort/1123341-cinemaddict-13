@@ -40,27 +40,23 @@ export default class InnerMain {
 
   // ниже получаем this._cards только из модели
   _getSortedCards() {
-    let cardsGroup = {main: [], rated: [], commented: [], default: []};
     // у экземпляра другого класса вызываем метод getCards()
     // тот в свою очередь возвращает this._cards
+    const cardsGroup = this._cardsModel.getCards();
+
     switch (this._currentSortType) {
       case SortType.RATING:
-        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareRating);
+        cardsGroup.main.slice().sort(compareRating);
         break;
       case SortType.MOST_COMMENTED:
-        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareCommentsCount);
+        cardsGroup.main.slice().sort(compareCommentsCount);
         break;
       case SortType.DATE:
-        cardsGroup.main = this._cardsModel.getCards().slice().sort(compareDate);
+        cardsGroup.main.slice().sort(compareDate);
         break;
-      default:
-        cardsGroup.main = this._cardsModel.getCards().slice(); // this._cards в исходном виде
     }
 
-    cardsGroup.rated = this._cardsModel.getCards().slice().sort(compareRating);
-    cardsGroup.commented = this._cardsModel.getCards().slice().sort(compareCommentsCount);
-
-    return cardsGroup;
+    return cardsGroup; // все равно возращаем первоначальные массивы
   }
 
   _handleDelAllPopups() {
