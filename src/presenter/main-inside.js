@@ -15,7 +15,7 @@ const EXTRA_CARD_COUNT = 2;
 
 export default class InnerMain {
   constructor(cardsModel) {
-    this._cardsModel = cardsModel; // экземпляр другого класса. this._cards уже есть
+    this._cardsModel = cardsModel;
     this._cardEditComponent = new MovieEdit();
     this._sortComponent = new Sort();
     this._noMoviesComponent = new NoMovies();
@@ -38,7 +38,6 @@ export default class InnerMain {
     this._renderInnerMain();
   }
 
-  // ниже получаем this._cards только из модели
   _getSortedCards() {
     // у экземпляра другого класса вызываем метод getCards()
     // тот в свою очередь возвращает this._cards
@@ -115,7 +114,6 @@ export default class InnerMain {
   _renderCard(container, card) {
     const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardDataChange, this._handleDelAllPopups);
     cardPresenter.createTotally(card);
-    // получается объект (список презентеров) {id: презентер, id: презентер}
     switch (container) {
       case this._cardContainers[2]:
         this._allPresenters.commentsList[card.id] = cardPresenter;
@@ -132,10 +130,12 @@ export default class InnerMain {
     cards.forEach((card) => this._renderCard(container, card));
   }
 
+  _clearInsideMain() {
   // удаляем все экземпляры и представления карточек
   // удаляем экземпляр и представление кнопки
   // очищаем список всех презентеров карточек
-  _clearInsideMain() {
+  // Но не удаляем вкладку сортировки
+
     Object.keys(this._allPresenters).forEach((list) => {
       Object.values(this._allPresenters[list])
         .forEach((cardPresenter) => cardPresenter.destroy());
