@@ -2,7 +2,13 @@ import {render, removeExemplar, replace} from "../utils/view-tools";
 import MovieEdit from "../view/movie-edit.js";
 import MovieCard from "../view/movie-card.js";
 import {UpdatePopup, UpdatedVersion} from "../const.js";
+
 const body = document.querySelector(`body`);
+
+const Mode = {
+  SHOW_POPUP: `SHOW_POPUP`,
+  DEL_POPUP: `DEL_POPUP`
+};
 
 export default class CardPresenter {
   constructor(cardContainer, cardContainers, cardDataChange, deleteAllPopups) {
@@ -12,6 +18,7 @@ export default class CardPresenter {
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
     this._cardEditComponent = null;
+    this._mode = Mode.DEL_POPUP;
     this._handleCardClick = this._handleCardClick.bind(this);
     this._handleWillWatchClick = this._handleWillWatchClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
@@ -28,7 +35,6 @@ export default class CardPresenter {
   // также перезаписываем обновленную карту и попап
   createTotally(card) {
     this._card = card;
-
     const oldCard = this._cardComponent; // либо старая карта, либо ничего
     const oldEdit = this._cardEditComponent;
 
@@ -50,13 +56,9 @@ export default class CardPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this._cardContainer.contains(oldCard.getElement())) {
-      replace(this._cardComponent, oldCard);
-    }
+    replace(this._cardComponent, oldCard);
 
-    if (body.contains(oldEdit.getElement())) {
+    if (this._mode === Mode.SHOW_POPUP) {
       replace(this._cardEditComponent, oldEdit);
     }
 
@@ -74,12 +76,14 @@ export default class CardPresenter {
     render(body, this._cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.SHOW_POPUP;
   }
 
   _handleCloseClick() {
     this._cardEditComponent.getElement().remove();
     body.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DEL_POPUP;
   }
 
   deletePopup() {

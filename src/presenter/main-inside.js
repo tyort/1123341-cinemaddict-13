@@ -95,9 +95,6 @@ export default class InnerMain {
       case UpdatedVersion.MINOR:
         // не меняем количество уже показанных карточек
         // не меняем тип сортировки
-        this._clearInsideMain();
-        this._renderInnerMain();
-
         Object.keys(this._allPresenters).forEach((list) => {
           if (this._allPresenters[list][updatedCard.id]) {
             this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
