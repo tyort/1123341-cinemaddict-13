@@ -17,14 +17,14 @@ export default class InnerMain {
   constructor(cardsModel) {
     this._cardsModel = cardsModel;
     this._cardEditComponent = new MovieEdit();
-    this._sortComponent = new Sort();
+    this._sortComponent = null;
     this._noMoviesComponent = new NoMovies();
-    this._showMoreButtonComponent = new ShowMore();
+    this._showMoreButtonComponent = null;
     this._containerOfLists = new MoviesLists();
     this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
     this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
     this._renderedCardsCount = CARD_COUNT_STEP;
-    this._currentSortType = SortType.DEFAULT;
+    this._checkedSortType = SortType.DEFAULT;
     this._allPresenters = {mainList: {}, rateList: {}, commentsList: {}};
     this._handleShowMoreClick = this._handleShowMoreClick.bind(this);
     this._handleCardDataChange = this._handleCardDataChange.bind(this);
@@ -40,22 +40,25 @@ export default class InnerMain {
 
   _getSortedCards() {
     // у экземпляра другого класса вызываем метод getCards()
-    // тот в свою очередь возвращает this._cards
+    // тот в свою очередь возвращает _cardsGroup
+    // this._cardsGroup = {
+    //   main: [],
+    //   rated: [],
+    //   commented: [],
+    //   default: []
+    // };
     const cardsGroup = this._cardsModel.getCards();
 
-    switch (this._currentSortType) {
+    switch (this._checkedSortType) {
       case SortType.RATING:
-        cardsGroup.main.slice().sort(compareRating);
-        break;
+        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareRating)});
       case SortType.MOST_COMMENTED:
-        cardsGroup.main.slice().sort(compareCommentsCount);
-        break;
+        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareCommentsCount)});
       case SortType.DATE:
-        cardsGroup.main.slice().sort(compareDate);
-        break;
+        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareDate)});
     }
 
-    return cardsGroup; // все равно возращаем первоначальные массивы
+    return cardsGroup;
   }
 
   _handleDelAllPopups() {
@@ -90,6 +93,11 @@ export default class InnerMain {
       case UpdatedVersion.PATCH:
         break;
       case UpdatedVersion.MINOR:
+        // не меняем количество уже показанных карточек
+        // не меняем тип сортировки
+        this._clearInsideMain();
+        this._renderInnerMain();
+
         Object.keys(this._allPresenters).forEach((list) => {
           if (this._allPresenters[list][updatedCard.id]) {
             this._allPresenters[list][updatedCard.id].createTotally(updatedCard);
@@ -97,18 +105,12 @@ export default class InnerMain {
         });
         break;
       case UpdatedVersion.MAJOR:
+        // начинаем показ опять с минимального количества карточек
+        // ставим сортировку на дефолт
+        this._clearInsideMain({resetRenderedCardsCount: true, resetSortType: true});
+        this._renderInnerMain();
         break;
     }
-  }
-
-  _handleStartSorting(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-
-    this._currentSortType = sortType;
-    this._clearInsideMain();
-    this._renderInnerMain();
   }
 
   _renderCard(container, card) {
@@ -130,11 +132,8 @@ export default class InnerMain {
     cards.forEach((card) => this._renderCard(container, card));
   }
 
-  _clearInsideMain() {
-  // удаляем все экземпляры и представления карточек
-  // удаляем экземпляр и представление кнопки
-  // очищаем список всех презентеров карточек
-  // Но не удаляем вкладку сортировки
+  _clearInsideMain({resetRenderedCardsCount = false, resetSortType = false} = {}) {
+    const mainCardsCount = this._getSortedCards().main.length;
 
     Object.keys(this._allPresenters).forEach((list) => {
       Object.values(this._allPresenters[list])
@@ -147,8 +146,20 @@ export default class InnerMain {
       commentsList: {}
     };
 
-    this._renderedCardsCount = CARD_COUNT_STEP;
+    removeExemplar(this._sortComponent);
+    removeExemplar(this._noMoviesComponent);
     removeExemplar(this._showMoreButtonComponent);
+
+    if (resetRenderedCardsCount) {
+      this._renderedCardsCount = CARD_COUNT_STEP;
+
+    } else {
+      this._renderedCardsCount = Math.min(mainCardsCount, this._renderedCardsCount);
+    }
+
+    if (resetSortType) {
+      this._checkedSortType = SortType.DEFAULT;
+    }
   }
 
   _renderInnerMain() {
@@ -161,7 +172,7 @@ export default class InnerMain {
     this._renderMoviesLists();
 
     const mainCardsCount = this._getSortedCards().main.length;
-    const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, CARD_COUNT_STEP));
+    const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, this._renderedCardsCount));
     this._renderCards(mainCards, this._cardContainers[0]);
 
     const ratedCardsCount = this._getSortedCards().rated.length;
@@ -172,7 +183,7 @@ export default class InnerMain {
     const commentedCards = this._getSortedCards().commented.slice(0, Math.min(commentedCardsCount, EXTRA_CARD_COUNT));
     this._renderCards(commentedCards, this._cardContainers[2]);
 
-    if (this._getSortedCards().main.length > CARD_COUNT_STEP) {
+    if (this._getSortedCards().main.length > this._renderedCardsCount) {
       this._renderShowMoreButton();
     }
   }
@@ -182,8 +193,23 @@ export default class InnerMain {
   }
 
   _renderSort() {
-    render(siteMainElement, this._sortComponent);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new Sort(this._checkedSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleStartSorting);
+    render(siteMainElement, this._sortComponent);
+  }
+
+  _handleStartSorting(sortType) {
+    if (this._checkedSortType === sortType) {
+      return;
+    }
+
+    this._checkedSortType = sortType;
+    this._clearInsideMain();
+    this._renderInnerMain();
   }
 
   _renderMoviesLists() {
@@ -191,8 +217,13 @@ export default class InnerMain {
   }
 
   _renderShowMoreButton() {
-    render(this._listsComponents[0], this._showMoreButtonComponent);
+    if (this._showMoreButtonComponent !== null) {
+      this._showMoreButtonComponent = null;
+    }
+
+    this._showMoreButtonComponent = new ShowMore();
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreClick);
+    render(this._listsComponents[0], this._showMoreButtonComponent);
   }
 
   _handleShowMoreClick() {
