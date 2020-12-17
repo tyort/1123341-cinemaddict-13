@@ -110,26 +110,32 @@ export default class InnerMain {
     }
   }
 
-  _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardDataChange, this._handleDelAllPopups);
-    cardPresenter.createTotally(card);
-    switch (container) {
-      case this._cardContainers[2]:
-        this._allPresenters.commentsList[card.id] = cardPresenter;
-        break;
-      case this._cardContainers[1]:
-        this._allPresenters.rateList[card.id] = cardPresenter;
-        break;
-      default:
-        this._allPresenters.mainList[card.id] = cardPresenter;
+  // Кнопка уже нарисована. Но можно на нее еще жать
+  // с помощью этого хэндлера
+  _handleShowMoreClick() {
+    const cardsCount = this._getSortedCards().main.length;
+    const newRenderedCardsCount = Math.min(cardsCount, this._renderedCardsCount + CARD_COUNT_STEP);
+    const cards = this._getSortedCards().main.slice(this._renderedCardsCount, newRenderedCardsCount);
+
+    this._renderCards(cards, this._cardContainers[0]);
+    this._renderedCardsCount = newRenderedCardsCount;
+
+    if (this._renderedCardsCount >= cardsCount) {
+      removeExemplar(this._showMoreButtonComponent);
     }
   }
 
-  _renderCards(cards, container) {
-    cards.forEach((card) => this._renderCard(container, card));
+  _handleStartSorting(sortType) {
+    if (this._checkedSortType === sortType) {
+      return;
+    }
+
+    this._checkedSortType = sortType;
+    this._clearInsideMain({resetRenderedCardsCount: true});
+    this._renderInnerMain();
   }
 
-  _clearInsideMain({resetRenderedCardsCount = false, resetSortType = false} = {}) {
+  _clearInsideMain({resetRenderedCardsCount = false, resetSortType = false}) {
     const mainCardsCount = this._getSortedCards().main.length;
 
     Object.keys(this._allPresenters).forEach((list) => {
@@ -161,7 +167,7 @@ export default class InnerMain {
 
   _renderInnerMain() {
     if (this._getSortedCards().main.length === 0) {
-      this._renderNoMovies();
+      render(siteMainElement, this._noMoviesComponent);
       return;
     }
 
@@ -185,10 +191,6 @@ export default class InnerMain {
     }
   }
 
-  _renderNoMovies() {
-    render(siteMainElement, this._noMoviesComponent);
-  }
-
   _renderSort() {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
@@ -199,18 +201,27 @@ export default class InnerMain {
     render(siteMainElement, this._sortComponent);
   }
 
-  _handleStartSorting(sortType) {
-    if (this._checkedSortType === sortType) {
-      return;
-    }
-
-    this._checkedSortType = sortType;
-    this._clearInsideMain();
-    this._renderInnerMain();
-  }
-
   _renderMoviesLists() {
     render(siteMainElement, this._containerOfLists);
+  }
+
+  _renderCard(container, card) {
+    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardDataChange, this._handleDelAllPopups);
+    cardPresenter.createTotally(card);
+    switch (container) {
+      case this._cardContainers[2]:
+        this._allPresenters.commentsList[card.id] = cardPresenter;
+        break;
+      case this._cardContainers[1]:
+        this._allPresenters.rateList[card.id] = cardPresenter;
+        break;
+      default:
+        this._allPresenters.mainList[card.id] = cardPresenter;
+    }
+  }
+
+  _renderCards(cards, container) {
+    cards.forEach((card) => this._renderCard(container, card));
   }
 
   _renderShowMoreButton() {
@@ -221,18 +232,5 @@ export default class InnerMain {
     this._showMoreButtonComponent = new ShowMore();
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreClick);
     render(this._listsComponents[0], this._showMoreButtonComponent);
-  }
-
-  _handleShowMoreClick() {
-    const cardsCount = this._getSortedCards().main.length;
-    const newRenderedCardsCount = Math.min(cardsCount, this._renderedCardsCount + CARD_COUNT_STEP);
-    const cards = this._getSortedCards().main.slice(this._renderedCardsCount, newRenderedCardsCount);
-
-    this._renderCards(cards, this._cardContainers[0]);
-    this._renderedCardsCount = newRenderedCardsCount;
-
-    if (this._renderedCardsCount >= cardsCount) {
-      removeExemplar(this._showMoreButtonComponent);
-    }
   }
 }
