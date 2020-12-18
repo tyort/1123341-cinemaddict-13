@@ -274,7 +274,7 @@ export default class MovieEdit extends AbstractSmart {
       ];
 
       evt.target.parentElement.parentElement.parentElement.remove();
-      this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard), false);
+      this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard));
       this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
