@@ -254,9 +254,18 @@ export default class MovieEdit extends AbstractSmart {
           day: `today`
         };
 
-        const allComments = this._parsedCard.allComments;
-        allComments.push(comment);
-        this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard));
+        // this.updateParsedCard(this._parsedCard);
+        // не учтет новое количество комментариев
+
+        // this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard)); !!! НЕ СТИРАТЬ
+        // ПОЧЕМУ НЕ РАБОТАЕТ ВАРИАНТ ВЫШЕ!!!!
+
+        this.updateParsedCard({
+          allComments: [...this._parsedCard.allComments, comment],
+          commentsSum: this._parsedCard.allComments.length + 1
+        });
+
+        this._popupChangeOnly();
         this.getElement().scrollTo(0, this.getElement().scrollHeight);
       }
     }
