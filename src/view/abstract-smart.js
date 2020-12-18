@@ -6,7 +6,7 @@ export default class Smart extends Abstract {
     this._parsedCard = {};
   }
 
-  // update - это объект с нужными свойствами
+  // usersUpdate - это объект с нужными свойствами
   updateParsedCard(usersUpdate, justDataUpdating) {
     if (!usersUpdate) {
       return;

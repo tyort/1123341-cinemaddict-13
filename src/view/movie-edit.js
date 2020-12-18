@@ -197,14 +197,6 @@ export default class MovieEdit extends AbstractSmart {
     this._setInnerHandlers();
   }
 
-  get currentCard() {
-    return this._parsedCard;
-  }
-
-  set currentCard(card) {
-    this._parsedCard = MovieEdit.parseCardToData(card);
-  }
-
   // можно добавить к исходным свойствам карточки новые свойства
   static parseCardToData(card) {
     return Object.assign(
@@ -231,7 +223,7 @@ export default class MovieEdit extends AbstractSmart {
     return createMovieEditTemplate(this._parsedCard);
   }
 
-  _emojiClickHandler(evt) {
+  _emojiClickHandler(evt) { // внутренний хэндлер
     evt.preventDefault();
     const parent = evt.target.parentElement;
     if (parent.className !== `film-details__emoji-label`) {
@@ -250,7 +242,7 @@ export default class MovieEdit extends AbstractSmart {
     );
   }
 
-  _enterKeydownHandler(evt) {
+  _enterKeydownHandler(evt) { // внутренний хэндлер
     if (evt.keyCode === 13 && !evt.shiftKey) { // когда просто нажимаем enter
       const commentPattern = this.getElement().querySelector(`.film-details__new-comment`);
       const child = commentPattern.firstElementChild;
@@ -266,12 +258,13 @@ export default class MovieEdit extends AbstractSmart {
 
         const allComments = this._parsedCard.allComments;
         allComments.push(comment);
-        this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
+        this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard), false);
+        this.getElement().scrollTo(0, this.getElement().scrollHeight);
       }
     }
   }
 
-  _deleteClickHandler(evt) {
+  _deleteClickHandler(evt) { // внутренний хэндлер
     if (evt.target.className === `film-details__comment-delete`) {
       const index = this._parsedCard.allComments.findIndex((user) => {
         return user.author === evt.target.parentElement.querySelector(`.film-details__comment-author`).textContent;
@@ -283,13 +276,14 @@ export default class MovieEdit extends AbstractSmart {
       ];
 
       evt.target.parentElement.parentElement.parentElement.remove();
-      this._handler.formSubmit(MovieEdit.parseDataToCard(this._parsedCard));
+      this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard), false);
+      this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
 
   _closeClickHandler(evt) {
     evt.preventDefault();
-    this._handler.cardClick();
+    this._handler.cardClick(evt);
   }
 
   _willWatchClickHandler(evt) {

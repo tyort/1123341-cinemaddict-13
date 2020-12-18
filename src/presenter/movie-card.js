@@ -25,6 +25,7 @@ export default class CardPresenter {
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._ctrlEnterKeyDownHandler = this._ctrlEnterKeyDownHandler.bind(this);
   }
 
   // создается экземпляр компонента карты с эксклюзивными данными
@@ -75,19 +76,8 @@ export default class CardPresenter {
     render(body, this._cardEditComponent);
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    document.addEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
     this._mode = Mode.SHOW_POPUP;
-  }
-
-  _handleCloseClick() {
-    const cardEdit = this._cardEditComponent.getElement();
-
-    cardEdit.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    cardEdit.querySelector(`textarea`).value = ``;
-    cardEdit.remove();
-
-    body.classList.toggle(`hide-overflow`, false);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._mode = Mode.DEL_POPUP;
   }
 
   deletePopup() {
@@ -140,8 +130,19 @@ export default class CardPresenter {
         UpdatedVersion.MINOR,
         card
     );
-    this._cardEditComponent.getElement()
-      .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
+  }
+
+  _handleCloseClick() {
+    const cardEdit = this._cardEditComponent.getElement();
+
+    cardEdit.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    cardEdit.querySelector(`textarea`).value = ``;
+    cardEdit.remove();
+
+    body.classList.toggle(`hide-overflow`, false);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
+    this._mode = Mode.DEL_POPUP;
   }
 
   _onEscKeyDown(evt) {
@@ -151,4 +152,20 @@ export default class CardPresenter {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
+
+  _ctrlEnterKeyDownHandler(evt) {
+    if (evt.keyCode === 13 && evt.ctrlKey) {
+      evt.preventDefault();
+      this._handleFormSubmit();
+    }
+  }
 }
+
+
+// if (evt !== undefined && (evt.key === `Escape` || evt.key === `Esc`)) {
+//   console.log(`пися`);
+// } else if (evt !== undefined && (evt.keyCode === 13 && evt.ctrlKey)) {
+//   console.log(`кака`);
+// } else if (evt !== undefined && evt.type === `click`) {
+//   console.log(`жопа`);
+// }
