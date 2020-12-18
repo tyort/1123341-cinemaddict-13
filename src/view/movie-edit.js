@@ -198,7 +198,6 @@ export default class MovieEdit extends AbstractSmart {
         card,
         {
           isRatingGood: card.rating > 7, // ??????? измени или удали ???????
-          isHated: !card.isFavorite, // ??????? измени или удали ???????
           commentsSum: card.allComments.length
         }
     );
@@ -206,9 +205,7 @@ export default class MovieEdit extends AbstractSmart {
 
   static parseDataToCard(parsedCard) { //  ??????? для сохранения изменений карточки внесенных на сайте ???????
     parsedCard = Object.assign({}, parsedCard);
-    parsedCard.isFavorite = parsedCard.isHated ? false : true;
     delete parsedCard.isRatingGood;
-    delete parsedCard.isHated;
     delete parsedCard.commentsSum;
     return parsedCard;
   }
@@ -216,6 +213,13 @@ export default class MovieEdit extends AbstractSmart {
   getTemplate() {
     return createMovieEditTemplate(this._parsedCard);
   }
+
+  reset(card) {
+    this.updateParsedCard(
+        MovieEdit.parseCardToData(card)
+    );
+  }
+
 
   _emojiClickHandler(evt) { // внутренний хэндлер
     evt.preventDefault();
@@ -252,7 +256,7 @@ export default class MovieEdit extends AbstractSmart {
 
         const allComments = this._parsedCard.allComments;
         allComments.push(comment);
-        this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard), false);
+        this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard));
         this.getElement().scrollTo(0, this.getElement().scrollHeight);
       }
     }

@@ -136,6 +136,7 @@ export default class CardPresenter {
   _onEscKeyDown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
+      this._cardEditComponent.reset(this._card);
       this._handleCloseClick();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
