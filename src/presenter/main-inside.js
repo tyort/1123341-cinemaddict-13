@@ -5,7 +5,6 @@ import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
-import MovieEdit from "../view/movie-edit.js";
 import CardPresenter from "./movie-card";
 
 const body = document.querySelector(`body`);
@@ -16,7 +15,6 @@ const EXTRA_CARD_COUNT = 2;
 export default class InnerMain {
   constructor(cardsModel) {
     this._cardsModel = cardsModel;
-    this._cardEditComponent = new MovieEdit();
     this._sortComponent = null;
     this._noMoviesComponent = new NoMovies();
     this._showMoreButtonComponent = null;
@@ -172,7 +170,7 @@ export default class InnerMain {
     }
 
     this._renderSort();
-    this._renderMoviesLists();
+    render(siteMainElement, this._containerOfLists);
 
     const mainCardsCount = this._getSortedCards().main.length;
     const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, this._renderedCardsCount));
@@ -201,12 +199,8 @@ export default class InnerMain {
     render(siteMainElement, this._sortComponent);
   }
 
-  _renderMoviesLists() {
-    render(siteMainElement, this._containerOfLists);
-  }
-
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._cardContainers, this._handleCardDataChange, this._handleDelAllPopups);
+    const cardPresenter = new CardPresenter(container, this._handleCardDataChange, this._handleDelAllPopups);
     cardPresenter.createTotally(card);
     switch (container) {
       case this._cardContainers[2]:

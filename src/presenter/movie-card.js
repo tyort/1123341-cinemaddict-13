@@ -11,9 +11,8 @@ const Mode = {
 };
 
 export default class CardPresenter {
-  constructor(cardContainer, cardContainers, cardDataChange, deleteAllPopups) {
+  constructor(cardContainer, cardDataChange, deleteAllPopups) {
     this._cardContainer = cardContainer;
-    this._cardContainers = cardContainers;
     this._cardDataChange = cardDataChange;
     this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
@@ -131,6 +130,7 @@ export default class CardPresenter {
   // мы передаем новые данные карточки во вьюхе попапа
   // а данные обновляются также у карточки!!!
   _handleFormSubmit(card) {
+    console.log(card);
     this._cardDataChange(card);
     this._cardEditComponent.getElement()
       .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
