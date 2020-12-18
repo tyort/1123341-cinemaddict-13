@@ -79,7 +79,12 @@ export default class CardPresenter {
   }
 
   _handleCloseClick() {
-    this._cardEditComponent.getElement().remove();
+    const cardEdit = this._cardEditComponent.getElement();
+
+    cardEdit.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    cardEdit.querySelector(`textarea`).value = ``;
+    cardEdit.remove();
+
     body.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._mode = Mode.DEL_POPUP;
@@ -130,8 +135,11 @@ export default class CardPresenter {
   // мы передаем новые данные карточки во вьюхе попапа
   // а данные обновляются также у карточки!!!
   _handleFormSubmit(card) {
-    console.log(card);
-    this._cardDataChange(card);
+    this._cardDataChange(
+        UpdatePopup.CHANGE_DESIRE,
+        UpdatedVersion.MINOR,
+        card
+    );
     this._cardEditComponent.getElement()
       .scrollTo(0, this._cardEditComponent.getElement().scrollHeight);
   }
