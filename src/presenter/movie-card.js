@@ -24,7 +24,6 @@ export default class CardPresenter {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._popupChangeOnly = this._popupChangeOnly.bind(this);
-    // this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._ctrlEnterKeyDownHandler = this._ctrlEnterKeyDownHandler.bind(this);
   }
@@ -36,7 +35,7 @@ export default class CardPresenter {
   // также перезаписываем обновленную карту и попап
   createTotally(card) {
     this._card = card;
-    const oldCard = this._cardComponent; // либо старая карта, либо ничего
+    const oldCard = this._cardComponent;
     const oldEdit = this._cardEditComponent;
 
     this._cardComponent = new MovieCard(this._card);
@@ -48,8 +47,6 @@ export default class CardPresenter {
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._cardEditComponent.setCloseClickHandler(this._handleCloseClick);
     this._cardEditComponent.setPopupChangeOnly(this._popupChangeOnly);
-    // this._cardEditComponent.setFormSubmitHandler(this._handleFormSubmit);
-
 
     if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
@@ -150,6 +147,7 @@ export default class CardPresenter {
           UpdatePopup.CHANGE_DESIRE,
           UpdatedVersion.MINOR,
           Object.assign(
+              {},
               this._card,
               this._cardForSave
           )
@@ -163,11 +161,3 @@ export default class CardPresenter {
   }
 }
 
-
-// if (evt !== undefined && (evt.key === `Escape` || evt.key === `Esc`)) {
-//   console.log(`пися`);
-// } else if (evt !== undefined && (evt.keyCode === 13 && evt.ctrlKey)) {
-//   console.log(`кака`);
-// } else if (evt !== undefined && evt.type === `click`) {
-//   console.log(`жопа`);
-// }
