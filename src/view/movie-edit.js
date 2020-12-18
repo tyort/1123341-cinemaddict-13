@@ -180,13 +180,6 @@ export default class MovieEdit extends AbstractSmart {
   constructor(card = BLANK_CARD) {
     super();
     this._parsedCard = MovieEdit.parseCardToData(card); // уже при первой загрузке получаем распарсенные данные
-    this._handler = {
-      cardClick: null,
-      willWatchClick: null,
-      watchedClick: null,
-      favoriteClick: null,
-      formSubmit: null
-    };
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -194,6 +187,7 @@ export default class MovieEdit extends AbstractSmart {
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._popupChangeOnly = this._popupChangeOnly.bind(this);
     this._setInnerHandlers();
   }
 
@@ -281,34 +275,52 @@ export default class MovieEdit extends AbstractSmart {
     }
   }
 
-  _closeClickHandler(evt) {
-    evt.preventDefault();
-    this._handler.cardClick(evt);
-  }
 
   _willWatchClickHandler(evt) {
     evt.preventDefault();
-    this._handler.willWatchClick();
+    this.updateParsedCard({
+      watchPlan: !this._parsedCard.watchPlan,
+    });
+    this._popupChangeOnly();
   }
 
   _watchedClickHandler(evt) {
     evt.preventDefault();
-    this._handler.watchedClick();
+    this.updateParsedCard({
+      hasWatched: !this._parsedCard.hasWatched,
+    });
+    this._popupChangeOnly();
   }
 
   _favoriteClickHandler(evt) {
     evt.preventDefault();
-    this._handler.favoriteClick();
+    this.updateParsedCard({
+      isFavorite: !this._parsedCard.isFavorite,
+    });
+    this._popupChangeOnly();
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this.setCloseClickHandler(this._handler.cardClick);
+    this.setPopupChangeOnly(this._handler.cardChange);
   }
 
   _setInnerHandlers() {
     this.getElement().addEventListener(`click`, this._emojiClickHandler);
     this.getElement().querySelector(`textarea`).addEventListener(`keydown`, this._enterKeydownHandler);
     this.getElement().addEventListener(`click`, this._deleteClickHandler);
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._willWatchClickHandler);
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._watchedClickHandler);
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._handler.cardClick(evt);
   }
 
   setCloseClickHandler(exactFormula) {
@@ -317,25 +329,11 @@ export default class MovieEdit extends AbstractSmart {
     closeButton.addEventListener(`click`, this._closeClickHandler);
   }
 
-  setWillWatchClickHandler(exactFormula) {
-    this._handler.willWatchClick = exactFormula;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this._willWatchClickHandler);
+  _popupChangeOnly() {
+    this._handler.cardChange(MovieEdit.parseDataToCard(this._parsedCard));
   }
 
-  setWatchedClickHandler(exactFormula) {
-    this._handler.watchedClick = exactFormula;
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, this._watchedClickHandler);
-  }
-
-  setFavoriteClickHandler(exactFormula) {
-    this._handler.favoriteClick = exactFormula;
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setFormSubmitHandler(exactFormula) {
-    this._handler.formSubmit = exactFormula;
+  setPopupChangeOnly(exactFormula) {
+    this._handler.cardChange = exactFormula;
   }
 }

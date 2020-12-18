@@ -23,7 +23,8 @@ export default class CardPresenter {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._popupChangeOnly = this._popupChangeOnly.bind(this);
+    // this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._ctrlEnterKeyDownHandler = this._ctrlEnterKeyDownHandler.bind(this);
   }
@@ -46,10 +47,9 @@ export default class CardPresenter {
     this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._cardEditComponent.setCloseClickHandler(this._handleCloseClick);
-    this._cardEditComponent.setWillWatchClickHandler(this._handleWillWatchClick);
-    this._cardEditComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._cardEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._cardEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._cardEditComponent.setPopupChangeOnly(this._popupChangeOnly);
+    // this._cardEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+
 
     if (oldCard === null || oldEdit === null) {
       render(this._cardContainer, this._cardComponent);
@@ -120,18 +120,6 @@ export default class CardPresenter {
     );
   }
 
-
-  // в отличие от this_handleFavoriteClick (см.выше)
-  // мы передаем новые данные карточки во вьюхе попапа
-  // а данные обновляются также у карточки!!!
-  _handleFormSubmit(card) {
-    this._cardDataChange(
-        UpdatePopup.CHANGE_DESIRE,
-        UpdatedVersion.MINOR,
-        card
-    );
-  }
-
   _handleCloseClick() {
     const cardEdit = this._cardEditComponent.getElement();
 
@@ -156,8 +144,18 @@ export default class CardPresenter {
   _ctrlEnterKeyDownHandler(evt) {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       evt.preventDefault();
-      this._handleFormSubmit();
+      this._handleCloseClick();
+      this._cardDataChange(
+          UpdatePopup.CHANGE_DESIRE,
+          UpdatedVersion.MINOR,
+          this._cardForSave
+      );
+      document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
     }
+  }
+
+  _popupChangeOnly(card) {
+    this._cardForSave = card;
   }
 }
 
