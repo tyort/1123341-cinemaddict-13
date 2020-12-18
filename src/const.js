@@ -89,4 +89,11 @@ export const UpdatedVersion = {
   MAJOR: `MAJOR`
 };
 
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `overdue`,
+  HISTORY: `today`,
+  FAVORITES: `favorites`,
+};
+
 

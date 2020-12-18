@@ -2,6 +2,7 @@ import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
 import InnerMain from "./presenter/main-inside.js";
 import CardsModel from "./model/cards.js";
+import FilterModel from "./model/filter.js";
 import {generateCard} from "./mock/card.js";
 import {generateFilter} from "./mock/filter.js";
 import {render} from "./utils/view-tools.js";
@@ -17,6 +18,8 @@ const filters = generateFilter(cards);
 
 const cardsModel = new CardsModel();
 cardsModel.setCards(cards); // возвращается копия cards в переменную this._cards. Ничего не возвращаем!
+
+const filterModel = new FilterModel();
 
 const innerMainPresenter = new InnerMain(cardsModel);
 
