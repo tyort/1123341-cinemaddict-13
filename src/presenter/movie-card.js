@@ -149,7 +149,10 @@ export default class CardPresenter {
       this._cardDataChange(
           UpdatePopup.CHANGE_DESIRE,
           UpdatedVersion.MINOR,
-          this._cardForSave
+          Object.assign(
+              this._card,
+              this._cardForSave
+          )
       );
       document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
     }
