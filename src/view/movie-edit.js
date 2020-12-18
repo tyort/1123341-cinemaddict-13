@@ -259,6 +259,7 @@ export default class MovieEdit extends AbstractSmart {
 
         // this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard)); !!! НЕ СТИРАТЬ
         // ПОЧЕМУ НЕ РАБОТАЕТ ВАРИАНТ ВЫШЕ!!!!
+        // НЕЛЬЗЯ ЗДЕСЬ ИЗМЕНЯТЬ САМУ ПЕРЕМЕННУЮ ВОТ ТАК this._parsedCard.allComments.push
 
         this.updateParsedCard({
           allComments: [...this._parsedCard.allComments, comment],
@@ -277,13 +278,14 @@ export default class MovieEdit extends AbstractSmart {
         return user.author === evt.target.parentElement.querySelector(`.film-details__comment-author`).textContent;
       });
 
-      this._parsedCard.allComments = [
-        ...this._parsedCard.allComments.slice(0, index),
-        ...this._parsedCard.allComments.slice(index + 1)
-      ];
+      this.updateParsedCard({
+        allComments: [
+          ...this._parsedCard.allComments.slice(0, index),
+          ...this._parsedCard.allComments.slice(index + 1)
+        ],
+        commentsSum: this._parsedCard.allComments.length - 1
+      });
 
-      evt.target.parentElement.parentElement.parentElement.remove();
-      this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard));
       this._popupChangeOnly();
       this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }

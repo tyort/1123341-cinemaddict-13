@@ -70,17 +70,14 @@ export default class InnerMain {
     // здесь только создаются массивы за счет например this._cardsModel.deleteComment;
     // и вызывается функция, что ниже
     switch (updateType) {
-      case UpdatePopup.DELETE_COMMENT:
-        this._cardsModel.deleteComment(updatedVersion, updatedCard);
+      case UpdatePopup.OTHER:
+        this._cardsModel = `KOKOKOKO`;
         break;
-      case UpdatePopup.ADD_COMMENT:
-        this._cardsModel.addComment(updatedVersion, updatedCard);
-        break;
-      case UpdatePopup.CHANGE_DESIRE:
+      case UpdatePopup.POPUP_AT_ALL:
         this._cardsModel.changeDesire(updatedVersion, updatedCard);
         break;
       default:
-        this._cardsModel.returnBack(updatedVersion, updatedCard);
+        this._cardsModel = `KOKOKOKO`;
     }
   }
 

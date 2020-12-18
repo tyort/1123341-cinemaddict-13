@@ -79,10 +79,8 @@ export const SortType = {
 };
 
 export const UpdatePopup = {
-  DELETE_COMMENT: `DELETE_COMMENT`,
-  ADD_COMMENT: `ADD_COMMENT`,
-  RETURN_BACK: `RETURN_CARD`,
-  CHANGE_DESIRE: `CHANGE_DESIRE`
+  OTHER: `OTHER`,
+  POPUP_AT_ALL: `POPUP_AT_ALL`
 };
 
 export const UpdatedVersion = {

@@ -83,7 +83,7 @@ export default class CardPresenter {
 
   _handleWillWatchClick() {
     this._cardDataChange(
-        UpdatePopup.CHANGE_DESIRE,
+        UpdatePopup.POPUP_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -95,7 +95,7 @@ export default class CardPresenter {
 
   _handleWatchedClick() {
     this._cardDataChange(
-        UpdatePopup.CHANGE_DESIRE,
+        UpdatePopup.POPUP_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -107,7 +107,7 @@ export default class CardPresenter {
 
   _handleFavoriteClick() {
     this._cardDataChange(
-        UpdatePopup.CHANGE_DESIRE,
+        UpdatePopup.POPUP_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -144,10 +144,9 @@ export default class CardPresenter {
       evt.preventDefault();
       this._handleCloseClick();
       this._cardDataChange(
-          UpdatePopup.CHANGE_DESIRE,
+          UpdatePopup.POPUP_AT_ALL,
           UpdatedVersion.MINOR,
           Object.assign(
-              {},
               this._card,
               this._cardForSave
           )
