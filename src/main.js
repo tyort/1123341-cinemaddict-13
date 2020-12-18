@@ -1,10 +1,10 @@
 import UserRank from "./view/user-rank.js";
 import Menu from "./view/menu.js";
+import Filter from "./view/filter.js";
 import InnerMain from "./presenter/main-inside.js";
 import CardsModel from "./model/cards.js";
 import FilterModel from "./model/filter.js";
 import {generateCard} from "./mock/card.js";
-import {generateFilter} from "./mock/filter.js";
 import {render} from "./utils/view-tools.js";
 
 const COMMON_CARD_COUNT = 22;
@@ -14,7 +14,7 @@ const siteHeaderElement = body.querySelector(`.header`);
 const siteMainElement = body.querySelector(`.main`);
 
 const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
-const filters = generateFilter(cards);
+const filters = [{idName: `all`, title: `All movies`, count: 0}];
 
 const cardsModel = new CardsModel();
 cardsModel.setCards(cards); // возвращается копия cards в переменную this._cards. Ничего не возвращаем!
@@ -24,8 +24,9 @@ const filterModel = new FilterModel();
 const innerMainPresenter = new InnerMain(cardsModel);
 
 render(siteHeaderElement, new UserRank());
-render(siteMainElement, new Menu(filters));
+render(siteMainElement, new Menu());
+const mainItems = siteMainElement.querySelector(`.main-navigation__items`);
+render(mainItems, new Filter(filters, `all`));
 
 innerMainPresenter.aboveRenderInnerMain();
-
 
