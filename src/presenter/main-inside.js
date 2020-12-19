@@ -67,13 +67,11 @@ export default class InnerMain {
 
   _handleCardDataChange(updateType, updatedVersion, updatedCard) {
     // здесь только создаются массивы за счет например this._cardsModel.deleteComment;
-    // и вызывается функция, что ниже
+    // т.е. массивы создаются только в cardsModel
+    // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
       case UpdatePopup.OTHER:
         this._cardsModel = `KOKOKOKO`;
-        break;
-      case UpdatePopup.SHOW_POPUP:
-        this._cardEditPresenter.createTotally(updatedCard);
         break;
       case UpdatePopup.POPUP_AT_ALL:
         this._cardsModel.changePopup(updatedVersion, updatedCard);
@@ -88,6 +86,7 @@ export default class InnerMain {
     // Короче занимаемся перерисовкой
     switch (updateType) {
       case UpdatedVersion.PATCH:
+        this._cardEditPresenter.createTotally(updatedCard);
         break;
       case UpdatedVersion.MINOR:
         // не меняем количество уже показанных карточек

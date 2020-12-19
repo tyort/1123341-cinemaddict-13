@@ -1,5 +1,5 @@
 import MovieEditView from "../view/movie-edit.js";
-import {removeExemplar, render, replace} from "../utils/view-tools.js";
+import {removeExemplar, render} from "../utils/view-tools.js";
 import {UpdatedVersion, UpdatePopup} from "../const.js";
 
 const Mode = {
@@ -23,19 +23,12 @@ export default class MovieEdit {
   createTotally(card) {
     this._card = card;
     const oldEdit = this._cardEditComponent;
-
     this._cardEditComponent = new MovieEditView(this._card);
     this._cardEditComponent.setCloseClickHandler(this._handleCloseClick);
     this._cardEditComponent.setPopupChangeOnly(this._popupChangeOnly);
 
-    if (oldEdit === null) {
-      render(this._cardEditContainer, this._cardEditComponent);
-
-    } else {
-      replace(this._cardEditComponent, oldEdit);
-    }
-
     removeExemplar(oldEdit);
+    render(this._cardEditContainer, this._cardEditComponent);
     this._mode = Mode.SHOW_POPUP;
     body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
@@ -43,11 +36,10 @@ export default class MovieEdit {
   }
 
   _handleCloseClick() {
-    const cardEdit = this._cardEditComponent.getElement();
-
-    cardEdit.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    cardEdit.querySelector(`textarea`).value = ``;
-    cardEdit.remove();
+    const cardEdit = this._cardEditComponent;
+    cardEdit.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    cardEdit.getElement().querySelector(`textarea`).value = ``;
+    removeExemplar(cardEdit);
 
     this._cardEditContainer.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
