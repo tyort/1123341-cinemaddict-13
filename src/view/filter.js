@@ -4,7 +4,6 @@ const createFilterTemplate = (filters, currentFilterType) => {
   return filters
     .map((filter) => {
       const {idName, title, count} = filter;
-      console.log(filter);
       return (
         `<a 
           href="#${idName}"
@@ -20,6 +19,14 @@ const createFilterTemplate = (filters, currentFilterType) => {
     .join(``);
 };
 
+const createMainItems = (filters, currentFilterType) => {
+  return (
+    `<div class="main-navigation__items">
+        ${createFilterTemplate(filters, currentFilterType)}
+    </div>`
+  );
+};
+
 export default class Filter extends Abstract {
   constructor(filters, currentFilterType) {
     super();
@@ -29,16 +36,16 @@ export default class Filter extends Abstract {
   }
 
   getTemplate() {
-    return createFilterTemplate(this._filters, this._currentFilter);
+    return createMainItems(this._filters, this._currentFilter);
   }
 
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.value);
+    this._handler.filterTypeChange(evt.target.value);
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
+  setFilterTypeChangeHandler(exactFormula) {
+    this._handler.filterTypeChange = exactFormula;
     this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
   }
 }

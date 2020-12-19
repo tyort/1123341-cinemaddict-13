@@ -91,8 +91,8 @@ export const UpdatedVersion = {
 
 export const FilterType = {
   ALL: `all`,
-  WATCHLIST: `overdue`,
-  HISTORY: `today`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
   FAVORITES: `favorites`,
 };
 
