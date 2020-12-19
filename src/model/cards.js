@@ -22,7 +22,7 @@ export default class Cards extends Observer {
     return this._cardsGroup;
   }
 
-  changeDesire(updatedVersion, updatedCard) {
+  changePopup(updatedVersion, updatedCard) {
     const indexMainCards = this._cardsGroup.main.findIndex((card) => card.id === updatedCard.id);
     const indexRatedCards = this._cardsGroup.rated.findIndex((card) => card.id === updatedCard.id);
     const indexCommentedCards = this._cardsGroup.commented.findIndex((card) => card.id === updatedCard.id);
