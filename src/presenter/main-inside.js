@@ -78,7 +78,7 @@ export default class InnerMain {
         this._cardsModel = `KOKOKOKO`;
         break;
       case UpdatePopup.POPUP_AT_ALL:
-        this._cardsModel.changeDesire(updatedVersion, updatedCard);
+        this._cardsModel.changePopup(updatedVersion, updatedCard);
         break;
       default:
         this._cardsModel = `KOKOKOKO`;
