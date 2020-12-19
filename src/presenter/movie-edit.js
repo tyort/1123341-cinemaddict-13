@@ -2,11 +2,12 @@ import MovieEditView from "../view/movie-edit.js";
 import {removeExemplar, render, replace} from "../utils/view-tools.js";
 import {UpdatedVersion, UpdatePopup} from "../const.js";
 
+const body = document.querySelector(`body`);
+
 export default class MovieEdit {
-  constructor(cardEditContainer, cardDataChange, deleteAllPopups) {
-    this._cardEditContainer = cardEditContainer;
+  constructor(cardDataChange) {
+    this._cardEditContainer = body;
     this._cardDataChange = cardDataChange;
-    this._deleteAllPopups = deleteAllPopups;
     this._cardEditComponent = null;
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._popupChangeOnly = this._popupChangeOnly.bind(this);
