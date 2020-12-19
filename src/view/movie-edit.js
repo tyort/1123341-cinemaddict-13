@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import he from "he";
 import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
 
@@ -26,7 +27,7 @@ const createCommentsTemplate = (count, comments) => {
           <img data-emoji="${comments[index].emoji}" src="./images/emoji/${comments[index].emoji}.png" width="55" height="55" alt="emoji-${comments[index].emoji}">
         </span>
         <div>
-          <p class="film-details__comment-text">${comments[index].text}</p>
+          <p class="film-details__comment-text">${he.encode(comments[index].text)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${comments[index].author}</span>
             <span class="film-details__comment-day">${comments[index].day}</span>
