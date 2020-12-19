@@ -10,7 +10,7 @@ const createFilterTemplate = (filters, currentFilterType) => {
           class="main-navigation__item"
           ${idName === currentFilterType ? `checked` : ``}
           ${count === 0 ? `disabled` : ``}
-          value="${idName}">
+          data-filter-name="${idName}">
           ${title}
           <span class="main-navigation__item-count">${count}</span>
         </a>`
@@ -40,13 +40,15 @@ export default class Filter extends Abstract {
   }
 
   _filterTypeChangeHandler(evt) {
-    evt.preventDefault();
-    this._handler.filterTypeChange(evt.target.value);
+    if (evt.target.className === `main-navigation__item`) {
+      evt.preventDefault();
+      this._handler.filterTypeChange(evt.target.dataset.filterName);
+    }
   }
 
   setFilterTypeChangeHandler(exactFormula) {
     this._handler.filterTypeChange = exactFormula;
-    this.getElement().addEventListener(`change`, this._filterTypeChangeHandler);
+    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
   }
 }
 

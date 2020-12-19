@@ -1,20 +1,21 @@
 import {render, removeExemplar} from "../utils/view-tools";
 import {compareDate, compareRating, compareCommentsCount} from "../utils/project-tools";
 import {SortType, UpdatePopup, UpdatedVersion} from "../const.js";
+import {filterCapacity} from "../utils/filter.js";
 import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
 import CardPresenter from "./movie-card";
 
-const body = document.querySelector(`body`);
-const siteMainElement = body.querySelector(`.main`);
 const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
 
 export default class InnerMain {
-  constructor(cardsModel) {
+  constructor(mainContainer, filterModel, cardsModel) {
     this._cardsModel = cardsModel;
+    this._filterModel = filterModel;
+    this._mainContainer = mainContainer;
     this._sortComponent = null;
     this._noMoviesComponent = new NoMovies();
     this._showMoreButtonComponent = null;
@@ -30,6 +31,7 @@ export default class InnerMain {
     this._handleDelAllPopups = this._handleDelAllPopups.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
     this._cardsModel.addObserver(this._handleSomeWhatRerender);
+    this._filterModel.addObserver(this._handleSomeWhatRerender);
   }
 
   aboveRenderInnerMain() {
@@ -45,18 +47,20 @@ export default class InnerMain {
     //   commented: [],
     //   default: []
     // };
+    const filterType = this._filterModel.getFilter();
     const cardsGroup = this._cardsModel.getCards();
+    const filtredCards = filterCapacity[filterType](cardsGroup.main);
 
     switch (this._checkedSortType) {
       case SortType.RATING:
-        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareRating)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareRating)});
       case SortType.MOST_COMMENTED:
-        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareCommentsCount)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareCommentsCount)});
       case SortType.DATE:
-        return Object.assign({}, cardsGroup, {main: cardsGroup.main.slice().sort(compareDate)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareDate)});
     }
 
-    return cardsGroup;
+    return Object.assign({}, cardsGroup, {main: filtredCards});
   }
 
   _handleDelAllPopups() {
@@ -162,12 +166,12 @@ export default class InnerMain {
 
   _renderInnerMain() {
     if (this._getSortedCards().main.length === 0) {
-      render(siteMainElement, this._noMoviesComponent);
+      render(this._mainContainer, this._noMoviesComponent);
       return;
     }
 
     this._renderSort();
-    render(siteMainElement, this._containerOfLists);
+    render(this._mainContainer, this._containerOfLists);
 
     const mainCardsCount = this._getSortedCards().main.length;
     const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, this._renderedCardsCount));
@@ -193,7 +197,7 @@ export default class InnerMain {
 
     this._sortComponent = new Sort(this._checkedSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleStartSorting);
-    render(siteMainElement, this._sortComponent);
+    render(this._mainContainer, this._sortComponent);
   }
 
   _renderCard(container, card) {

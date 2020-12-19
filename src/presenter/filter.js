@@ -18,6 +18,7 @@ export default class Filter {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
+  // рисуем или перерисовываем табло фильтров
   init() {
     this._currentFilter = this._filterModel.getFilter(); // `all` `watchlist` `history` `favorites`
     const prevFilterComponent = this._filterComponent;

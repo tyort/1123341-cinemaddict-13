@@ -20,7 +20,7 @@ cardsModel.setCards(cards); // возвращается копия cards в пе
 
 const filterModel = new FilterModel();
 
-const innerMainPresenter = new InnerMain(cardsModel);
+const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
 
 render(siteHeaderElement, new UserRank());
 render(siteMainElement, new Menu());
