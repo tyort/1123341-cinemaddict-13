@@ -11,10 +11,9 @@ const Mode = {
 };
 
 export default class CardPresenter {
-  constructor(cardContainer, cardDataChange, deleteAllPopups) {
+  constructor(cardContainer, cardDataChange) {
     this._cardContainer = cardContainer;
     this._cardDataChange = cardDataChange;
-    this._deleteAllPopups = deleteAllPopups;
     this._cardComponent = null;
     this._cardEditComponent = null;
     this._mode = Mode.DEL_POPUP;
@@ -69,12 +68,14 @@ export default class CardPresenter {
   }
 
   _handleCardClick() {
-    this._deleteAllPopups();
-    render(body, this._cardEditComponent);
-    body.classList.toggle(`hide-overflow`, true);
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-    document.addEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
-    this._mode = Mode.SHOW_POPUP;
+    this._cardDataChange(
+        UpdatePopup.SHOW_POPUP,
+        false,
+        Object.assign(
+            {},
+            this._card
+        )
+    );
   }
 
   deletePopup() {

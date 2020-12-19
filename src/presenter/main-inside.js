@@ -7,6 +7,7 @@ import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
 import CardPresenter from "./movie-card";
+import CardEditPresenter from "./movie-edit";
 
 const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
@@ -28,10 +29,11 @@ export default class InnerMain {
     this._handleShowMoreClick = this._handleShowMoreClick.bind(this);
     this._handleCardDataChange = this._handleCardDataChange.bind(this);
     this._handleSomeWhatRerender = this._handleSomeWhatRerender.bind(this);
-    this._handleDelAllPopups = this._handleDelAllPopups.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
     this._cardsModel.addObserver(this._handleSomeWhatRerender);
     this._filterModel.addObserver(this._handleSomeWhatRerender);
+
+    this._cardEditPresenter = new CardEditPresenter(this._handleCardDataChange);
   }
 
   aboveRenderInnerMain() {
@@ -63,19 +65,15 @@ export default class InnerMain {
     return Object.assign({}, cardsGroup, {main: filtredCards});
   }
 
-  _handleDelAllPopups() {
-    Object.keys(this._allPresenters).forEach((list) => {
-      Object.values(this._allPresenters[list])
-        .forEach((cardPresenter) => cardPresenter.deletePopup());
-    });
-  }
-
   _handleCardDataChange(updateType, updatedVersion, updatedCard) {
     // здесь только создаются массивы за счет например this._cardsModel.deleteComment;
     // и вызывается функция, что ниже
     switch (updateType) {
       case UpdatePopup.OTHER:
         this._cardsModel = `KOKOKOKO`;
+        break;
+      case UpdatePopup.SHOW_POPUP:
+        this._cardEditPresenter.createTotally(updatedCard);
         break;
       case UpdatePopup.POPUP_AT_ALL:
         this._cardsModel.changePopup(updatedVersion, updatedCard);
@@ -201,7 +199,7 @@ export default class InnerMain {
   }
 
   _renderCard(container, card) {
-    const cardPresenter = new CardPresenter(container, this._handleCardDataChange, this._handleDelAllPopups);
+    const cardPresenter = new CardPresenter(container, this._handleCardDataChange);
     cardPresenter.createTotally(card);
     switch (container) {
       case this._cardContainers[2]:

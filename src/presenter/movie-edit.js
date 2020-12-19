@@ -2,6 +2,10 @@ import MovieEditView from "../view/movie-edit.js";
 import {removeExemplar, render, replace} from "../utils/view-tools.js";
 import {UpdatedVersion, UpdatePopup} from "../const.js";
 
+const Mode = {
+  SHOW_POPUP: `SHOW_POPUP`,
+  DEL_POPUP: `DEL_POPUP`
+};
 const body = document.querySelector(`body`);
 
 export default class MovieEdit {
@@ -9,6 +13,7 @@ export default class MovieEdit {
     this._cardEditContainer = body;
     this._cardDataChange = cardDataChange;
     this._cardEditComponent = null;
+    this._mode = Mode.DEL_POPUP;
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._popupChangeOnly = this._popupChangeOnly.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -25,12 +30,16 @@ export default class MovieEdit {
 
     if (oldEdit === null) {
       render(this._cardEditContainer, this._cardEditComponent);
+
     } else {
       replace(this._cardEditComponent, oldEdit);
     }
 
     removeExemplar(oldEdit);
+    this._mode = Mode.SHOW_POPUP;
+    body.classList.toggle(`hide-overflow`, true);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    document.addEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
   }
 
   _handleCloseClick() {
@@ -43,6 +52,7 @@ export default class MovieEdit {
     this._cardEditContainer.classList.toggle(`hide-overflow`, false);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
+    this._mode = Mode.DEL_POPUP;
   }
 
   deletePopup() {

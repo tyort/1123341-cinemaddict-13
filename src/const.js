@@ -80,7 +80,8 @@ export const SortType = {
 
 export const UpdatePopup = {
   OTHER: `OTHER`,
-  POPUP_AT_ALL: `POPUP_AT_ALL`
+  POPUP_AT_ALL: `POPUP_AT_ALL`,
+  SHOW_POPUP: `SHOW_POPUP`
 };
 
 export const UpdatedVersion = {
