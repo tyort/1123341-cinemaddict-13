@@ -20,9 +20,9 @@ export default class InnerMain {
     this._sortComponent = null;
     this._noMoviesComponent = new NoMovies();
     this._showMoreButtonComponent = null;
-    this._containerOfLists = new MoviesLists();
-    this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
-    this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
+    this._containerOfLists = null;
+    this._listsComponents = null;
+    this._cardContainers = null;
     this._renderedCardsCount = CARD_COUNT_STEP;
     this._checkedSortType = SortType.DEFAULT;
     this._allPresenters = {mainList: {}, rateList: {}, commentsList: {}};
@@ -30,14 +30,7 @@ export default class InnerMain {
     this._handleCardDataChange = this._handleCardDataChange.bind(this);
     this._handleSomeWhatRerender = this._handleSomeWhatRerender.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
-    this._cardsModel.addObserver(this._handleSomeWhatRerender);
-    this._filterModel.addObserver(this._handleSomeWhatRerender);
-
     this._cardEditPresenter = new CardEditPresenter(this._handleCardDataChange);
-  }
-
-  aboveRenderInnerMain() {
-    this._renderInnerMain();
   }
 
   _getSortedCards() {
@@ -100,8 +93,8 @@ export default class InnerMain {
       case UpdatedVersion.MAJOR:
         // начинаем показ опять с минимального количества карточек
         // ставим сортировку на дефолт
-        this._clearInsideMain({resetRenderedCardsCount: true, resetSortType: true});
-        this._renderInnerMain();
+        this.clearInsideMain({resetRenderedCardsCount: true, resetSortType: true});
+        this.renderInnerMain();
         break;
     }
   }
@@ -127,11 +120,11 @@ export default class InnerMain {
     }
 
     this._checkedSortType = sortType;
-    this._clearInsideMain({resetRenderedCardsCount: true});
-    this._renderInnerMain();
+    this.clearInsideMain({resetRenderedCardsCount: true});
+    this.renderInnerMain();
   }
 
-  _clearInsideMain({resetRenderedCardsCount = false, resetSortType = false}) {
+  clearInsideMain({resetRenderedCardsCount = false, resetSortType = false}) {
     const mainCardsCount = this._getSortedCards().main.length;
 
     Object.keys(this._allPresenters).forEach((list) => {
@@ -145,8 +138,9 @@ export default class InnerMain {
       commentsList: {}
     };
 
-    removeExemplar(this._sortComponent);
     removeExemplar(this._noMoviesComponent);
+    removeExemplar(this._sortComponent);
+    removeExemplar(this._containerOfLists);
     removeExemplar(this._showMoreButtonComponent);
 
     if (resetRenderedCardsCount) {
@@ -159,16 +153,22 @@ export default class InnerMain {
     if (resetSortType) {
       this._checkedSortType = SortType.DEFAULT;
     }
+
+    this._cardsModel.removeObserver(this._handleSomeWhatRerender);
+    this._filterModel.removeObserver(this._handleSomeWhatRerender);
   }
 
-  _renderInnerMain() {
+  renderInnerMain() {
+    this._cardsModel.addObserver(this._handleSomeWhatRerender);
+    this._filterModel.addObserver(this._handleSomeWhatRerender);
+
     if (this._getSortedCards().main.length === 0) {
       render(this._mainContainer, this._noMoviesComponent);
       return;
     }
 
     this._renderSort();
-    render(this._mainContainer, this._containerOfLists);
+    this._renderContainerOfList();
 
     const mainCardsCount = this._getSortedCards().main.length;
     const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, this._renderedCardsCount));
@@ -195,6 +195,13 @@ export default class InnerMain {
     this._sortComponent = new Sort(this._checkedSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleStartSorting);
     render(this._mainContainer, this._sortComponent);
+  }
+
+  _renderContainerOfList() {
+    this._containerOfLists = new MoviesLists();
+    this._listsComponents = [...this._containerOfLists.getElement().querySelectorAll(`.films-list`)];
+    this._cardContainers = this._listsComponents.map((list) => list.querySelector(`.films-list__container`));
+    render(this._mainContainer, this._containerOfLists);
   }
 
   _renderCard(container, card) {

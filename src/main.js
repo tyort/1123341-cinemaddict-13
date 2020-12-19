@@ -30,16 +30,16 @@ const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
 
 const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsModel);
 
-innerMainPresenter.aboveRenderInnerMain();
+innerMainPresenter.renderInnerMain();
 filterPresenter.init();
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.STATISTICS:
-      console.log(`жопа`);
+      innerMainPresenter.clearInsideMain({resetRenderedCardsCount: false, resetSortType: false});
       break;
     default:
-      console.log(`кака`);
+      innerMainPresenter.renderInnerMain();
       break;
   }
 };
