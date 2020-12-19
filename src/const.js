@@ -96,4 +96,9 @@ export const FilterType = {
   FAVORITES: `favorites`,
 };
 
+export const MenuItem = {
+  CATALOG: `CATALOG`,
+  STATISTICS: `STATISTICS`
+};
+
 

@@ -6,6 +6,7 @@ import CardsModel from "./model/cards.js";
 import FilterModel from "./model/filter.js";
 import {generateCard} from "./mock/card.js";
 import {render} from "./utils/view-tools.js";
+import {MenuItem} from "./const";
 
 const COMMON_CARD_COUNT = 22;
 
@@ -23,7 +24,8 @@ const filterModel = new FilterModel();
 const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
 
 render(siteHeaderElement, new UserRank());
-render(siteMainElement, new Menu());
+const menu = new Menu();
+render(siteMainElement, menu);
 const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
 
 const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsModel);
@@ -31,3 +33,15 @@ const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsMo
 innerMainPresenter.aboveRenderInnerMain();
 filterPresenter.init();
 
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.STATISTICS:
+      console.log(`жопа`);
+      break;
+    default:
+      console.log(`кака`);
+      break;
+  }
+};
+
+menu.setMenuClickHandler(handleSiteMenuClick);
