@@ -30,7 +30,19 @@ export default class InnerMain {
     this._handleCardDataChange = this._handleCardDataChange.bind(this);
     this._handleSomeWhatRerender = this._handleSomeWhatRerender.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
     this._cardEditPresenter = new CardEditPresenter(this._handleCardDataChange);
+  }
+
+  show() {
+    this._sortComponent.getElement().classList.toggle(`visually-hidden`, false);
+    this._containerOfLists.getElement().classList.toggle(`visually-hidden`, false);
+  }
+
+  hide() {
+    this._sortComponent.getElement().classList.toggle(`visually-hidden`, true);
+    this._containerOfLists.getElement().classList.toggle(`visually-hidden`, true);
   }
 
   _getSortedCards() {

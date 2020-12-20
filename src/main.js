@@ -27,6 +27,7 @@ innerMainPresenter.renderInnerMain();
 
 const statistics = new Statistics(cardsModel.getCards());
 render(siteMainElement, statistics);
+statistics.getElement().classList.toggle(`visually-hidden`, true);
 
 const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
 const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsModel);
@@ -35,10 +36,23 @@ filterPresenter.init();
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.STATISTICS:
-      innerMainPresenter.clearInsideMain({resetRenderedCardsCount: false, resetSortType: false});
+      innerMainPresenter.hide();
+      statistics.getElement().classList.toggle(`visually-hidden`, false);
+      menu.getElement()
+        .querySelector(`.main-navigation__additional`)
+        .classList.toggle(`main-navigation__additional--active`, true);
+
+      [...menu.getElement().firstChild.children]
+        .forEach((navigationItem) => {
+          navigationItem.classList.toggle(`main-navigation__item--active`, false);
+        });
       break;
     default:
-      innerMainPresenter.renderInnerMain();
+      innerMainPresenter.show();
+      statistics.getElement().classList.toggle(`visually-hidden`, true);
+      menu.getElement()
+        .querySelector(`.main-navigation__additional`)
+        .classList.toggle(`main-navigation__additional--active`, false);
       break;
   }
 };

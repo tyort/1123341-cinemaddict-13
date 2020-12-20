@@ -101,4 +101,10 @@ export const MenuItem = {
   STATISTICS: `STATISTICS`
 };
 
-
+export const TimePeriod = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};

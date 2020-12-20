@@ -3,6 +3,7 @@ import duration from "dayjs/plugin/duration";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./abstract-smart.js";
+import {TimePeriod} from "../const.js";
 import {generateOriginalGenres, generateCountCardsByGenre, generateWatchedCards} from "../utils/project-tools.js";
 dayjs.extend(duration);
 
@@ -65,7 +66,7 @@ const renderGenresChart = (genresCtx, sortedCardsByCount) => {
   });
 };
 
-const createStatisticsTemplate = (cards, topGenre) => {
+const createStatisticsTemplate = (cards, topGenre, currentTimePeriod) => {
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   const totalDuration = cards
     .map((card) => card.duration)
@@ -84,19 +85,19 @@ const createStatisticsTemplate = (cards, topGenre) => {
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <input ${currentTimePeriod === TimePeriod.ALL_TIME ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time">
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+      <input ${currentTimePeriod === TimePeriod.TODAY ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
       <label for="statistic-today" class="statistic__filters-label">Today</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+      <input ${currentTimePeriod === TimePeriod.WEEK ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
       <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+      <input ${currentTimePeriod === TimePeriod.MONTH ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
       <label for="statistic-month" class="statistic__filters-label">Month</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+      <input ${currentTimePeriod === TimePeriod.YEAR ? `checked` : ``} type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
       <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
 
@@ -125,6 +126,8 @@ const createStatisticsTemplate = (cards, topGenre) => {
 export default class Statistics extends SmartView {
   constructor(cards) {
     super();
+    this._currentTimePeriod = TimePeriod.ALL_TIME;
+    this._parsedCurrentDate = dayjs(new Date());
     this._cards = generateWatchedCards(cards.main);
     this._genres = generateOriginalGenres(this._cards);
 
@@ -134,8 +137,11 @@ export default class Statistics extends SmartView {
 
     // сортируем массив, что выше и создаем из него new Map();
     this._sortedGenres = new Map(this._genresCapacity.sort((a, b) => b[1] - a[1]));
+    this._topGenre = [...this._sortedGenres][0][0];
 
+    this._formChangehandler = this._formChangehandler.bind(this);
     this._setCharts();
+    this._changeViewPeriod();
   }
 
   removeElement() {
@@ -146,12 +152,27 @@ export default class Statistics extends SmartView {
   }
 
   getTemplate() {
-    const topGenre = [...this._sortedGenres][0][0];
-    return createStatisticsTemplate(this._cards, topGenre);
+    return createStatisticsTemplate(this._cards, this._topGenre, this._currentTimePeriod);
   }
 
   restoreHandlers() {
     this._setCharts();
+    this._changeViewPeriod();
+  }
+
+  _formChangehandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName === `INPUT`) {
+      // const form = this.getElement().querySelector(`form`);
+      // const checkedPeriod = form.querySelector(`[value=${evt.target.value}]`);
+      this._currentTimePeriod = evt.target.value;
+      this.updateElement();
+    }
+  }
+
+  _changeViewPeriod() {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`change`, this._formChangehandler);
   }
 
   _setCharts() {
@@ -164,7 +185,6 @@ export default class Statistics extends SmartView {
   }
 }
 
-// const parsedCurrentDate = dayjs(new Date());
 // cards.forEach((card) => parsedCurrentDate.diff(card.dateOfView, `day`));
 // const fkfller = dayjs.duration(7, `days`).days();
 // const fkflle = dayjs.duration(7, `days`).weeks();

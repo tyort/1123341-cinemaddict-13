@@ -7,8 +7,7 @@ const createFilterTemplate = (filters, currentFilterType) => {
       return (
         `<a 
           href="#${idName}"
-          class="main-navigation__item"
-          ${idName === currentFilterType ? `checked` : ``}
+          class="main-navigation__item ${idName === currentFilterType ? `main-navigation__item--active` : ``}"
           ${count === 0 ? `disabled` : ``}
           data-filter-name="${idName}">
           ${title}
@@ -40,7 +39,7 @@ export default class Filter extends Abstract {
   }
 
   _filterTypeChangeHandler(evt) {
-    if (evt.target.className === `main-navigation__item`) {
+    if (evt.target.tagName === `A`) {
       evt.preventDefault();
       this._handler.filterTypeChange(evt.target.dataset.filterName);
     }
