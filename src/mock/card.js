@@ -1,6 +1,6 @@
 import {nanoid} from "nanoid";
 import {getRandomInteger} from "../utils/common-tools.js";
-import {generateDuration, generateDate} from "../utils/project-tools.js";
+import {generateDate} from "../utils/project-tools.js";
 import {ages, moviesTitles, genres, descriptions, allComments} from "../const";
 
 const generateComments = () => {
@@ -57,7 +57,7 @@ export const generateCard = () => {
     title: title.slice(0, title.length - 4),
     rating: generateRating(),
     releaseDate: generateDate(),
-    duration: generateDuration(), // это файл dayjs
+    duration: getRandomInteger(80, 150),
     genres: generateGenres(),
     description: generateDescription(),
     watchPlan: Boolean(getRandomInteger(0, 1)),

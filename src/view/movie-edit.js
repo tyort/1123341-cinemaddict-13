@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import he from "he";
 import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
+import {generateDuration} from "../utils/project-tools.js";
 
 const BLANK_CARD = {
   poster: ``,
@@ -79,6 +80,7 @@ const createMovieEditTemplate = (card = {}) => {
   const comments = createCommentsTemplate(commentsSum, allComments);
   const emojies = createEmojiesTemplate(allEmojies);
   const actualGenres = generateGenresTemplate(genres);
+  const parsedDuration = generateDuration(duration);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -124,7 +126,7 @@ const createMovieEditTemplate = (card = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${duration}</td>
+                <td class="film-details__cell">${parsedDuration}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

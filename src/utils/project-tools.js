@@ -7,7 +7,7 @@ dayjs.extend(relativeTime);
 dayjs.extend(duration);
 dayjs.extend(objectSupport);
 
-export const generateDuration = (asMinutes = getRandomInteger(80, 150)) => {
+export const generateDuration = (asMinutes) => {
   const minutes = dayjs.duration(asMinutes, `minutes`).minutes();
   const hours = dayjs.duration(asMinutes, `minutes`).hours();
   return dayjs({hour: hours, minute: minutes}).format(`H[h] mm[m]`);
@@ -41,4 +41,20 @@ export const compareRating = (cardA, cardB) => {
 export const compareCommentsCount = (cardA, cardB) => {
   return Number(cardB.allComments.length) - Number(cardA.allComments.length);
 };
+
+export const generateOriginalGenres = (cards) => {
+  const originalGenres = new Set();
+  cards.forEach((card) => card.genres.forEach((genre) => originalGenres.add(genre)));
+  return [...originalGenres];
+};
+
+export const generateCountCardsByGenre = (cards, genre) => {
+  const isGenreAppear = (cardGenre) => cardGenre === genre;
+  return cards.filter((card) => card.genres.some(isGenreAppear)).length;
+};
+
+export const generateWatchedCards = (cards) => {
+  return cards.filter((card) => card.hasWatched);
+};
+
 

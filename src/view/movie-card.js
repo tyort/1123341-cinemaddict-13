@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import Abstract from "./abstract.js";
+import {generateDuration} from "../utils/project-tools.js";
 
 const createMovieCardTemplate = (card) => {
   const {
@@ -20,13 +21,14 @@ const createMovieCardTemplate = (card) => {
   const planClassName = watchPlan ? `film-card__controls-item--active` : ``;
   const watchedClassName = hasWatched ? `film-card__controls-item--active` : ``;
   const favoriteClassName = isFavorite ? `film-card__controls-item--active` : ``;
+  const parsedDuration = generateDuration(duration);
 
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${year}</span>
-      <span class="film-card__duration">${duration}</span>
+      <span class="film-card__duration">${parsedDuration}</span>
       <span class="film-card__genre">${genres[0]}</span>
     </p>
     <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
