@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./abstract-smart.js";
 import {generateOriginalGenres, generateCountCardsByGenre, generateWatchedCards} from "../utils/project-tools.js";
+dayjs.extend(duration);
 
 const renderGenresChart = (genresCtx, sortedCardsByCount) => {
   return new Chart(genresCtx, {
@@ -161,3 +163,14 @@ export default class Statistics extends SmartView {
     this._genresCart = renderGenresChart(genresCtx, this._sortedGenres);
   }
 }
+
+// const parsedCurrentDate = dayjs(new Date());
+// cards.forEach((card) => parsedCurrentDate.diff(card.dateOfView, `day`));
+// const fkfller = dayjs.duration(7, `days`).days();
+// const fkflle = dayjs.duration(7, `days`).weeks();
+// const fkfll = dayjs.duration(30, `days`).months();
+// const fkfl = dayjs.duration(365, `days`).years();
+// console.log(fkfller);
+// console.log(fkflle);
+// console.log(fkfll);
+// console.log(fkfl);
