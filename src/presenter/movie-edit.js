@@ -57,7 +57,7 @@ export default class MovieEdit {
       this._handleCloseClick();
       this._cardDataChange(
           UpdatePopup.POPUP_AT_ALL,
-          UpdatedVersion.MINOR,
+          UpdatedVersion.MAJOR,
           Object.assign(
               this._card,
               this._cardForSave
