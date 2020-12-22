@@ -5,12 +5,10 @@ import InnerMain from "./presenter/main-inside.js";
 import FilterPresenter from "./presenter/filter.js";
 import CardsModel from "./model/cards.js";
 import FilterModel from "./model/filter.js";
-import {generateCard} from "./mock/card.js";
 import {render} from "./utils/view-tools.js";
 import {MenuItem} from "./const";
 import Api from "./api.js";
 
-const COMMON_CARD_COUNT = 22;
 const AUTHORIZATION = `Basic dgfs234234fewlf443`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
@@ -24,17 +22,7 @@ const filterModel = new FilterModel();
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
-api.getMovies().then((cards) => {
-  console.log(cards);
-  // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-  // а ещё на сервере используется snake_case, а у нас camelCase.
-  // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-  // Есть вариант получше - паттерн "Адаптер"
-});
-const cards = new Array(COMMON_CARD_COUNT).fill().map(generateCard);
-console.log(cards);
 const cardsModel = new CardsModel();
-cardsModel.setCards(cards); // возвращается копия cards в переменную this._cards. Ничего не возвращаем!
 const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
 innerMainPresenter.renderInnerMain();
 
@@ -75,3 +63,7 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 menu.setMenuClickHandler(handleSiteMenuClick);
+
+api.getMovies().then((cards) => {
+  cardsModel.setCards(cards);
+});
