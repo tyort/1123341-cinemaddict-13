@@ -37,7 +37,6 @@ export default class Cards extends Observer {
     delete adaptedCardToCoder.film_info;
     delete adaptedCardToCoder.user_details;
 
-    console.log(adaptedCardToCoder);
     return adaptedCardToCoder;
   }
 

@@ -27,27 +27,29 @@ export default class Api {
       .then((cards) => cards.map(CardsModel.adaptToClient));
   }
 
-  updateMovie(card) {
+  updateMovie(card) { // возвращает fetch
     return this._load({
       url: `movies/${card.id}`,
       method: Method.PUT,
-      body: JSON.stringify(card),
+      body: JSON.stringify(CardsModel.adaptToServer(card)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(CardsModel.adaptToClient);
   }
 
-  _load({
-    url,
-    method = Method.GET,
-    body = null,
-    headers = new Headers()
-  }) {
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(
-        `${this._endPoint}/${url}`,
-        {method, body, headers}
+        `${this._endPoint}/${url}`, // адрес с которого мы хоти получить данные
+
+        // второй аргумент обязательно объект
+        {
+          method,
+          body,
+          headers
+        }
     )
       .then(Api.checkStatus)
       .catch(Api.catchError);
