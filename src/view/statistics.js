@@ -128,7 +128,7 @@ export default class Statistics extends SmartView {
     super();
     this._currentTimePeriod = TimePeriod.ALL_TIME;
     this._parsedCurrentDate = dayjs(new Date());
-    this._cards = generateWatchedCards(cards.main);
+    this._cards = generateWatchedCards(cards);
     this._filteredCards = this._cards.slice();
     this._formChangehandler = this._formChangehandler.bind(this);
     this._setCharts();

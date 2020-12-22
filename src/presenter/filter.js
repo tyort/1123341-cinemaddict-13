@@ -63,22 +63,22 @@ export default class Filter {
       {
         idName: FilterType.ALL,
         title: `All Movies`,
-        count: filterCapacity[FilterType.ALL](cards.main).length
+        count: filterCapacity[FilterType.ALL](cards).length
       },
       {
         idName: FilterType.WATCHLIST,
         title: `Watchlist`,
-        count: filterCapacity[FilterType.WATCHLIST](cards.main).length
+        count: filterCapacity[FilterType.WATCHLIST](cards).length
       },
       {
         idName: FilterType.HISTORY,
         title: `History`,
-        count: filterCapacity[FilterType.HISTORY](cards.main).length
+        count: filterCapacity[FilterType.HISTORY](cards).length
       },
       {
         idName: FilterType.FAVORITES,
         title: `Favorites`,
-        count: filterCapacity[FilterType.FAVORITES](cards.main).length
+        count: filterCapacity[FilterType.FAVORITES](cards).length
       }
     ];
   }
