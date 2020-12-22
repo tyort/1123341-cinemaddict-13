@@ -60,14 +60,14 @@ export default class InnerMain {
 
     switch (this._checkedSortType) {
       case SortType.RATING:
-        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareRating)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareRating)});
       case SortType.MOST_COMMENTED:
-        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareCommentsCount)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareCommentsCount)});
       case SortType.DATE:
-        return Object.assign({}, cardsGroup, {main: filtredCards.sort(compareDate)});
+        return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareDate)});
     }
 
-    return Object.assign({}, cardsGroup, {main: filtredCards});
+    return Object.assign({}, cardsGroup, {main: filtredCards.slice()});
   }
 
   _handleCardDataChange(updateType, updatedVersion, updatedCard) {
