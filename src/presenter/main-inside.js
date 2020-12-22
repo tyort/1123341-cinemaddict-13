@@ -53,7 +53,6 @@ export default class InnerMain {
     //   rated: [],
     //   commented: []
     // };
-    console.log(`жопа`);
     const filterType = this._filterModel.getFilter();
     const cardsGroup = this._cardsModel.getCards();
     const filtredCards = filterCapacity[filterType](cardsGroup.main);
@@ -129,8 +128,6 @@ export default class InnerMain {
   }
 
   _handleStartSorting(sortType) {
-    console.log(`кака`);
-
     if (this._checkedSortType === sortType) {
       return;
     }
@@ -186,19 +183,21 @@ export default class InnerMain {
     this._renderSort();
     this._renderContainerOfList();
 
-    const mainCardsCount = this._getSortedCards().main.length;
-    const mainCards = this._getSortedCards().main.slice(0, Math.min(mainCardsCount, this._renderedCardsCount));
-    this._renderCards(mainCards, this._cardContainers[0]);
+    const сardsCount = this._getSortedCards().main.length;
 
-    const ratedCardsCount = this._getSortedCards().rated.length;
-    const ratedCards = this._getSortedCards().rated.slice(0, Math.min(ratedCardsCount, EXTRA_CARD_COUNT));
-    this._renderCards(ratedCards, this._cardContainers[1]);
+    const mainCards = this._getSortedCards().main
+      .slice(0, Math.min(сardsCount, this._renderedCardsCount));
 
-    const commentedCardsCount = this._getSortedCards().main.length;
+    const ratedCards = this._getSortedCards().main
+      .sort(compareRating)
+      .slice(0, Math.min(сardsCount, EXTRA_CARD_COUNT));
+
     const commentedCards = this._getSortedCards().main
       .sort(compareCommentsCount)
-      .slice(0, Math.min(commentedCardsCount, EXTRA_CARD_COUNT));
+      .slice(0, Math.min(сardsCount, EXTRA_CARD_COUNT));
 
+    this._renderCards(mainCards, this._cardContainers[0]);
+    this._renderCards(ratedCards, this._cardContainers[1]);
     this._renderCards(commentedCards, this._cardContainers[2]);
 
     if (this._getSortedCards().main.length > this._renderedCardsCount) {
