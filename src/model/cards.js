@@ -3,25 +3,25 @@ import Observer from "../utils/observer.js";
 export default class Cards extends Observer {
   constructor() {
     super();
-    this._cardsGroup = [];
+    this._cards = [];
   }
 
   setCards(cards) {
-    this._cardsGroup = cards.slice();
+    this._cards = cards.slice();
   }
 
   getCards() {
-    return this._cardsGroup;
+    return this._cards;
   }
 
   changePopup(updatedVersion, updatedCard) {
-    const index = this._cardsGroup.findIndex((card) => card.id === updatedCard.id);
+    const index = this._cards.findIndex((card) => card.id === updatedCard.id);
 
     if (index !== -1) {
-      this._cardsGroup = [
-        ...this._cardsGroup.slice(0, index),
+      this._cards = [
+        ...this._cards.slice(0, index),
         updatedCard,
-        ...this._cardsGroup.slice(index + 1)
+        ...this._cards.slice(index + 1)
       ];
     }
 

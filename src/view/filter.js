@@ -50,5 +50,3 @@ export default class Filter extends Abstract {
     this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
   }
 }
-
-// [{idName: `all`, title: `All movies`, count: 0}], `all`

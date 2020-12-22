@@ -25,6 +25,10 @@ cardsModel.setCards(cards); // возвращается копия cards в пе
 const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
 innerMainPresenter.renderInnerMain();
 
+const footerStatistics = body.querySelector(`.footer__statistics`);
+const text = footerStatistics.querySelector(`span`);
+text.textContent = `${cardsModel.getCards().length}`;
+
 const statistics = new Statistics(cardsModel.getCards());
 render(siteMainElement, statistics);
 statistics.getElement().classList.toggle(`visually-hidden`, true);
