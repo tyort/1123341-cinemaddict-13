@@ -129,16 +129,7 @@ export default class Statistics extends SmartView {
     this._currentTimePeriod = TimePeriod.ALL_TIME;
     this._parsedCurrentDate = dayjs(new Date());
     this._cards = generateWatchedCards(cards.main);
-    this._genres = generateOriginalGenres(this._cards);
-
-    // создаем массив, где каждый элемент;
-    // [жанр, количество просмотренных фильмов этого жанра];
-    this._genresCapacity = this._genres.map((genre) => [genre, generateCountCardsByGenre(this._cards, genre)]);
-
-    // сортируем массив, что выше и создаем из него new Map();
-    this._sortedGenres = new Map(this._genresCapacity.sort((a, b) => b[1] - a[1]));
-    this._topGenre = [...this._sortedGenres][0][0];
-
+    this._filteredCards = this._cards.slice();
     this._formChangehandler = this._formChangehandler.bind(this);
     this._setCharts();
     this._changeViewPeriod();
@@ -146,13 +137,22 @@ export default class Statistics extends SmartView {
 
   removeElement() {
     super.removeElement();
-    if (this._genresCart !== null) {
-      this._genresCart = null;
+    if (this._genresChart !== null) {
+      this._genresChart = null;
     }
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._cards, this._topGenre, this._currentTimePeriod);
+    this._genres = generateOriginalGenres(this._filteredCards);
+
+    // создаем массив, где каждый элемент;
+    // [жанр, количество просмотренных фильмов этого жанра];
+    this._genresCapacity = this._genres.map((genre) => [genre, generateCountCardsByGenre(this._filteredCards, genre)]);
+
+    // сортируем массив, что выше и создаем из него new Map();
+    this._sortedGenres = new Map(this._genresCapacity.sort((a, b) => b[1] - a[1]));
+    this._topGenre = [...this._sortedGenres].length > 0 ? [...this._sortedGenres][0][0] : ``;
+    return createStatisticsTemplate(this._filteredCards, this._topGenre, this._currentTimePeriod);
   }
 
   restoreHandlers() {
@@ -163,9 +163,27 @@ export default class Statistics extends SmartView {
   _formChangehandler(evt) {
     evt.preventDefault();
     if (evt.target.tagName === `INPUT`) {
-      // const form = this.getElement().querySelector(`form`);
-      // const checkedPeriod = form.querySelector(`[value=${evt.target.value}]`);
       this._currentTimePeriod = evt.target.value;
+      this._filteredCards = this._cards.slice().filter((card) => {
+        const diffDays = this._parsedCurrentDate.diff(card.dateOfView, `day`);
+
+        switch (this._currentTimePeriod) {
+          case TimePeriod.YEAR:
+            return dayjs.duration(diffDays, `days`).years() === 0;
+          case TimePeriod.MONTH:
+            return dayjs.duration(diffDays, `days`).months() === 0;
+          case TimePeriod.WEEK:
+            return dayjs.duration(diffDays, `days`).weeks() === 0;
+          case TimePeriod.TODAY:
+            return dayjs.duration(diffDays, `days`).days() === 0
+              && dayjs.duration(diffDays, `days`).years() === 0
+              && dayjs.duration(diffDays, `days`).weeks() === 0
+              && dayjs.duration(diffDays, `days`).months() === 0;
+          default:
+            return 1;
+        }
+      });
+
       this.updateElement();
     }
   }
@@ -176,21 +194,13 @@ export default class Statistics extends SmartView {
   }
 
   _setCharts() {
-    if (this._genresCart !== null) {
-      this._genresCart = null;
+    if (this._genresChart !== null) {
+      this._genresChart = null;
     }
 
     const genresCtx = this.getElement().querySelector(`.statistic__chart`);
-    this._genresCart = renderGenresChart(genresCtx, this._sortedGenres);
+    this._genresChart = renderGenresChart(genresCtx, this._sortedGenres);
   }
 }
 
-// cards.forEach((card) => parsedCurrentDate.diff(card.dateOfView, `day`));
-// const fkfller = dayjs.duration(7, `days`).days();
-// const fkflle = dayjs.duration(7, `days`).weeks();
-// const fkfll = dayjs.duration(30, `days`).months();
-// const fkfl = dayjs.duration(365, `days`).years();
-// console.log(fkfller);
-// console.log(fkflle);
-// console.log(fkfll);
-// console.log(fkfl);
+

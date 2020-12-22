@@ -72,7 +72,7 @@ export const generateCard = () => {
     isFavorite: Boolean(getRandomInteger(0, 1)),
     ageLimit: generateAgeLimits(),
     allComments: generateComments(),
-    dateOfView: parsedCurrentDate.subtract(getRandomInteger(0, 500), `day`)
+    dateOfView: parsedCurrentDate.subtract(getRandomInteger(0, 400), `day`)
   };
 };
 
