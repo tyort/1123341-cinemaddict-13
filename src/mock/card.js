@@ -22,7 +22,7 @@ const generateRating = () => {
   const integer = getRandomInteger(1, 10);
   const fractional = getRandomInteger(0, 9);
 
-  return `${integer}.${fractional}`;
+  return Number(`${integer}.${fractional}`);
 };
 
 const generateAgeLimits = () => {
@@ -44,6 +44,42 @@ const generateGenres = () => {
   return [...titles];
 };
 
+const actors = [
+  `Buratino`,
+  `Patrick`,
+  `Roberto Suka`,
+  `Berkova`,
+  `Shalava`,
+  `Durka`,
+  `Jopka Popka`
+];
+
+const countries = [
+  `Anal`,
+  `Pizda`,
+  `Russia`,
+  `USA`,
+  `India`,
+  `Canada`,
+];
+
+const generateActors = () => {
+  const names = new Set();
+  for (let i = 0; i < getRandomInteger(1, 5); i++) {
+    names.add(actors[getRandomInteger(0, actors.length - 1)]);
+  }
+
+  return [...names];
+};
+
+const generateDirector = () => {
+  return actors[getRandomInteger(0, actors.length - 1)];
+};
+
+const generateCountry = () => {
+  return countries[getRandomInteger(0, countries.length - 1)];
+};
+
 const generateDescription = () => {
   const sentences = new Set();
   for (let i = 0; i < getRandomInteger(1, 5); i++) {
@@ -57,22 +93,33 @@ const generateDescription = () => {
 
 export const generateCard = () => {
   const title = generateTitle();
+  const hasWatched = Boolean(getRandomInteger(0, 1));
+  const dateOfView = hasWatched
+    ? parsedCurrentDate.subtract(getRandomInteger(0, 400), `day`)
+    : null;
+
+  const posterName = title.toLowerCase().replace(/\s+/g, `-`);
+  const poster = `images/posters/${posterName}`;
 
   return {
     id: nanoid(5),
-    poster: title.toLowerCase().replace(/\s+/g, `-`),
+    poster,
     title: title.slice(0, title.length - 4),
     rating: generateRating(),
     releaseDate: generateDate(),
+    releaseCountry: generateCountry(),
     duration: getRandomInteger(80, 150),
     genres: generateGenres(),
+    actors: generateActors(),
+    writers: generateActors(),
+    director: generateDirector(),
     description: generateDescription(),
     watchPlan: Boolean(getRandomInteger(0, 1)),
-    hasWatched: Boolean(getRandomInteger(0, 1)),
+    hasWatched,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     ageLimit: generateAgeLimits(),
     allComments: generateComments(),
-    dateOfView: parsedCurrentDate.subtract(getRandomInteger(0, 400), `day`)
+    dateOfView
   };
 };
 

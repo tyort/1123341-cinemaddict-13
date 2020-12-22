@@ -33,7 +33,7 @@ export const allComments = [
   }
 ];
 
-export const ages = [`0+`, `6+`, `12+`, `16+`, `18+`];
+export const ages = [0, 6, 12, 16, 18];
 
 export const allEmojies = [`angry`, `puke`, `sleeping`, `smile`];
 

@@ -73,7 +73,11 @@ const createMovieEditTemplate = (card = {}) => {
     watchPlan,
     hasWatched,
     isFavorite,
-    allComments
+    allComments,
+    director,
+    actors,
+    writers,
+    releaseCountry
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
@@ -90,9 +94,9 @@ const createMovieEditTemplate = (card = {}) => {
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${image}" alt="${title}">
+            <img class="film-details__poster-img" src="./${image}" alt="${title}">
 
-            <p class="film-details__age">${ageLimit}</p>
+            <p class="film-details__age">${ageLimit}+</p>
           </div>
 
           <div class="film-details__info">
@@ -110,15 +114,15 @@ const createMovieEditTemplate = (card = {}) => {
             <table class="film-details__table">
               <tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Anthony Mann</td>
+                <td class="film-details__cell">${director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                <td class="film-details__cell">${writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                <td class="film-details__cell">${actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
@@ -130,7 +134,7 @@ const createMovieEditTemplate = (card = {}) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">USA</td>
+                <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>

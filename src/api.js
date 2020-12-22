@@ -1,4 +1,5 @@
 // Модуль, который будет отправлять на сервер REST-запросы
+import CardsModel from "./model/cards.js";
 
 const Method = {
   GET: `GET`,
@@ -18,7 +19,12 @@ export default class Api {
 
   getMovies() {
     return this._load({url: `movies`})
-      .then(Api.toJSON);
+      // получаем pending («ожидание»), в последствии одно из:
+      // fulfilled («выполнено успешно») или rejected («выполнено с ошибкой»).
+      .then(Api.toJSON)
+      // не меняет результат метода getMovies()
+      // но создает список карт удобоваримый для моей придуманной структуру
+      .then((cards) => cards.map(CardsModel.adaptToClient));
   }
 
   updateMovie(card) {
