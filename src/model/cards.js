@@ -8,7 +8,6 @@ export default class Cards extends Observer {
       main: [],
       rated: [],
       commented: [],
-      default: []
     };
   }
 

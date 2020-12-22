@@ -51,8 +51,7 @@ export default class InnerMain {
     // this._cardsGroup = {
     //   main: [],
     //   rated: [],
-    //   commented: [],
-    //   default: []
+    //   commented: []
     // };
     const filterType = this._filterModel.getFilter();
     const cardsGroup = this._cardsModel.getCards();
@@ -61,13 +60,15 @@ export default class InnerMain {
     switch (this._checkedSortType) {
       case SortType.RATING:
         return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareRating)});
-      case SortType.MOST_COMMENTED:
-        return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareCommentsCount)});
       case SortType.DATE:
         return Object.assign({}, cardsGroup, {main: filtredCards.slice().sort(compareDate)});
     }
 
-    return Object.assign({}, cardsGroup, {main: filtredCards.slice()});
+    return Object.assign({},
+        cardsGroup,
+        {main: filtredCards.slice()},
+        {commented: filtredCards.slice().sort(compareCommentsCount)}
+    );
   }
 
   _handleCardDataChange(updateType, updatedVersion, updatedCard) {

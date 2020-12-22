@@ -200,13 +200,13 @@ export default class MovieEdit extends AbstractSmart {
         {},
         card,
         {
-          isRatingGood: card.rating > 7, // ??????? измени или удали ???????
           commentsSum: card.allComments.length
         }
     );
   }
 
-  static parseDataToCard(parsedCard) { //  ??????? для сохранения изменений карточки внесенных на сайте ???????
+  // превращение расширенных данных в данные для отрисовки
+  static parseDataToCard(parsedCard) {
     parsedCard = Object.assign({}, parsedCard);
     delete parsedCard.isRatingGood;
     delete parsedCard.commentsSum;
@@ -222,7 +222,6 @@ export default class MovieEdit extends AbstractSmart {
         MovieEdit.parseCardToData(card)
     );
   }
-
 
   _emojiClickHandler(evt) { // внутренний хэндлер
     evt.preventDefault();
@@ -259,11 +258,9 @@ export default class MovieEdit extends AbstractSmart {
 
         // this.updateParsedCard(this._parsedCard);
         // не учтет новое количество комментариев
-
         // this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard)); !!! НЕ СТИРАТЬ
         // ПОЧЕМУ НЕ РАБОТАЕТ ВАРИАНТ ВЫШЕ!!!!
         // НЕЛЬЗЯ ЗДЕСЬ ИЗМЕНЯТЬ САМУ ПЕРЕМЕННУЮ ВОТ ТАК this._parsedCard.allComments.push
-
         this.updateParsedCard({
           allComments: [...this._parsedCard.allComments, comment],
           commentsSum: this._parsedCard.allComments.length + 1

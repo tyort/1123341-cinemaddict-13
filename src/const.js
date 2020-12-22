@@ -75,7 +75,6 @@ export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
   RATING: `rating`,
-  MOST_COMMENTED: `most-commented`
 };
 
 export const UpdatePopup = {
