@@ -40,8 +40,9 @@ export default class Cards extends Observer {
     return adaptedCardToCoder;
   }
 
-  setCards(cards) {
+  setCards(updatedVersion, cards) {
     this._cards = cards.slice();
+    this._notify(updatedVersion);
   }
 
   getCards() {

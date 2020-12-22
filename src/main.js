@@ -6,7 +6,7 @@ import FilterPresenter from "./presenter/filter.js";
 import CardsModel from "./model/cards.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/view-tools.js";
-import {MenuItem} from "./const";
+import {UpdatedVersion, MenuItem} from "./const";
 import Api from "./api.js";
 
 const AUTHORIZATION = `Basic dgfs234234fewlf443`;
@@ -64,6 +64,10 @@ const handleSiteMenuClick = (menuItem) => {
 
 menu.setMenuClickHandler(handleSiteMenuClick);
 
-api.getMovies().then((cards) => {
-  cardsModel.setCards(cards);
-});
+api.getMovies()
+  .then((cards) => {
+    cardsModel.setCards(UpdatedVersion.INIT, cards);
+  })
+  .catch(() => {
+    cardsModel.setTasks(UpdatedVersion.INIT, []);
+  });
