@@ -23,19 +23,23 @@ const createCommentsTemplate = (count, comments) => {
   return new Array(count)
     .fill()
     .map((_comment, index) => {
-      return `<li class="film-details__comment">
-        <span class="film-details__comment-emoji">
-          <img data-emoji="${comments[index].emoji}" src="./images/emoji/${comments[index].emoji}.png" width="55" height="55" alt="emoji-${comments[index].emoji}">
-        </span>
-        <div>
-          <p class="film-details__comment-text">${he.encode(comments[index].text)}</p>
-          <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${comments[index].author}</span>
-            <span class="film-details__comment-day">${comments[index].day}</span>
-            <button class="film-details__comment-delete">Delete</button>
-          </p>
-        </div>
-      </li>`;
+      if (comments[index].hasOwnProperty(`id`)) {
+        return `<li class="film-details__comment">
+          <span class="film-details__comment-emoji">
+            <img data-emoji="${comments[index].emoji}" src="./images/emoji/${comments[index].emoji}.png" width="55" height="55" alt="emoji-${comments[index].emoji}">
+          </span>
+          <div>
+            <p class="film-details__comment-text">${he.encode(comments[index].text)}</p>
+            <p class="film-details__comment-info">
+              <span class="film-details__comment-author">${comments[index].author}</span>
+              <span class="film-details__comment-day">${comments[index].day}</span>
+              <button class="film-details__comment-delete">Delete</button>
+            </p>
+          </div>
+        </li>`;
+      }
+
+      return ``;
     })
     .join(``);
 };

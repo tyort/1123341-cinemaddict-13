@@ -7,6 +7,7 @@ export default class Cards extends Observer {
   constructor() {
     super();
     this._cards = [];
+    this._comments = [];
   }
 
   static adaptToServer(card) {
@@ -76,8 +77,16 @@ export default class Cards extends Observer {
     this._notify(updatedVersion);
   }
 
+  setComments(comments) {
+    this._comments = comments.slice();
+  }
+
   getCards() {
     return this._cards;
+  }
+
+  getComments() {
+    return this._comments;
   }
 
   changePopup(updatedVersion, updatedCard) {

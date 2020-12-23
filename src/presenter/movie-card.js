@@ -3,17 +3,11 @@ import MovieCard from "../view/movie-card.js";
 import {UpdatePopup, UpdatedVersion} from "../const.js";
 import dayjs from "dayjs";
 
-const Mode = {
-  SHOW_POPUP: `SHOW_POPUP`,
-  DEL_POPUP: `DEL_POPUP`
-};
-
 export default class CardPresenter {
   constructor(cardContainer, cardDataChange) {
     this._cardContainer = cardContainer;
     this._cardDataChange = cardDataChange;
     this._cardComponent = null;
-    this._mode = Mode.DEL_POPUP;
     this._handleCardClick = this._handleCardClick.bind(this);
     this._handleWillWatchClick = this._handleWillWatchClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);

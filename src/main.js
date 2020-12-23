@@ -76,5 +76,4 @@ api.getMovies()
     text.textContent = `${cardsModel.getCards().length}`;
   });
 
-api.getComments()
-  .then((cards) => console.log(cards));
+

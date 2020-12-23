@@ -27,8 +27,8 @@ export default class Api {
       .then((cards) => cards.map(CardsModel.adaptToClient));
   }
 
-  getComments() {
-    return this._load({url: `comments/11`})
+  getComments(card) {
+    return this._load({url: `comments/${card.id}`})
       .then(Api.toJSON);
   }
 
