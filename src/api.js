@@ -36,7 +36,7 @@ export default class Api {
     return this._load({
       url: `movies/${card.id}`,
       method: Method.PUT,
-      body: JSON.stringify(CardsModel.adaptToServer(card)),
+      body: JSON.stringify(CardsModel.adaptToServer(card)), // !!!! выдает актуальные данные, только на сервер не записываются
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON)

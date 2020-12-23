@@ -55,12 +55,19 @@ export default class MovieEdit {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       evt.preventDefault();
       this._handleCloseClick();
+
+      const allComments = this._cardForSave
+        ? this._cardForSave.allComments.map((user) => user.id)
+        : this._card.allComments.map((user) => user.id);
+
       this._cardDataChange(
           UpdatePopup.POPUP_AT_ALL,
           UpdatedVersion.MAJOR,
           Object.assign(
+              {},
               this._card,
-              this._cardForSave
+              this._cardForSave,
+              {allComments}
           )
       );
       document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);

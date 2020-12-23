@@ -25,7 +25,7 @@ const createCommentsTemplate = (count, comments) => {
     .map((_comment, index) => {
       if (comments[index].hasOwnProperty(`id`)) {
         const parsedDate = generateRecordDay(comments[index].date);
-        return `<li class="film-details__comment">
+        return `<li id="user-id${comments[index].id}" class="film-details__comment">
           <span class="film-details__comment-emoji">
             <img data-emoji="${comments[index].emotion}" src="./images/emoji/${comments[index].emotion}.png" width="55" height="55" alt="emoji-${comments[index].emotion}">
           </span>
@@ -284,7 +284,8 @@ export default class MovieEdit extends AbstractSmart {
   _deleteClickHandler(evt) { // внутренний хэндлер
     if (evt.target.className === `film-details__comment-delete`) {
       const index = this._parsedCard.allComments.findIndex((user) => {
-        return user.author === evt.target.parentElement.querySelector(`.film-details__comment-author`).textContent;
+        const userId = `${evt.target.parentElement.parentElement.parentElement.id.slice(7)}`;
+        return user.id === userId;
       });
 
       this.updateParsedCard({

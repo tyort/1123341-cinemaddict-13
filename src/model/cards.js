@@ -80,7 +80,7 @@ export default class Cards extends Observer {
   setComments(comments, card) {
     this._comments = comments
       .slice()
-      .filter((item) => card.allComments.some((commentId) => commentId === item.id));
+      .filter((user) => card.allComments.some((commentId) => commentId === user.id));
   }
 
   getCards() {
