@@ -6,6 +6,7 @@ import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
 import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
+import Loading from "../view/loading.js";
 import CardPresenter from "./movie-card";
 import CardEditPresenter from "./movie-edit";
 
@@ -18,6 +19,7 @@ export default class InnerMain {
     this._filterModel = filterModel;
     this._mainContainer = mainContainer;
     this._sortComponent = null;
+    this._loadingComponent = new Loading();
     this._noMoviesComponent = new NoMovies();
     this._showMoreButtonComponent = null;
     this._containerOfLists = null;
@@ -30,6 +32,7 @@ export default class InnerMain {
     this._handleCardDataChange = this._handleCardDataChange.bind(this);
     this._handleSomeWhatRerender = this._handleSomeWhatRerender.bind(this);
     this._handleStartSorting = this._handleStartSorting.bind(this);
+    this._isLoading = true;
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
     this._cardEditPresenter = new CardEditPresenter(this._handleCardDataChange);
@@ -102,6 +105,11 @@ export default class InnerMain {
         this.clearInsideMain({resetRenderedCardsCount: true, resetSortType: true});
         this.renderInnerMain();
         break;
+      case UpdatedVersion.INIT:
+        this._isLoading = false;
+        removeExemplar(this._loadingComponent);
+        this.renderInnerMain();
+        break;
     }
   }
 
@@ -144,6 +152,7 @@ export default class InnerMain {
       commentsList: {}
     };
 
+    removeExemplar(this._loadingComponent);
     removeExemplar(this._noMoviesComponent);
     removeExemplar(this._sortComponent);
     removeExemplar(this._containerOfLists);
@@ -167,6 +176,11 @@ export default class InnerMain {
   renderInnerMain() {
     this._cardsModel.addObserver(this._handleSomeWhatRerender);
     this._filterModel.addObserver(this._handleSomeWhatRerender);
+
+    if (this._isLoading) {
+      render(this._mainContainer, this._loadingComponent);
+      return;
+    }
 
     if (this._getSortedCards().length === 0) {
       render(this._mainContainer, this._noMoviesComponent);

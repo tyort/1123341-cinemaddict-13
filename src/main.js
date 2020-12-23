@@ -69,5 +69,5 @@ api.getMovies()
     cardsModel.setCards(UpdatedVersion.INIT, cards);
   })
   .catch(() => {
-    cardsModel.setTasks(UpdatedVersion.INIT, []);
+    cardsModel.setCards(UpdatedVersion.INIT, []);
   });
