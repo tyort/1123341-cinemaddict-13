@@ -18,8 +18,10 @@ export const generateDate = () => {
   return new Date(milliseconds);
 };
 
-export const generateRecordDay = () => {
-  const daysAgo = getRandomInteger(0, 14);
+export const generateRecordDay = (recordDay) => {
+  const currentDate = dayjs(new Date());
+  const parsedRecordDay = dayjs(recordDay);
+  const daysAgo = currentDate.diff(parsedRecordDay, `day`);
 
   if (daysAgo <= 7 && !!daysAgo) {
     return dayjs().subtract(daysAgo, `day`).fromNow();

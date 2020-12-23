@@ -79,8 +79,10 @@ export default class InnerMain {
         break;
       case UpdatePopup.OPEN_POPUP:
         this._api.getComments(updatedCard)
-          .then((comments) => this._cardsModel.setComments(comments));
-        this._cardsModel.changePopup(updatedVersion, updatedCard);
+          .then((comments) => {
+            this._cardsModel.setComments(comments);
+            this._cardsModel.openPopup(updatedVersion, updatedCard);
+          });
         break;
     }
   }

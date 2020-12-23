@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import he from "he";
 import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
-import {generateDuration} from "../utils/project-tools.js";
+import {generateDuration, generateRecordDay} from "../utils/project-tools.js";
 
 const BLANK_CARD = {
   poster: ``,
@@ -24,15 +24,16 @@ const createCommentsTemplate = (count, comments) => {
     .fill()
     .map((_comment, index) => {
       if (comments[index].hasOwnProperty(`id`)) {
+        const parsedDate = generateRecordDay(comments[index].date);
         return `<li class="film-details__comment">
           <span class="film-details__comment-emoji">
-            <img data-emoji="${comments[index].emoji}" src="./images/emoji/${comments[index].emoji}.png" width="55" height="55" alt="emoji-${comments[index].emoji}">
+            <img data-emoji="${comments[index].emotion}" src="./images/emoji/${comments[index].emotion}.png" width="55" height="55" alt="emoji-${comments[index].emotion}">
           </span>
           <div>
-            <p class="film-details__comment-text">${he.encode(comments[index].text)}</p>
+            <p class="film-details__comment-text">${he.encode(comments[index].comment)}</p>
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${comments[index].author}</span>
-              <span class="film-details__comment-day">${comments[index].day}</span>
+              <span class="film-details__comment-day">${parsedDate}</span>
               <button class="film-details__comment-delete">Delete</button>
             </p>
           </div>

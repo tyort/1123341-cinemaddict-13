@@ -89,6 +89,16 @@ export default class Cards extends Observer {
     return this._comments;
   }
 
+  openPopup(updatedVersion, updatedCard) {
+    const parsedUpdatedCard = Object.assign(
+        {},
+        updatedCard,
+        {allComments: this._comments}
+    );
+    this._notify(updatedVersion, parsedUpdatedCard);
+  }
+
+
   changePopup(updatedVersion, updatedCard) {
     const index = this._cards.findIndex((card) => card.id === updatedCard.id);
 
