@@ -27,13 +27,8 @@ const cardsModel = new CardsModel();
 const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
 innerMainPresenter.renderInnerMain();
 
-const footerStatistics = body.querySelector(`.footer__statistics`);
-const text = footerStatistics.querySelector(`span`);
-text.textContent = `${cardsModel.getCards().length}`;
-
 const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
 const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsModel);
-filterPresenter.init();
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -61,14 +56,22 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-menu.setMenuClickHandler(handleSiteMenuClick);
-
 api.getMovies()
   .then((cards) => {
     cardsModel.setCards(UpdatedVersion.INIT, cards);
+    menu.setMenuClickHandler(handleSiteMenuClick);
+    filterPresenter.init();
     statistics = new Statistics(cardsModel.getCards());
+    const footerStatistics = body.querySelector(`.footer__statistics`);
+    const text = footerStatistics.querySelector(`span`);
+    text.textContent = `${cardsModel.getCards().length}`;
   })
   .catch(() => {
     cardsModel.setCards(UpdatedVersion.INIT, []);
+    menu.setMenuClickHandler(handleSiteMenuClick);
+    filterPresenter.init();
     statistics = new Statistics(cardsModel.getCards());
+    const footerStatistics = body.querySelector(`.footer__statistics`);
+    const text = footerStatistics.querySelector(`span`);
+    text.textContent = `${cardsModel.getCards().length}`;
   });
