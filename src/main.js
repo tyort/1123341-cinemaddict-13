@@ -11,6 +11,7 @@ import Api from "./api.js";
 
 const AUTHORIZATION = `Basic dgfs234234fewlf443`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+let statistics = ``;
 
 const body = document.querySelector(`body`);
 const siteHeaderElement = body.querySelector(`.header`);
@@ -30,10 +31,6 @@ const footerStatistics = body.querySelector(`.footer__statistics`);
 const text = footerStatistics.querySelector(`span`);
 text.textContent = `${cardsModel.getCards().length}`;
 
-const statistics = new Statistics(cardsModel.getCards());
-render(siteMainElement, statistics);
-statistics.getElement().classList.toggle(`visually-hidden`, true);
-
 const mainNavigation = siteMainElement.querySelector(`.main-navigation`);
 const filterPresenter = new FilterPresenter(mainNavigation, filterModel, cardsModel);
 filterPresenter.init();
@@ -42,7 +39,9 @@ const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.STATISTICS:
       innerMainPresenter.hide();
+      render(siteMainElement, statistics);
       statistics.getElement().classList.toggle(`visually-hidden`, false);
+
       menu.getElement()
         .querySelector(`.main-navigation__additional`)
         .classList.toggle(`main-navigation__additional--active`, true);
@@ -67,7 +66,9 @@ menu.setMenuClickHandler(handleSiteMenuClick);
 api.getMovies()
   .then((cards) => {
     cardsModel.setCards(UpdatedVersion.INIT, cards);
+    statistics = new Statistics(cardsModel.getCards());
   })
   .catch(() => {
     cardsModel.setCards(UpdatedVersion.INIT, []);
+    statistics = new Statistics(cardsModel.getCards());
   });
