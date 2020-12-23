@@ -299,7 +299,7 @@ export default class MovieEdit extends AbstractSmart {
   _willWatchClickHandler(evt) {
     evt.preventDefault();
     this.updateParsedCard({
-      watchPlan: !this._parsedCard.watchPlan,
+      watchPlan: !this._parsedCard.watchPlan
     });
     this._popupChangeOnly();
   }
@@ -308,6 +308,9 @@ export default class MovieEdit extends AbstractSmart {
     evt.preventDefault();
     this.updateParsedCard({
       hasWatched: !this._parsedCard.hasWatched,
+      dateOfView: !this._parsedCard.hasWatched
+        ? dayjs(new Date())
+        : null
     });
     this._popupChangeOnly();
   }

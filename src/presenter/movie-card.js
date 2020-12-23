@@ -1,6 +1,7 @@
 import {render, removeExemplar, replace} from "../utils/view-tools";
 import MovieCard from "../view/movie-card.js";
 import {UpdatePopup, UpdatedVersion} from "../const.js";
+import dayjs from "dayjs";
 
 const Mode = {
   SHOW_POPUP: `SHOW_POPUP`,
@@ -72,7 +73,11 @@ export default class CardPresenter {
         Object.assign(
             {},
             this._card,
-            {hasWatched: !this._card.hasWatched}
+            {hasWatched: !this._card.hasWatched},
+            {dateOfView: !this._card.hasWatched
+              ? dayjs(new Date())
+              : null
+            }
         )
     );
   }

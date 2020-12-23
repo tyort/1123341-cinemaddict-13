@@ -25,7 +25,6 @@ export default class Api {
       // не меняет результат метода getMovies()
       // но создает список карт удобоваримый для моей придуманной структуру
       .then((cards) => {
-        console.log(cards);
         return cards.map(CardsModel.adaptToClient);
       });
   }
