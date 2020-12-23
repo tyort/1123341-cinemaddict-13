@@ -47,12 +47,9 @@ export default class CardPresenter {
 
   _handleCardClick() {
     this._cardDataChange(
-        UpdatePopup.POPUP_AT_ALL,
+        UpdatePopup.OPEN_POPUP,
         UpdatedVersion.PATCH,
-        Object.assign(
-            {},
-            this._card
-        )
+        this._card
     );
   }
 

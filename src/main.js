@@ -24,7 +24,7 @@ const filterModel = new FilterModel();
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const cardsModel = new CardsModel();
-const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel);
+const innerMainPresenter = new InnerMain(siteMainElement, filterModel, cardsModel, api);
 innerMainPresenter.renderInnerMain();
 
 const mainNavigation = siteMainElement.querySelector(`.main-navigation`);

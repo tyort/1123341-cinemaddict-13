@@ -14,10 +14,11 @@ const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
 
 export default class InnerMain {
-  constructor(mainContainer, filterModel, cardsModel) {
+  constructor(mainContainer, filterModel, cardsModel, api) {
     this._cardsModel = cardsModel;
     this._filterModel = filterModel;
     this._mainContainer = mainContainer;
+    this._api = api;
     this._sortComponent = null;
     this._loadingComponent = new Loading();
     this._noMoviesComponent = new NoMovies();
@@ -72,14 +73,13 @@ export default class InnerMain {
     // т.е. массивы создаются только в cardsModel
     // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
-      case UpdatePopup.OTHER:
-        this._cardsModel = `KOKOKOKO`;
-        break;
       case UpdatePopup.POPUP_AT_ALL:
+        this._api.updateMovie(updatedCard)
+          .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+        break;
+      case UpdatePopup.OPEN_POPUP:
         this._cardsModel.changePopup(updatedVersion, updatedCard);
         break;
-      default:
-        this._cardsModel = `KOKOKOKO`;
     }
   }
 

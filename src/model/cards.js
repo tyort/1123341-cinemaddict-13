@@ -7,6 +7,10 @@ export default class Cards extends Observer {
     this._cards = [];
   }
 
+  static adaptToServer(card) {
+    console.log(card);
+  }
+
   static adaptToClient(card) {
     const adaptedCardToCoder = Object.assign(
         {},
@@ -52,13 +56,15 @@ export default class Cards extends Observer {
   changePopup(updatedVersion, updatedCard) {
     const index = this._cards.findIndex((card) => card.id === updatedCard.id);
 
-    if (index !== -1) {
-      this._cards = [
-        ...this._cards.slice(0, index),
-        updatedCard,
-        ...this._cards.slice(index + 1)
-      ];
+    if (index === -1) {
+      throw new Error(`Can't update unexisting task`);
     }
+
+    this._cards = [
+      ...this._cards.slice(0, index),
+      updatedCard,
+      ...this._cards.slice(index + 1)
+    ];
 
     this._notify(updatedVersion, updatedCard);
   }
