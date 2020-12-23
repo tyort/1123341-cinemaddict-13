@@ -48,7 +48,7 @@ export default class Cards extends Observer {
 
   static adaptToClient(card) {
     const adaptedCardToCoder = {
-      allComments: [],
+      allComments: card.comments,
       dateOfView: dayjs(card.user_details.watching_date),
       description: card.film_info.description,
       director: card.film_info.director,

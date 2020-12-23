@@ -24,9 +24,12 @@ export default class Api {
       .then(Api.toJSON)
       // не меняет результат метода getMovies()
       // но создает список карт удобоваримый для моей придуманной структуру
-      .then((cards) => {
-        return cards.map(CardsModel.adaptToClient);
-      });
+      .then((cards) => cards.map(CardsModel.adaptToClient));
+  }
+
+  getComments() {
+    return this._load({url: `comments/11`})
+      .then(Api.toJSON);
   }
 
   updateMovie(card) { // возвращает fetch

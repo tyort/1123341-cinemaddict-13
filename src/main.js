@@ -75,3 +75,6 @@ api.getMovies()
     const text = footerStatistics.querySelector(`span`);
     text.textContent = `${cardsModel.getCards().length}`;
   });
+
+api.getComments()
+  .then((cards) => console.log(cards));
