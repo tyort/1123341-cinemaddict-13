@@ -80,7 +80,7 @@ export default class InnerMain {
       case UpdatePopup.OPEN_POPUP:
         this._api.getComments(updatedCard)
           .then((comments) => {
-            this._cardsModel.setComments(comments);
+            this._cardsModel.setComments(comments, updatedCard);
             this._cardsModel.openPopup(updatedVersion, updatedCard);
           });
         break;

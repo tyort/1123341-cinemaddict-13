@@ -77,8 +77,10 @@ export default class Cards extends Observer {
     this._notify(updatedVersion);
   }
 
-  setComments(comments) {
-    this._comments = comments.slice();
+  setComments(comments, card) {
+    this._comments = comments
+      .slice()
+      .filter((item) => card.allComments.some((commentId) => commentId === item.id));
   }
 
   getCards() {
