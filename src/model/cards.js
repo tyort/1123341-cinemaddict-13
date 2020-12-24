@@ -81,6 +81,8 @@ export default class Cards extends Observer {
     this._comments = comments
       .slice()
       .filter((user) => card.allComments.some((commentId) => commentId === user.id));
+
+    console.log(this._comments);
   }
 
   getCards() {

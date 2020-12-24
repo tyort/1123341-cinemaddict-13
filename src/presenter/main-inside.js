@@ -80,12 +80,11 @@ export default class InnerMain {
           .slice()
           .filter((user) => !updatedCard.allComments.some((num) => num === user.id));
 
-        if (usersForDelete.length > 0) {
-          usersForDelete.forEach((user) => this._api.deleteComment(user));
-        }
-
-        this._api.updateMovie(updatedCard)
-          .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+        usersForDelete.forEach((user) => {
+          this._api.deleteComment(user)
+              .then(() => this._api.updateMovie(updatedCard))
+            .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+        });
 
         break;
       case UpdatePopup.OPEN_POPUP:
