@@ -102,6 +102,7 @@ export default class Cards extends Observer {
 
 
   changePopup(updatedVersion, updatedCard) {
+    console.log(updatedCard);
     const index = this._cards.findIndex((card) => card.id === updatedCard.id);
 
     if (index === -1) {

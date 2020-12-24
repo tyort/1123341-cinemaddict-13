@@ -74,8 +74,22 @@ export default class InnerMain {
     // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
       case UpdatePopup.POPUP_AT_ALL:
+        // массив пользователей с комментариями, которых мы хотим удалить
+        // уже в нужном виде для запроса на сервер
+        const usersForDelete = this._cardsModel.getComments()
+          .slice()
+          .filter((user) => !updatedCard.allComments.some((num) => num === user.id));
+
+        if (usersForDelete.length > 0) {
+          usersForDelete.forEach((user) => {
+            this._api.deleteComment(user)
+              .then((response) => console.log(response));
+          });
+        }
+
         this._api.updateMovie(updatedCard)
           .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+
         break;
       case UpdatePopup.OPEN_POPUP:
         this._api.getComments(updatedCard)

@@ -3,7 +3,8 @@ import CardsModel from "./model/cards.js";
 
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  DELETE: `DELETE`
 };
 
 const SuccessHTTPStatusRange = {
@@ -30,6 +31,15 @@ export default class Api {
   getComments(card) {
     return this._load({url: `comments/${card.id}`})
       .then(Api.toJSON);
+  }
+
+  deleteComment(user) {
+    return this._load({
+      url: `comments/${user.id}`,
+      method: Method.DELETE,
+      body: JSON.stringify(user),
+      headers: new Headers({"Content-Type": `application/json`})
+    });
   }
 
   updateMovie(card) { // возвращает fetch
