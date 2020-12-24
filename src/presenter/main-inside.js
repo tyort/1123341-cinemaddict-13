@@ -81,10 +81,7 @@ export default class InnerMain {
           .filter((user) => !updatedCard.allComments.some((num) => num === user.id));
 
         if (usersForDelete.length > 0) {
-          usersForDelete.forEach((user) => {
-            this._api.deleteComment(user)
-              .then((response) => console.log(response));
-          });
+          usersForDelete.forEach((user) => this._api.deleteComment(user));
         }
 
         this._api.updateMovie(updatedCard)
