@@ -4,7 +4,8 @@ import CardsModel from "./model/cards.js";
 const Method = {
   GET: `GET`,
   PUT: `PUT`,
-  DELETE: `DELETE`
+  DELETE: `DELETE`,
+  POST: `POST`
 };
 
 const SuccessHTTPStatusRange = {
@@ -36,7 +37,14 @@ export default class Api {
   deleteComment(user) {
     return this._load({
       url: `comments/${user.id}`,
-      method: Method.DELETE,
+      method: Method.DELETE
+    });
+  }
+
+  addComment(card, user) {
+    return this._load({
+      url: `comments/${card.id}`,
+      method: Method.POST,
       body: JSON.stringify(user),
       headers: new Headers({"Content-Type": `application/json`})
     });

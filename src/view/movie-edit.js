@@ -3,6 +3,7 @@ import he from "he";
 import AbstractSmart from "./abstract-smart.js";
 import {allEmojies} from "../const";
 import {generateDuration, generateRecordDay} from "../utils/project-tools.js";
+import {nanoid} from "nanoid";
 
 const BLANK_CARD = {
   poster: ``,
@@ -25,6 +26,7 @@ const createCommentsTemplate = (count, comments) => {
     .map((_comment, index) => {
       if (comments[index].hasOwnProperty(`id`)) {
         const parsedDate = generateRecordDay(comments[index].date);
+
         return `<li id="user-id${comments[index].id}" class="film-details__comment">
           <span class="film-details__comment-emoji">
             <img data-emoji="${comments[index].emotion}" src="./images/emoji/${comments[index].emotion}.png" width="55" height="55" alt="emoji-${comments[index].emotion}">
@@ -258,11 +260,12 @@ export default class MovieEdit extends AbstractSmart {
       const img = child.querySelector(`img`);
 
       if (this.getElement().querySelector(`textarea`).value !== `` && img !== null) {
-        const comment = {
-          text: this.getElement().querySelector(`textarea`).value,
+        const newComment = {
+          id: nanoid(5),
+          comment: this.getElement().querySelector(`textarea`).value,
           author: `Noname`,
-          emoji: img.dataset.emoji,
-          day: `today`
+          emotion: img.dataset.emoji,
+          date: dayjs(new Date()).utc().format()
         };
 
         // this.updateParsedCard(this._parsedCard);
@@ -271,7 +274,7 @@ export default class MovieEdit extends AbstractSmart {
         // ПОЧЕМУ НЕ РАБОТАЕТ ВАРИАНТ ВЫШЕ!!!!
         // НЕЛЬЗЯ ЗДЕСЬ ИЗМЕНЯТЬ САМУ ПЕРЕМЕННУЮ ВОТ ТАК this._parsedCard.allComments.push
         this.updateParsedCard({
-          allComments: [...this._parsedCard.allComments, comment],
+          allComments: [...this._parsedCard.allComments, newComment],
           commentsSum: this._parsedCard.allComments.length + 1
         });
 

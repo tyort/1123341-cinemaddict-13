@@ -74,17 +74,36 @@ export default class InnerMain {
     // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
       case UpdatePopup.POPUP_AT_ALL:
-        // массив пользователей с комментариями, которых мы хотим удалить
-        // уже в нужном виде для запроса на сервер
         const usersForDelete = this._cardsModel.getComments()
           .slice()
-          .filter((user) => !updatedCard.allComments.some((num) => num === user.id));
+          .filter((oldUser) => !updatedCard.allComments
+            .some((actualUser) => actualUser.id === oldUser.id));
 
-        usersForDelete.forEach((user) => {
-          this._api.deleteComment(user)
-              .then(() => this._api.updateMovie(updatedCard))
+        const usersForAdd = updatedCard.allComments
+          .slice()
+          .filter((actualUser) => !this._cardsModel.getComments()
+            .some((oldUser) => oldUser.id === actualUser.id));
+
+        if (usersForAdd.length > 0) {
+          usersForAdd.forEach((user) => {
+            this._api.addComment(updatedCard, user)
+            .then(() => this._api.updateMovie(updatedCard))
             .then((response) => this._cardsModel.changePopup(updatedVersion, response));
-        });
+          });
+        }
+
+        if (usersForDelete.length > 0) {
+          usersForDelete.forEach((user) => {
+            this._api.deleteComment(user)
+              .then(() => this._api.updateMovie(updatedCard))
+              .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+          });
+        }
+
+        if (usersForDelete.length === 0 && usersForAdd.length === 0) {
+          this._api.updateMovie(updatedCard)
+            .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+        }
 
         break;
       case UpdatePopup.OPEN_POPUP:

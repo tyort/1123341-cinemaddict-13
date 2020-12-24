@@ -12,7 +12,7 @@ export default class Cards extends Observer {
 
   static adaptToServer(card) {
     const adaptedCardToServer = {
-      "comments": card.allComments,
+      "comments": card.allComments.map((user) => user.id),
 
       "film_info": {
         "actors": card.actors,
@@ -81,8 +81,6 @@ export default class Cards extends Observer {
     this._comments = comments
       .slice()
       .filter((user) => card.allComments.some((commentId) => commentId === user.id));
-
-    console.log(this._comments);
   }
 
   getCards() {
