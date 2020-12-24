@@ -20,7 +20,7 @@ const BLANK_CARD = {
   allComments: []
 };
 
-const createCommentsTemplate = (comments, isDisabled) => {
+const createCommentsTemplate = (comments) => {
   return comments
     .map((comment) => {
       if (comment.hasOwnProperty(`id`)) {
@@ -35,8 +35,8 @@ const createCommentsTemplate = (comments, isDisabled) => {
             <p class="film-details__comment-info">
               <span class="film-details__comment-author">${comment.author}</span>
               <span class="film-details__comment-day">${parsedDate}</span>
-              <button class="film-details__comment-delete" ${isDisabled ? `disabled` : ``}>
-                ${comment.isDeletingComment ? `Deleting...` : `Delete`}
+              <button class="film-details__comment-delete" ${comment.isDisabled ? `disabled` : ``}>
+                ${comment.isDeletingComment ? `For deleting...` : `Delete`}
               </button>
             </p>
           </div>
@@ -85,12 +85,11 @@ const createMovieEditTemplate = (card = {}) => {
     director,
     actors,
     writers,
-    releaseCountry,
-    isDisabled,
+    releaseCountry
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
-  const comments = createCommentsTemplate(allComments, isDisabled);
+  const comments = createCommentsTemplate(allComments);
   const emojies = createEmojiesTemplate(allEmojies);
   const actualGenres = createGenresTemplate(genres);
   const parsedDuration = generateDuration(duration);
@@ -214,8 +213,12 @@ export default class MovieEdit extends AbstractSmart {
         card,
         {
           commentsSum: card.allComments.length,
-          isDisabled: false,
-          allComments: card.allComments.map((user) => Object.assign({}, user, {isDeletingComment: false}))
+          allComments: card.allComments
+            .map((user) => Object.assign(
+                {},
+                user,
+                {isDeletingComment: false, isDisabled: false}
+            ))
         }
     );
   }
@@ -223,9 +226,11 @@ export default class MovieEdit extends AbstractSmart {
   // превращение расширенных данных в данные для отрисовки
   static parseDataToCard(parsedCard) {
     parsedCard = Object.assign({}, parsedCard);
-    parsedCard.allComments.forEach((user) => delete user.isDeletingComment);
+    parsedCard.allComments.forEach((user) => {
+      delete user.isDeletingComment;
+      delete user.isDisabled;
+    });
     delete parsedCard.commentsSum;
-    delete parsedCard.isDisabled;
 
     return parsedCard;
   }
@@ -297,13 +302,30 @@ export default class MovieEdit extends AbstractSmart {
         return user.id === userId;
       });
 
+      const userForDelete = Object.assign(
+          {},
+          this._parsedCard.allComments[index],
+          {
+            isDeletingComment: true,
+            isDisabled: true
+          }
+      );
+
+      this.updateParsedCard({
+        allComments: [
+          ...this._parsedCard.allComments.slice(0, index),
+          userForDelete,
+          ...this._parsedCard.allComments.slice(index + 1)
+        ]
+      });
+
       this.updateParsedCard({
         allComments: [
           ...this._parsedCard.allComments.slice(0, index),
           ...this._parsedCard.allComments.slice(index + 1)
         ],
         commentsSum: this._parsedCard.allComments.length - 1
-      });
+      }, true);
 
       this._popupChangeOnly();
       this.getElement().scrollTo(0, this.getElement().scrollHeight);

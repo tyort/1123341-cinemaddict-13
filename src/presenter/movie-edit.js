@@ -89,6 +89,7 @@ export default class MovieEdit {
   }
 
   _popupChangeOnly(card) {
+    console.log(card);
     this._cardForSave = card;
   }
 }
