@@ -20,23 +20,24 @@ const BLANK_CARD = {
   allComments: []
 };
 
-const createCommentsTemplate = (count, comments) => {
-  return new Array(count)
-    .fill()
-    .map((_comment, index) => {
-      if (comments[index].hasOwnProperty(`id`)) {
-        const parsedDate = generateRecordDay(comments[index].date);
+const createCommentsTemplate = (comments, isDisabled) => {
+  return comments
+    .map((comment) => {
+      if (comment.hasOwnProperty(`id`)) {
+        const parsedDate = generateRecordDay(comment.date);
 
-        return `<li id="user-id${comments[index].id}" class="film-details__comment">
+        return `<li id="user-id${comment.id}" class="film-details__comment">
           <span class="film-details__comment-emoji">
-            <img data-emoji="${comments[index].emotion}" src="./images/emoji/${comments[index].emotion}.png" width="55" height="55" alt="emoji-${comments[index].emotion}">
+            <img data-emoji="${comment.emotion}" src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
           </span>
           <div>
-            <p class="film-details__comment-text">${he.encode(comments[index].comment)}</p>
+            <p class="film-details__comment-text">${he.encode(comment.comment)}</p>
             <p class="film-details__comment-info">
-              <span class="film-details__comment-author">${comments[index].author}</span>
+              <span class="film-details__comment-author">${comment.author}</span>
               <span class="film-details__comment-day">${parsedDate}</span>
-              <button class="film-details__comment-delete">Delete</button>
+              <button class="film-details__comment-delete" ${isDisabled ? `disabled` : ``}>
+                ${comment.isDeletingComment ? `Deleting...` : `Delete`}
+              </button>
             </p>
           </div>
         </li>`;
@@ -58,7 +59,7 @@ const createEmojiesTemplate = (emojies) => {
     .join(``);
 };
 
-const generateGenresTemplate = (genres) => {
+const createGenresTemplate = (genres) => {
   return genres
     .map((genre) => {
       return `<span class="film-details__genre">${genre}</span>`;
@@ -84,13 +85,14 @@ const createMovieEditTemplate = (card = {}) => {
     director,
     actors,
     writers,
-    releaseCountry
+    releaseCountry,
+    isDisabled,
   } = card;
 
   const date = dayjs(releaseDate).format(`D MMMM YYYY`);
-  const comments = createCommentsTemplate(commentsSum, allComments);
+  const comments = createCommentsTemplate(allComments, isDisabled);
   const emojies = createEmojiesTemplate(allEmojies);
-  const actualGenres = generateGenresTemplate(genres);
+  const actualGenres = createGenresTemplate(genres);
   const parsedDuration = generateDuration(duration);
 
   return `<section class="film-details">
@@ -211,7 +213,9 @@ export default class MovieEdit extends AbstractSmart {
         {},
         card,
         {
-          commentsSum: card.allComments.length
+          commentsSum: card.allComments.length,
+          isDisabled: false,
+          allComments: card.allComments.map((user) => Object.assign({}, user, {isDeletingComment: false}))
         }
     );
   }
@@ -219,8 +223,10 @@ export default class MovieEdit extends AbstractSmart {
   // превращение расширенных данных в данные для отрисовки
   static parseDataToCard(parsedCard) {
     parsedCard = Object.assign({}, parsedCard);
-    delete parsedCard.isRatingGood;
+    parsedCard.allComments.forEach((user) => delete user.isDeletingComment);
     delete parsedCard.commentsSum;
+    delete parsedCard.isDisabled;
+
     return parsedCard;
   }
 
