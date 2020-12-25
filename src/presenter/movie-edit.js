@@ -7,11 +7,6 @@ const Mode = {
   DEL_POPUP: `DEL_POPUP`
 };
 
-export const State = {
-  DELETING: `DELETING`,
-  ABORTING: `ABORTING`
-};
-
 const body = document.querySelector(`body`);
 
 export default class MovieEdit {
@@ -21,7 +16,6 @@ export default class MovieEdit {
     this._cardEditComponent = null;
     this._mode = Mode.DEL_POPUP;
     this._handleCloseClick = this._handleCloseClick.bind(this);
-    this._popupChangeOnly = this._popupChangeOnly.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._ctrlEnterKeyDownHandler = this._ctrlEnterKeyDownHandler.bind(this);
   }
@@ -31,7 +25,6 @@ export default class MovieEdit {
     const oldEdit = this._cardEditComponent;
     this._cardEditComponent = new MovieEditView(this._card);
     this._cardEditComponent.setCloseClickHandler(this._handleCloseClick);
-    this._cardEditComponent.setPopupChangeOnly(this._popupChangeOnly);
 
     removeExemplar(oldEdit);
     render(this._cardEditContainer, this._cardEditComponent);
@@ -61,19 +54,10 @@ export default class MovieEdit {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       evt.preventDefault();
 
-      const allComments = this._cardForSave
-        ? this._cardForSave.allComments
-        : this._card.allComments;
-
       this._cardDataChange(
           UpdatePopup.POPUP_AT_ALL,
           UpdatedVersion.MAJOR,
-          Object.assign(
-              {},
-              this._card,
-              this._cardForSave,
-              {allComments}
-          )
+          this._cardEditComponent.parseDataToCard()
       );
 
       document.removeEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
@@ -91,9 +75,5 @@ export default class MovieEdit {
 
   setViewState() {
     console.log(this._card);
-  }
-
-  _popupChangeOnly(card) {
-    this._cardForSave = card;
   }
 }

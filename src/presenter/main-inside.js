@@ -8,7 +8,7 @@ import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
 import Loading from "../view/loading.js";
 import CardPresenter from "./movie-card";
-import CardEditPresenter, {State} from "./movie-edit";
+import CardEditPresenter from "./movie-edit";
 
 const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
@@ -74,6 +74,7 @@ export default class InnerMain {
     // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
       case UpdatePopup.POPUP_AT_ALL:
+        console.log(updatedCard);
         const usersForDelete = this._cardsModel.getComments()
           .slice()
           .filter((oldUser) => !updatedCard.allComments
@@ -103,7 +104,7 @@ export default class InnerMain {
                 this._cardsModel.changePopup(updatedVersion, response);
                 this._cardEditPresenter.deletePopup();
               })
-              .catch(() => this._cardEditPresenter.setViewState(State.ABORTING));
+              .catch(() => this._cardEditPresenter.setViewState());
           });
         }
 

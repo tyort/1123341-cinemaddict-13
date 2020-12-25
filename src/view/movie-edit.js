@@ -202,7 +202,7 @@ export default class MovieEdit extends AbstractSmart {
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._enterKeydownHandler = this._enterKeydownHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._popupChangeOnly = this._popupChangeOnly.bind(this);
+    this.parseDataToCard = this.parseDataToCard.bind(this);
     this._setInnerHandlers();
   }
 
@@ -224,15 +224,23 @@ export default class MovieEdit extends AbstractSmart {
   }
 
   // превращение расширенных данных в данные для отрисовки
-  static parseDataToCard(parsedCard) {
-    parsedCard = Object.assign({}, parsedCard);
-    parsedCard.allComments.forEach((user) => {
+  parseDataToCard() {
+    const commentators = this._parsedCard.allComments
+      .filter((commentator) => commentator.isDeletingComment === false);
+
+    this._parsedCard = Object.assign(
+        {},
+        this._parsedCard,
+        {allComments: commentators}
+    );
+
+    this._parsedCard.allComments.forEach((user) => {
       delete user.isDeletingComment;
       delete user.isDisabled;
     });
-    delete parsedCard.commentsSum;
 
-    return parsedCard;
+    delete this._parsedCard.commentsSum;
+    return this._parsedCard;
   }
 
   getTemplate() {
@@ -276,7 +284,9 @@ export default class MovieEdit extends AbstractSmart {
           comment: this.getElement().querySelector(`textarea`).value,
           author: `Noname`,
           emotion: img.dataset.emoji,
-          date: dayjs(new Date()).utc().format()
+          date: dayjs(new Date()).utc().format(),
+          isDeletingComment: false,
+          isDisabled: false
         };
 
         // this.updateParsedCard(this._parsedCard);
@@ -287,9 +297,8 @@ export default class MovieEdit extends AbstractSmart {
         this.updateParsedCard({
           allComments: [...this._parsedCard.allComments, newComment],
           commentsSum: this._parsedCard.allComments.length + 1
-        }, true);
+        });
 
-        this._popupChangeOnly();
         this.getElement().scrollTo(0, this.getElement().scrollHeight);
       }
     }
@@ -319,15 +328,14 @@ export default class MovieEdit extends AbstractSmart {
         ]
       });
 
-      this.updateParsedCard({
-        allComments: [
-          ...this._parsedCard.allComments.slice(0, index),
-          ...this._parsedCard.allComments.slice(index + 1)
-        ],
-        commentsSum: this._parsedCard.allComments.length - 1
-      }, true);
+      // this.updateParsedCard({
+      //   allComments: [
+      //     ...this._parsedCard.allComments.slice(0, index),
+      //     ...this._parsedCard.allComments.slice(index + 1)
+      //   ],
+      //   commentsSum: this._parsedCard.allComments.length - 1
+      // }, true);
 
-      this._popupChangeOnly();
       this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
@@ -338,7 +346,6 @@ export default class MovieEdit extends AbstractSmart {
     this.updateParsedCard({
       watchPlan: !this._parsedCard.watchPlan
     });
-    this._popupChangeOnly();
   }
 
   _watchedClickHandler(evt) {
@@ -349,7 +356,6 @@ export default class MovieEdit extends AbstractSmart {
         ? dayjs(new Date())
         : null
     });
-    this._popupChangeOnly();
   }
 
   _favoriteClickHandler(evt) {
@@ -357,13 +363,11 @@ export default class MovieEdit extends AbstractSmart {
     this.updateParsedCard({
       isFavorite: !this._parsedCard.isFavorite,
     });
-    this._popupChangeOnly();
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
     this.setCloseClickHandler(this._handler.cardClick);
-    this.setPopupChangeOnly(this._handler.cardChange);
   }
 
   _setInnerHandlers() {
@@ -387,13 +391,5 @@ export default class MovieEdit extends AbstractSmart {
     this._handler.cardClick = exactFormula;
     const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
     closeButton.addEventListener(`click`, this._closeClickHandler);
-  }
-
-  _popupChangeOnly() {
-    this._handler.cardChange(MovieEdit.parseDataToCard(this._parsedCard));
-  }
-
-  setPopupChangeOnly(exactFormula) {
-    this._handler.cardChange = exactFormula;
   }
 }
