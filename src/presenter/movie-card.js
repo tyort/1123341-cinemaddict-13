@@ -1,6 +1,6 @@
 import {render, removeExemplar, replace} from "../utils/view-tools";
 import MovieCard from "../view/movie-card.js";
-import {UpdatePopup, UpdatedVersion} from "../const.js";
+import {UpdateMovie, UpdatedVersion} from "../const.js";
 import dayjs from "dayjs";
 
 export default class CardPresenter {
@@ -42,7 +42,7 @@ export default class CardPresenter {
 
   _handleCardClick() {
     this._cardDataChange(
-        UpdatePopup.OPEN_POPUP,
+        UpdateMovie.OPEN_POPUP,
         UpdatedVersion.PATCH,
         this._card
     );
@@ -50,7 +50,7 @@ export default class CardPresenter {
 
   _handleWillWatchClick() {
     this._cardDataChange(
-        UpdatePopup.POPUP_AT_ALL,
+        UpdateMovie.CARD_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -62,7 +62,7 @@ export default class CardPresenter {
 
   _handleWatchedClick() {
     this._cardDataChange(
-        UpdatePopup.POPUP_AT_ALL,
+        UpdateMovie.CARD_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},
@@ -78,7 +78,7 @@ export default class CardPresenter {
 
   _handleFavoriteClick() {
     this._cardDataChange(
-        UpdatePopup.POPUP_AT_ALL,
+        UpdateMovie.CARD_AT_ALL,
         UpdatedVersion.MINOR,
         Object.assign(
             {},

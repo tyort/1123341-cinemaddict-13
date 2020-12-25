@@ -77,10 +77,11 @@ export const SortType = {
   RATING: `rating`,
 };
 
-export const UpdatePopup = {
+export const UpdateMovie = {
   OTHER: `OTHER`,
   POPUP_AT_ALL: `POPUP_AT_ALL`,
   OPEN_POPUP: `OPEN_POPUP`,
+  CARD_AT_ALL: `CARD_AT_ALL`
 };
 
 export const UpdatedVersion = {

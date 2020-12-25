@@ -1,6 +1,6 @@
 import {render, removeExemplar} from "../utils/view-tools";
 import {compareDate, compareRating, compareCommentsCount} from "../utils/project-tools";
-import {SortType, UpdatePopup, UpdatedVersion} from "../const.js";
+import {SortType, UpdateMovie, UpdatedVersion} from "../const.js";
 import {filterCapacity} from "../utils/filter.js";
 import NoMovies from "../view/no-movies";
 import Sort from "../view/sorting.js";
@@ -73,8 +73,14 @@ export default class InnerMain {
     // т.е. массивы создаются только в cardsModel
     // и ссылку на _handleSomeWhatRerender (см. ниже) можно только получить там!
     switch (updateType) {
-      case UpdatePopup.POPUP_AT_ALL:
-        console.log(updatedCard);
+      case UpdateMovie.CARD_AT_ALL:
+        this._api.updateMovie(updatedCard)
+            .then((response) => {
+              this._cardsModel.changeCardData(updatedVersion, response);
+            });
+        break;
+
+      case UpdateMovie.POPUP_AT_ALL:
         const usersForDelete = this._cardsModel.getComments()
           .slice()
           .filter((oldUser) => !updatedCard.allComments
@@ -90,7 +96,7 @@ export default class InnerMain {
             this._api.addComment(updatedCard, user)
             .then(() => this._api.updateMovie(updatedCard))
             .then((response) => {
-              this._cardsModel.changePopup(updatedVersion, response);
+              this._cardsModel.changeCardData(updatedVersion, response);
               this._cardEditPresenter.deletePopup();
             });
           });
@@ -101,7 +107,7 @@ export default class InnerMain {
             this._api.deleteComment(user)
               .then(() => this._api.updateMovie(updatedCard))
               .then((response) => {
-                this._cardsModel.changePopup(updatedVersion, response);
+                this._cardsModel.changeCardData(updatedVersion, response);
                 this._cardEditPresenter.deletePopup();
               })
               .catch(() => this._cardEditPresenter.setViewState());
@@ -111,13 +117,14 @@ export default class InnerMain {
         if (usersForDelete.length === 0 && usersForAdd.length === 0) {
           this._api.updateMovie(updatedCard)
             .then((response) => {
-              this._cardsModel.changePopup(updatedVersion, response);
+              this._cardsModel.changeCardData(updatedVersion, response);
               this._cardEditPresenter.deletePopup();
             });
         }
 
         break;
-      case UpdatePopup.OPEN_POPUP:
+
+      case UpdateMovie.OPEN_POPUP:
         this._api.getComments(updatedCard)
           .then((comments) => {
             this._cardsModel.setComments(comments, updatedCard);

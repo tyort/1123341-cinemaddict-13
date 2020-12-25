@@ -1,6 +1,6 @@
 import MovieEditView from "../view/movie-edit.js";
 import {removeExemplar, render} from "../utils/view-tools.js";
-import {UpdatedVersion, UpdatePopup} from "../const.js";
+import {UpdatedVersion, UpdateMovie} from "../const.js";
 
 const Mode = {
   SHOW_POPUP: `SHOW_POPUP`,
@@ -55,7 +55,7 @@ export default class MovieEdit {
       evt.preventDefault();
 
       this._cardDataChange(
-          UpdatePopup.POPUP_AT_ALL,
+          UpdateMovie.POPUP_AT_ALL,
           UpdatedVersion.MAJOR,
           this._cardEditComponent.parseDataToCard()
       );

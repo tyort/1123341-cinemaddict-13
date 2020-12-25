@@ -12,7 +12,9 @@ export default class Cards extends Observer {
 
   static adaptToServer(card) {
     const adaptedCardToServer = {
-      "comments": card.allComments.map((user) => user.id),
+      "comments": card.allComments.map((user) => {
+        return user.id === undefined ? user : user.id;
+      }),
 
       "film_info": {
         "actors": card.actors,
@@ -101,7 +103,7 @@ export default class Cards extends Observer {
   }
 
 
-  changePopup(updatedVersion, updatedCard) {
+  changeCardData(updatedVersion, updatedCard) {
     const index = this._cards.findIndex((card) => card.id === updatedCard.id);
 
     if (index === -1) {
