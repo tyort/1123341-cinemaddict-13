@@ -74,6 +74,10 @@ export default class MovieEdit {
   }
 
   setViewState() {
-    console.log(this._card);
+    const parsedCard = this._cardEditComponent.parseCardToData(this._card);
+    this._cardEditComponent.shake(() => {
+      this._cardEditComponent.updateParsedCard(parsedCard);
+    });
+    document.addEventListener(`keydown`, this._ctrlEnterKeyDownHandler);
   }
 }

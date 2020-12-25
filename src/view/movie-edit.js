@@ -194,7 +194,8 @@ const createMovieEditTemplate = (card = {}) => {
 export default class MovieEdit extends AbstractSmart {
   constructor(card = BLANK_CARD) {
     super();
-    this._parsedCard = MovieEdit.parseCardToData(card); // уже при первой загрузке получаем распарсенные данные
+    this.parseCardToData = this.parseCardToData.bind(this);
+    this._parsedCard = this.parseCardToData(card); // уже при первой загрузке получаем распарсенные данные
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._willWatchClickHandler = this._willWatchClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -207,7 +208,7 @@ export default class MovieEdit extends AbstractSmart {
   }
 
   // можно добавить к исходным свойствам карточки новые свойства
-  static parseCardToData(card) {
+  parseCardToData(card) {
     return Object.assign(
         {},
         card,
@@ -248,9 +249,7 @@ export default class MovieEdit extends AbstractSmart {
   }
 
   reset(card) {
-    this.updateParsedCard(
-        MovieEdit.parseCardToData(card)
-    );
+    this.updateParsedCard(this.parseCardToData(card));
   }
 
   _emojiClickHandler(evt) { // внутренний хэндлер
@@ -291,7 +290,7 @@ export default class MovieEdit extends AbstractSmart {
 
         // this.updateParsedCard(this._parsedCard);
         // не учтет новое количество комментариев
-        // this.updateParsedCard(MovieEdit.parseCardToData(this._parsedCard)); !!! НЕ СТИРАТЬ
+        // this.updateParsedCard(this.parseCardToData(this._parsedCard)); !!! НЕ СТИРАТЬ
         // ПОЧЕМУ НЕ РАБОТАЕТ ВАРИАНТ ВЫШЕ!!!!
         // НЕЛЬЗЯ ЗДЕСЬ ИЗМЕНЯТЬ САМУ ПЕРЕМЕННУЮ ВОТ ТАК this._parsedCard.allComments.push
         this.updateParsedCard({

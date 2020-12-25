@@ -94,11 +94,12 @@ export default class InnerMain {
         if (usersForAdd.length > 0) {
           usersForAdd.forEach((user) => {
             this._api.addComment(updatedCard, user)
-            .then(() => this._api.updateMovie(updatedCard))
-            .then((response) => {
-              this._cardsModel.changeCardData(updatedVersion, response);
-              this._cardEditPresenter.deletePopup();
-            });
+              .then(() => this._api.updateMovie(updatedCard))
+              .then((response) => {
+                this._cardsModel.changeCardData(updatedVersion, response);
+                this._cardEditPresenter.deletePopup();
+              })
+              .catch(() => this._cardEditPresenter.setViewState());
           });
         }
 
@@ -119,9 +120,9 @@ export default class InnerMain {
             .then((response) => {
               this._cardsModel.changeCardData(updatedVersion, response);
               this._cardEditPresenter.deletePopup();
-            });
+            })
+            .catch(() => this._cardEditPresenter.setViewState());
         }
-
         break;
 
       case UpdateMovie.OPEN_POPUP:
