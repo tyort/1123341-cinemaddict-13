@@ -207,7 +207,6 @@ export default class MovieEdit extends AbstractSmart {
     this._setInnerHandlers();
   }
 
-  // можно добавить к исходным свойствам карточки новые свойства
   parseCardToData(card) {
     return Object.assign(
         {},
@@ -224,7 +223,6 @@ export default class MovieEdit extends AbstractSmart {
     );
   }
 
-  // превращение расширенных данных в данные для отрисовки
   parseDataToCard() {
     const commentators = this._parsedCard.allComments
       .filter((commentator) => commentator.isDeletingComment === false);
