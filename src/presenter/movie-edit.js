@@ -56,13 +56,9 @@ export default class MovieEdit {
       evt.preventDefault();
       this._handleCloseClick();
 
-      // преобразуем массив комментов в массив чисел
-      // так нужно чтобы сервер принял карточку
       const allComments = this._cardForSave
         ? this._cardForSave.allComments
         : this._card.allComments;
-        // ? this._cardForSave.allComments.map((user) => user.id)
-        // : this._card.allComments.map((user) => user.id);
 
       this._cardDataChange(
           UpdatePopup.POPUP_AT_ALL,
@@ -89,7 +85,6 @@ export default class MovieEdit {
   }
 
   _popupChangeOnly(card) {
-    console.log(card);
     this._cardForSave = card;
   }
 }
