@@ -8,7 +8,7 @@ import MoviesLists from "../view/movies-all.js";
 import ShowMore from "../view/show-more.js";
 import Loading from "../view/loading.js";
 import CardPresenter from "./movie-card";
-import CardEditPresenter from "./movie-edit";
+import CardEditPresenter, {State} from "./movie-edit";
 
 const CARD_COUNT_STEP = 5;
 const EXTRA_CARD_COUNT = 2;
@@ -88,7 +88,10 @@ export default class InnerMain {
           usersForAdd.forEach((user) => {
             this._api.addComment(updatedCard, user)
             .then(() => this._api.updateMovie(updatedCard))
-            .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+            .then((response) => {
+              this._cardsModel.changePopup(updatedVersion, response);
+              this._cardEditPresenter.deletePopup();
+            });
           });
         }
 
@@ -96,13 +99,20 @@ export default class InnerMain {
           usersForDelete.forEach((user) => {
             this._api.deleteComment(user)
               .then(() => this._api.updateMovie(updatedCard))
-              .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+              .then((response) => {
+                this._cardsModel.changePopup(updatedVersion, response);
+                this._cardEditPresenter.deletePopup();
+              })
+              .catch(() => this._cardEditPresenter.setViewState(State.ABORTING));
           });
         }
 
         if (usersForDelete.length === 0 && usersForAdd.length === 0) {
           this._api.updateMovie(updatedCard)
-            .then((response) => this._cardsModel.changePopup(updatedVersion, response));
+            .then((response) => {
+              this._cardsModel.changePopup(updatedVersion, response);
+              this._cardEditPresenter.deletePopup();
+            });
         }
 
         break;

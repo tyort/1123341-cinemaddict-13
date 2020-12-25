@@ -6,6 +6,12 @@ const Mode = {
   SHOW_POPUP: `SHOW_POPUP`,
   DEL_POPUP: `DEL_POPUP`
 };
+
+export const State = {
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`
+};
+
 const body = document.querySelector(`body`);
 
 export default class MovieEdit {
@@ -54,7 +60,6 @@ export default class MovieEdit {
   _ctrlEnterKeyDownHandler(evt) {
     if (evt.keyCode === 13 && evt.ctrlKey) {
       evt.preventDefault();
-      this._handleCloseClick();
 
       const allComments = this._cardForSave
         ? this._cardForSave.allComments
@@ -82,6 +87,10 @@ export default class MovieEdit {
       this._handleCloseClick();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
+  }
+
+  setViewState() {
+    console.log(this._card);
   }
 
   _popupChangeOnly(card) {
