@@ -91,33 +91,32 @@ export default class InnerMain {
           .filter((actualUser) => !this._cardsModel.getComments()
             .some((oldUser) => oldUser.id === actualUser.id));
 
-        if (usersForAdd.length > 0) {
-          usersForAdd.forEach((user) => {
-            this._api.addComment(updatedCard, user)
-              .then(() => this._api.updateMovie(updatedCard))
-              .then((response) => {
-                this._cardsModel.changeCardData(updatedVersion, response);
-                this._cardEditPresenter.deletePopup();
-              })
-              .catch(() => this._cardEditPresenter.setViewState());
-          });
-        }
+        usersForAdd.forEach((user) => {
+          console.log(`жопа`);
+          this._api.addComment(updatedCard, user)
+            .then(() => this._api.updateMovie(updatedCard))
+            .then((response) => {
+              this._cardsModel.changeCardData(updatedVersion, response);
+              this._cardEditPresenter.deletePopup();
+            })
+            .catch(() => this._cardEditPresenter.setViewState());
+        });
 
-        if (usersForDelete.length > 0) {
-          usersForDelete.forEach((user) => {
-            this._api.deleteComment(user)
-              .then(() => this._api.updateMovie(updatedCard))
-              .then((response) => {
-                this._cardsModel.changeCardData(updatedVersion, response);
-                this._cardEditPresenter.deletePopup();
-              })
-              .catch(() => this._cardEditPresenter.setViewState());
-          });
-        }
+        usersForDelete.forEach((user) => {
+          console.log(`пися`);
+          this._api.deleteComment(user)
+            .then(() => this._api.updateMovie(updatedCard))
+            .then((response) => {
+              this._cardsModel.changeCardData(updatedVersion, response);
+              this._cardEditPresenter.deletePopup();
+            })
+            .catch(() => this._cardEditPresenter.setViewState());
+        });
 
         if (usersForDelete.length === 0 && usersForAdd.length === 0) {
           this._api.updateMovie(updatedCard)
             .then((response) => {
+              console.log(`кака`);
               this._cardsModel.changeCardData(updatedVersion, response);
               this._cardEditPresenter.deletePopup();
             })

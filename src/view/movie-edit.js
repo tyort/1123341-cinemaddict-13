@@ -327,14 +327,6 @@ export default class MovieEdit extends AbstractSmart {
         ]
       });
 
-      // this.updateParsedCard({
-      //   allComments: [
-      //     ...this._parsedCard.allComments.slice(0, index),
-      //     ...this._parsedCard.allComments.slice(index + 1)
-      //   ],
-      //   commentsSum: this._parsedCard.allComments.length - 1
-      // }, true);
-
       this.getElement().scrollTo(0, this.getElement().scrollHeight);
     }
   }
