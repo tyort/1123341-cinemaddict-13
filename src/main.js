@@ -9,7 +9,7 @@ import {render} from "./utils/view-tools.js";
 import {UpdatedVersion, MenuItem} from "./const";
 import Api from "./api.js";
 
-const AUTHORIZATION = `Basic s2fewldf4`;
+const AUTHORIZATION = `Basic s2fewldfjh4`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 let statistics = ``;
 

@@ -92,7 +92,6 @@ export default class InnerMain {
             .some((oldUser) => oldUser.id === actualUser.id));
 
         usersForAdd.forEach((user) => {
-          console.log(`жопа`);
           this._api.addComment(updatedCard, user)
             .then(() => this._api.updateMovie(updatedCard))
             .then((response) => {
@@ -103,7 +102,6 @@ export default class InnerMain {
         });
 
         usersForDelete.forEach((user) => {
-          console.log(`пися`);
           this._api.deleteComment(user)
             .then(() => this._api.updateMovie(updatedCard))
             .then((response) => {
@@ -116,7 +114,6 @@ export default class InnerMain {
         if (usersForDelete.length === 0 && usersForAdd.length === 0) {
           this._api.updateMovie(updatedCard)
             .then((response) => {
-              console.log(`кака`);
               this._cardsModel.changeCardData(updatedVersion, response);
               this._cardEditPresenter.deletePopup();
             })
