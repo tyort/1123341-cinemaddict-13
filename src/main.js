@@ -76,4 +76,8 @@ api.getMovies()
     text.textContent = `${cardsModel.getCards().length}`;
   });
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
 
