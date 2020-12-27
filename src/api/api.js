@@ -61,6 +61,18 @@ export default class Api {
       .then(CardsModel.adaptToClient);
   }
 
+  // поможет в режиме offline загрузить изменения в LocalStorage
+  // а когда появится сеть поможет передать информацию на сервер
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
+  }
+
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
