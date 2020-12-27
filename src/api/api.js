@@ -47,7 +47,8 @@ export default class Api {
       method: Method.POST,
       body: JSON.stringify(user),
       headers: new Headers({"Content-Type": `application/json`})
-    });
+    })
+      .then(Api.toJSON);
   }
 
   updateMovie(card) { // возвращает fetch
