@@ -1,5 +1,5 @@
 // Модуль, который будет отправлять на сервер REST-запросы
-import CardsModel from "./model/cards.js";
+import CardsModel from "../model/cards.js";
 
 const Method = {
   GET: `GET`,

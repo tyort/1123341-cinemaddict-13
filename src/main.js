@@ -7,7 +7,7 @@ import CardsModel from "./model/cards.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/view-tools.js";
 import {UpdatedVersion, MenuItem} from "./const";
-import Api from "./api.js";
+import Api from "./api/api.js";
 
 const AUTHORIZATION = `Basic s2fewldfjh4`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
