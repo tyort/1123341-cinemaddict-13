@@ -80,6 +80,8 @@ export default class Cards extends Observer {
   }
 
   setComments(comments, card) {
+    // если у комментариев из сервера есть номер
+    // который присутствует в массиве allComments
     this._comments = comments
       .slice()
       .filter((user) => card.allComments.some((commentId) => commentId === user.id));
