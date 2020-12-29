@@ -1,3 +1,7 @@
+import {isOnline, toast} from "../utils/common-tools.js";
+
+const COMMENTS_STORE_PREFIX = `comments-for-card-id`;
+
 export default class Store {
   constructor(key, storage) {
     this._storage = storage;
@@ -19,6 +23,27 @@ export default class Store {
     );
   }
 
+  getCardComments(card) {
+    try {
+      if (!isOnline() && !Object.keys(localStorage).some((key) => key === `${COMMENTS_STORE_PREFIX}${card.id}`)) {
+        return toast(`You can't edit popup offline`);
+      }
+
+      return JSON.parse(this._storage.getItem(`${COMMENTS_STORE_PREFIX}${card.id}`)) || {};
+
+    } catch (err) {
+      return toast(`${err}`);
+    }
+  }
+
+  setCardComments(card, comments) {
+    this._storage.setItem(
+        `${COMMENTS_STORE_PREFIX}${card.id}`,
+        JSON.stringify(comments)
+    );
+  }
+
+  // не учавствует в getMovies
   setItem(key, value) {
     const store = this.getItems();
 
