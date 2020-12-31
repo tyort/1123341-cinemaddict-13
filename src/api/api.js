@@ -62,8 +62,6 @@ export default class Api {
       .then(CardsModel.adaptToClient);
   }
 
-  // поможет в режиме offline загрузить изменения в LocalStorage
-  // а когда появится сеть поможет передать информацию на сервер
   sync(data) {
     return this._load({
       url: `movies/sync`,

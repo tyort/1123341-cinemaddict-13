@@ -64,9 +64,9 @@ apiWithProvider.getMovies()
 // в офлайне грузит саму страницу
 // НЕ ЗАГРУЖАЕТ карточки фильмов
 // "Трясет" попап, но не изменяет данные
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`);
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
 
 // в DOM-дереве добавляет к титулу online
 window.addEventListener(`online`, () => {
