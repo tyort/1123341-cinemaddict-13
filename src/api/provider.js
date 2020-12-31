@@ -95,6 +95,7 @@ export default class Provider {
 }
 
 // массив объектов превращает в объект с объектами;
+// это необходимо для LocalStorage
 // вместо [{сам объект}, {сам объект}];
 // {id: {сам объект}, id: {сам объект}};
 function createStoreStructure(items) {

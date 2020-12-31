@@ -43,7 +43,7 @@ export default class Store {
     );
   }
 
-  // не учавствует в getMovies
+  // не учавствует в getMovies???
   setItem(key, value) {
     const store = this.getItems();
 
