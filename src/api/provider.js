@@ -34,7 +34,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getComments(card)
         .then((comments) => {
-          this._store.setCardComments(card, comments);
+          this._store.setCardComments(card, createStoreStructure(comments));
           return comments;
         });
     }
@@ -43,12 +43,25 @@ export default class Provider {
     return Promise.resolve(storeComments.slice());
   }
 
-  deleteComment(user) {
+  deleteComment(card, user) {
     if (isOnline()) {
-      return this._api.deleteComment(user);
+      return this._api.deleteComment(user)
+        .then(() => this._store.deleteComment(user.id, `comments-for-card-id${card.id}`));
     }
 
     return Promise.reject(new Error(`Delete comment failed`));
+  }
+
+  addComment(card, user) {
+    if (isOnline()) {
+      return this._api.addComment(card, user)
+        .then((updatedCard) => {
+          this._store.setCardComments(card, createStoreStructure(updatedCard.comments));
+          return updatedCard;
+        });
+    }
+
+    return Promise.reject(new Error(`Add comment failed`));
   }
 
   updateMovie(card) {
@@ -63,6 +76,22 @@ export default class Provider {
     this._store.setItem(card.id, CardsModel.adaptToServer(Object.assign({}, card)));
     return Promise.resolve(card);
   }
+
+
+  // поможет в режиме offline загрузить изменения в LocalStorage
+  // а когда появится сеть поможет передать информацию на сервер
+  sync() {
+    if (isOnline()) {
+      const storeTasks = Object.values(this._store.getItems());
+
+      return this._api.sync(storeTasks)
+        .then((response) => {
+          this._store.setItems(response.updated);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
 }
 
 // массив объектов превращает в объект с объектами;
@@ -75,10 +104,4 @@ function createStoreStructure(items) {
     });
   }, {});
 }
-
-// function getSyncedTasks(items) {
-//   console.log(`жопа`);
-//   return items.filter(({success}) => success)
-//     .map(({payload}) => payload.task);
-// }
 

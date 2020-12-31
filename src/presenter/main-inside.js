@@ -92,7 +92,7 @@ export default class InnerMain {
             .some((oldUser) => oldUser.id === actualUser.id));
 
         Promise.all([
-          ...usersForDelete.map((user) => this._api.deleteComment(user)),
+          ...usersForDelete.map((user) => this._api.deleteComment(updatedCard, user)),
           ...usersForAdd.map((user) => this._api.addComment(updatedCard, user))
         ])
           .then(() => this._api.updateMovie(updatedCard))

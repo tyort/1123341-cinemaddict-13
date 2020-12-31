@@ -8,9 +8,9 @@ export default class Store {
     this._storeKey = key;
   }
 
-  getItems() { // получаем содержимое хранилища по ключу
+  getItems(storeKey = this._storeKey) { // получаем содержимое хранилища по ключу
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(storeKey)) || {};
     } catch (err) {
       return {};
     }
@@ -57,13 +57,13 @@ export default class Store {
     );
   }
 
-  removeItem(key) {
-    const store = this.getItems();
+  deleteComment(key, storeKey = this._storeKey) {
+    const store = this.getItems(storeKey);
 
     delete store[key];
 
     this._storage.setItem(
-        this._storeKey,
+        storeKey,
         JSON.stringify(store)
     );
   }
