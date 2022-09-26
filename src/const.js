@@ -33,7 +33,7 @@ export const allComments = [
   }
 ];
 
-export const ages = [`0+`, `6+`, `12+`, `16+`, `18+`];
+export const ages = [0, 6, 12, 16, 18];
 
 export const allEmojies = [`angry`, `puke`, `sleeping`, `smile`];
 
@@ -74,7 +74,39 @@ export const descriptions = [
 export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
-  RATING: `rating`
+  RATING: `rating`,
 };
 
+export const UpdateMovie = {
+  OTHER: `OTHER`,
+  POPUP_AT_ALL: `POPUP_AT_ALL`,
+  OPEN_POPUP: `OPEN_POPUP`,
+  CARD_AT_ALL: `CARD_AT_ALL`
+};
 
+export const UpdatedVersion = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
+export const MenuItem = {
+  CATALOG: `CATALOG`,
+  STATISTICS: `STATISTICS`
+};
+
+export const TimePeriod = {
+  ALL_TIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};

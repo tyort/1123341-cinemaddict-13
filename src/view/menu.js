@@ -1,36 +1,39 @@
 import Abstract from "./abstract.js";
+import {MenuItem} from "../const.js";
 
-const createFilterItemTemplate = (filter) => {
-  const {name, count} = filter;
-  const filterName = name !== `all`
-    ? `${name.slice(0, 1).toUpperCase()}${name.slice(1)}`
-    : `All movies`;
-
-  return `<a href="#${name}" class="main-navigation__item">
-      ${filterName} <span class="main-navigation__item-count">${count}</span>
-    </a>`;
-};
-
-const createMenuTemplate = (filters) => {
-  const filterItems = filters
-    .map((filter) => createFilterItemTemplate(filter))
-    .join(``);
-
-  return `<nav class="main-navigation">
-    <div class="main-navigation__items">
-      ${filterItems}
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
-  </nav>`;
-};
+const createMenuTemplate = () => (
+  `<nav class="main-navigation">
+    <a href="#stats" class="main-navigation__additional" data-filter-name="stats">Stats</a>
+  </nav>`
+);
 
 export default class Menu extends Abstract {
-  constructor(filters) {
+  constructor() {
     super();
-    this._filters = filters;
+
+    this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuTemplate(this._filters);
+    return createMenuTemplate();
+  }
+
+  _menuClickHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+
+    if (evt.target.dataset.filterName === `stats`) {
+      this._handler.menuClick(MenuItem.STATISTICS);
+
+    } else {
+      this._handler.menuClick(MenuItem.CATALOG);
+    }
+  }
+
+  setMenuClickHandler(exactFormula) {
+    this._handler.menuClick = exactFormula;
+    this.getElement().addEventListener(`click`, this._menuClickHandler);
   }
 }
